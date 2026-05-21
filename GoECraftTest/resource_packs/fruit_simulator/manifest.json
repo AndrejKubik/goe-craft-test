@@ -4,37 +4,21 @@
     "name": "Fruit Harvest Simulator",
     "description": "GoECraft test addon",
     "uuid": "c7b3fd12-4343-4678-825c-5e7e3962eaac",
-    "version": [
-      1,
-      0,
-      0
-    ],
-    "min_engine_version": [
-      1,
-      26,
-      20
-    ]
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 26, 20]
   },
   "modules": [
     {
       "description": "My Resource Pack",
       "type": "resources",
       "uuid": "99483216-f20d-4dfb-a564-8483c7431236",
-      "version": [
-        1,
-        0,
-        0
-      ]
+      "version": [1, 0, 0]
     }
   ],
   "dependencies": [
     {
       "uuid": "a8590d57-b979-46ad-8af2-b8df3f1bd018",
-      "version": [
-        1,
-        0,
-        0
-      ]
+      "version": [1, 0, 0]
     }
   ]
 }
