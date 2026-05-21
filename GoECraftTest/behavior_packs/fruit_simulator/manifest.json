@@ -5,7 +5,7 @@
     "description": "GoECraft test addon",
     "uuid": "a8590d57-b979-46ad-8af2-b8df3f1bd018",
     "version": [1, 0, 0],
-    "min_engine_version": [1, 26, 20]
+    "min_engine_version": [1, 21, 0]
   },
   "modules": [
     {
