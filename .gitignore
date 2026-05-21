@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# TypeScript build output
+dist/
+build/
+out/
+
+# Logs
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Minecraft dev install folders
+com.mojang/
+
+# Optional editor settings
+.vscode/
+
+# Optional local env files
+.env
