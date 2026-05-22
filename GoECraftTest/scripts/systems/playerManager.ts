@@ -1,12 +1,12 @@
 import { Player, system, world } from "@minecraft/server";
-import { PlayerData } from "../data/playerData";
-import { DataFactory } from "../factories/dataFactory";
-import { MessageUtility } from "../utilities/messageUtility";
-import { MessageTextColor } from "../data/messageTextColor";
-import { PlayerSaveKeys } from "../data/playerSaveKeys";
+import { PlayerData } from "../data/PlayerData";
+import { DataFactory } from "../factories/DataFactory";
+import { MessageUtility } from "../utilities/MessageUtility";
+import { MessageTextColor } from "../data/MessageTextColor";
+import { PlayerSaveKeys } from "../data/PlayerSaveKeys";
 
 const fullSecondTicks = 20;
-const playerWelcomeMessageDelayTicks = 25;
+const playerWelcomeMessageDelayTicks = 30;
 
 export class PlayerManager {
   private playerMap = new Map<string, PlayerData>();
@@ -47,8 +47,8 @@ export class PlayerManager {
     this.increasePlayerVisits(player);
 
     system.runTimeout(() => {
-      (player.sendMessage(this.getPlayerWelcomeMessage(player)), playerWelcomeMessageDelayTicks);
-    }); //small delay to avoid duplicate welcome message, due to UI reload at startup
+      player.sendMessage(this.getPlayerWelcomeMessage(player));
+    }, playerWelcomeMessageDelayTicks); //small delay to avoid duplicate welcome message, due to UI reload at startup
   }
 
   private getPlayerWelcomeMessage(player: Player): string {

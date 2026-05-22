@@ -1,4 +1,4 @@
-import { PlayerData } from "../data/playerData";
+import { PlayerData } from "../data/PlayerData";
 
 export class DataFactory {
   static createPlayerData(): PlayerData {

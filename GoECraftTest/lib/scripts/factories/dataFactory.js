@@ -5,4 +5,4 @@ export class DataFactory {
         };
     }
 }
-//# sourceMappingURL=dataFactory.js.map
+//# sourceMappingURL=DataFactory.js.map

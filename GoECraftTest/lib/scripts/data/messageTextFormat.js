@@ -5,4 +5,4 @@ export var MessageTextFormat;
     MessageTextFormat["Obfuscated"] = "\u00A7k";
     MessageTextFormat["Normal"] = "\u00A7r";
 })(MessageTextFormat || (MessageTextFormat = {}));
-//# sourceMappingURL=messageTextFormat.js.map
+//# sourceMappingURL=MessageTextFormat.js.map

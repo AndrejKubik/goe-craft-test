@@ -17,4 +17,4 @@ export var MessageTextColor;
     MessageTextColor["Yellow"] = "\u00A7e";
     MessageTextColor["White"] = "\u00A7f";
 })(MessageTextColor || (MessageTextColor = {}));
-//# sourceMappingURL=messageTextColor.js.map
+//# sourceMappingURL=MessageTextColor.js.map

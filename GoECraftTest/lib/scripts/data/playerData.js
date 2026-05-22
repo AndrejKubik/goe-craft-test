@@ -1,2 +1,2 @@
 export {};
-//# sourceMappingURL=playerData.js.map
+//# sourceMappingURL=PlayerData.js.map

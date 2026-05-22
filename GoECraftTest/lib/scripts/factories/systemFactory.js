@@ -1,7 +1,7 @@
-import { PlayerManager } from "../systems/playerManager";
+import { PlayerManager } from "../systems/PlayerManager";
 export class SystemFactory {
     static createPlayerManager() {
         return new PlayerManager();
     }
 }
-//# sourceMappingURL=systemFactory.js.map
+//# sourceMappingURL=SystemFactory.js.map

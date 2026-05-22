@@ -1,5 +1,5 @@
 import { system, world } from "@minecraft/server";
-import { SystemFactory } from "./factories/systemFactory";
+import { SystemFactory } from "./factories/SystemFactory";
 const playerManager = SystemFactory.createPlayerManager();
 function onStartup(event) {
     console.warn("Startup placeholder");

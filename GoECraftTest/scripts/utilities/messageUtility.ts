@@ -1,5 +1,5 @@
-import { MessageTextColor } from "../data/messageTextColor";
-import { MessageTextFormat } from "../data/messageTextFormat";
+import { MessageTextColor } from "../data/MessageTextColor";
+import { MessageTextFormat } from "../data/MessageTextFormat";
 
 export class MessageUtility {
   static formatString(

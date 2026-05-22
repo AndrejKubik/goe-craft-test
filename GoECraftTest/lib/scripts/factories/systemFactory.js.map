@@ -1,1 +1,1 @@
-{"version":3,"file":"systemFactory.js","sourceRoot":"","sources":["../../../scripts/factories/systemFactory.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,MAAM,0BAA0B,CAAC;AAEzD,MAAM,OAAO,aAAa;IACxB,MAAM,CAAC,mBAAmB;QACxB,OAAO,IAAI,aAAa,EAAE,CAAC;IAC7B,CAAC;CACF"}
+{"version":3,"file":"SystemFactory.js","sourceRoot":"","sources":["../../../scripts/factories/SystemFactory.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,MAAM,0BAA0B,CAAC;AAEzD,MAAM,OAAO,aAAa;IACxB,MAAM,CAAC,mBAAmB;QACxB,OAAO,IAAI,aAAa,EAAE,CAAC;IAC7B,CAAC;CACF"}

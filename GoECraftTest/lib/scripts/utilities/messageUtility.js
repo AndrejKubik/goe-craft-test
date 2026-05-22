@@ -1,4 +1,4 @@
-import { MessageTextFormat } from "../data/messageTextFormat";
+import { MessageTextFormat } from "../data/MessageTextFormat";
 export class MessageUtility {
     static formatString(text, color, format = MessageTextFormat.Normal) {
         return `${format}${color}${text}§r`;
@@ -20,4 +20,4 @@ export class MessageUtility {
         return `${number.toString().padStart(minSymbols, "0")}`;
     }
 }
-//# sourceMappingURL=messageUtility.js.map
+//# sourceMappingURL=MessageUtility.js.map

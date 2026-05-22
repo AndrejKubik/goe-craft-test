@@ -1,5 +1,5 @@
 import { system, StartupEvent, world, PlayerSpawnAfterEvent } from "@minecraft/server";
-import { SystemFactory } from "./factories/systemFactory";
+import { SystemFactory } from "./factories/SystemFactory";
 
 const playerManager = SystemFactory.createPlayerManager();
 

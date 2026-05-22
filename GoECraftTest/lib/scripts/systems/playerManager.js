@@ -1,10 +1,10 @@
 import { system, world } from "@minecraft/server";
-import { DataFactory } from "../factories/dataFactory";
-import { MessageUtility } from "../utilities/messageUtility";
-import { MessageTextColor } from "../data/messageTextColor";
-import { PlayerSaveKeys } from "../data/playerSaveKeys";
+import { DataFactory } from "../factories/DataFactory";
+import { MessageUtility } from "../utilities/MessageUtility";
+import { MessageTextColor } from "../data/MessageTextColor";
+import { PlayerSaveKeys } from "../data/PlayerSaveKeys";
 const fullSecondTicks = 20;
-const playerWelcomeMessageDelayTicks = 25;
+const playerWelcomeMessageDelayTicks = 30;
 export class PlayerManager {
     constructor() {
         this.playerMap = new Map();
@@ -34,8 +34,8 @@ export class PlayerManager {
     onPlayerJoin(player) {
         this.increasePlayerVisits(player);
         system.runTimeout(() => {
-            (player.sendMessage(this.getPlayerWelcomeMessage(player)), playerWelcomeMessageDelayTicks);
-        }); //small delay to avoid duplicate welcome message, due to UI reload at startup
+            player.sendMessage(this.getPlayerWelcomeMessage(player));
+        }, playerWelcomeMessageDelayTicks); //small delay to avoid duplicate welcome message, due to UI reload at startup
     }
     getPlayerWelcomeMessage(player) {
         const totalSeconds = this.getPlayerPlayTime(player);
@@ -76,4 +76,4 @@ export class PlayerManager {
         return totalVisits;
     }
 }
-//# sourceMappingURL=playerManager.js.map
+//# sourceMappingURL=PlayerManager.js.map
