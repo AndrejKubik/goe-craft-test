@@ -1,8 +1,8 @@
 import { system, world } from "@minecraft/server";
 import { DataFactory } from "../factories/DataFactory";
 import { MessageUtility } from "../utilities/MessageUtility";
-import { MessageTextColor } from "../data/MessageTextColor";
-import { PlayerSaveKeys } from "../data/PlayerSaveKeys";
+import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
+import { PlayerSaveKeys } from "../data/player/PlayerSaveKeys";
 const fullSecondTicks = 20;
 const playerWelcomeMessageDelayTicks = 30;
 export class PlayerManager {

@@ -1,4 +1,4 @@
-import { MessageTextFormat } from "../data/MessageTextFormat";
+import { MessageTextFormat } from "../data/messageUtility/MessageTextFormat";
 export class MessageUtility {
     static formatString(text, color, format = MessageTextFormat.Normal) {
         return `${format}${color}${text}§r`;
