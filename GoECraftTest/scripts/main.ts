@@ -1,10 +1,16 @@
-import { system, world, StartupEvent } from "@minecraft/server";
-import { PlayerManager } from "./systems/playerManager";
+import { system, StartupEvent, world, PlayerSpawnAfterEvent } from "@minecraft/server";
+import { SystemFactory } from "./factories/systemFactory";
 
-const playerManager = new PlayerManager();
+const playerManager = SystemFactory.createPlayerManager();
 
 function onStartup(event: StartupEvent): void {
   console.warn("Startup placeholder");
+}
+
+function onPlayerJoin(event: PlayerSpawnAfterEvent): void {
+  if (event.initialSpawn) {
+    playerManager.welcomePlayer(event.player);
+  }
 }
 
 function onTick(): void {
@@ -22,4 +28,5 @@ function mainTick(): void {
 }
 
 system.beforeEvents.startup.subscribe(onStartup);
+world.afterEvents.playerSpawn.subscribe(onPlayerJoin);
 system.run(mainTick);
