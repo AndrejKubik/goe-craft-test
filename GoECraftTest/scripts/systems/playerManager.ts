@@ -1,12 +1,12 @@
-import { Player, world } from "@minecraft/server";
+import { Player, system, world } from "@minecraft/server";
 import { PlayerData } from "../data/playerData";
 import { DataFactory } from "../factories/dataFactory";
 import { MessageUtility } from "../utilities/messageUtility";
 import { MessageTextColor } from "../data/messageTextColor";
-import { MessageTextFormat } from "../data/messageTextFormat";
+import { PlayerSaveKeys } from "../data/playerSaveKeys";
 
-const playerPlayTimeSaveKey = "PLAYER_PLAY_TIME";
 const fullSecondTicks = 20;
+const playerWelcomeMessageDelayTicks = 25;
 
 export class PlayerManager {
   private playerMap = new Map<string, PlayerData>();
@@ -31,30 +31,44 @@ export class PlayerManager {
     playerData.playTimeSecondTicks = 0;
   }
 
+  private increasePlayerVisits(player: Player) {
+    const currentVisits = this.getPlayerVisits(player);
+
+    player.setDynamicProperty(PlayerSaveKeys.totalVisits, currentVisits + 1);
+  }
+
   private increasePlayerPlayTimeSeconds(player: Player) {
     const currentTotalSeconds = this.getPlayerPlayTime(player);
 
-    player.setDynamicProperty(playerPlayTimeSaveKey, currentTotalSeconds + 1);
+    player.setDynamicProperty(PlayerSaveKeys.playTime, currentTotalSeconds + 1);
   }
 
-  public welcomePlayer(player: Player): void {
-    player.sendMessage(this.getPlayerWelcomeMessage(player));
+  public onPlayerJoin(player: Player): void {
+    this.increasePlayerVisits(player);
+
+    system.runTimeout(() => {
+      (player.sendMessage(this.getPlayerWelcomeMessage(player)), playerWelcomeMessageDelayTicks);
+    }); //small delay to avoid duplicate welcome message, due to UI reload at startup
   }
 
   private getPlayerWelcomeMessage(player: Player): string {
     const totalSeconds = this.getPlayerPlayTime(player);
+    const totalVisits = this.getPlayerVisits(player);
+    const playerNameText = MessageUtility.formatString(`${player.nameTag}`, MessageTextColor.Gold);
 
-    const playerNameText = MessageUtility.getFormattedString(`${player.nameTag}`, MessageTextColor.Gold);
-
-    if (totalSeconds <= 0) {
-      const addonTitleText = MessageUtility.getFormattedString("Fruit Harvest Simulator", MessageTextColor.Gold);
+    if (totalVisits <= 0) {
+      const addonTitleText = MessageUtility.formatString("Fruit Harvest Simulator", MessageTextColor.Gold);
 
       return `Welcome to the ${addonTitleText}, have fun ${playerNameText}!`;
     }
 
-    const playTimeText = MessageUtility.getFormattedString(totalSeconds.toString(), MessageTextColor.Gold);
+    let totalVisitsText = totalVisits.toString();
+    totalVisitsText = MessageUtility.formatString(totalVisitsText, MessageTextColor.Gold);
 
-    return `Welcome back ${playerNameText}, your current play time: ${playTimeText}`;
+    let playTimeText = MessageUtility.formatStringTime(totalSeconds);
+    playTimeText = MessageUtility.formatString(playTimeText.toString(), MessageTextColor.Gold);
+
+    return `Welcome back ${playerNameText}!\n` + `Play time: ${playTimeText}\n` + `Total visits: ${totalVisitsText}`;
   }
 
   private getPlayerData(playerId: string): PlayerData {
@@ -70,12 +84,23 @@ export class PlayerManager {
 
   private getPlayerPlayTime(player: Player): number {
     let totalSeconds = 0;
-    const playerPlayTimeProperty = player.getDynamicProperty(playerPlayTimeSaveKey);
+    const playerPlayTimeProperty = player.getDynamicProperty(PlayerSaveKeys.playTime);
 
     if (playerPlayTimeProperty !== undefined) {
       totalSeconds = playerPlayTimeProperty as number;
     }
 
     return totalSeconds;
+  }
+
+  private getPlayerVisits(player: Player) {
+    let totalVisits = 0;
+    const playerTotalVisitsProperty = player.getDynamicProperty(PlayerSaveKeys.totalVisits);
+
+    if (playerTotalVisitsProperty !== undefined) {
+      totalVisits = playerTotalVisitsProperty as number;
+    }
+
+    return totalVisits;
   }
 }

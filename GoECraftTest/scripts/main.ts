@@ -9,7 +9,7 @@ function onStartup(event: StartupEvent): void {
 
 function onPlayerJoin(event: PlayerSpawnAfterEvent): void {
   if (event.initialSpawn) {
-    playerManager.welcomePlayer(event.player);
+    playerManager.onPlayerJoin(event.player);
   }
 }
 

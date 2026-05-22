@@ -1,9 +1,10 @@
-import { world } from "@minecraft/server";
+import { system, world } from "@minecraft/server";
 import { DataFactory } from "../factories/dataFactory";
 import { MessageUtility } from "../utilities/messageUtility";
 import { MessageTextColor } from "../data/messageTextColor";
-const playerPlayTimeSaveKey = "PLAYER_PLAY_TIME";
+import { PlayerSaveKeys } from "../data/playerSaveKeys";
 const fullSecondTicks = 20;
+const playerWelcomeMessageDelayTicks = 25;
 export class PlayerManager {
     constructor() {
         this.playerMap = new Map();
@@ -22,22 +23,33 @@ export class PlayerManager {
         this.increasePlayerPlayTimeSeconds(player);
         playerData.playTimeSecondTicks = 0;
     }
+    increasePlayerVisits(player) {
+        const currentVisits = this.getPlayerVisits(player);
+        player.setDynamicProperty(PlayerSaveKeys.totalVisits, currentVisits + 1);
+    }
     increasePlayerPlayTimeSeconds(player) {
         const currentTotalSeconds = this.getPlayerPlayTime(player);
-        player.setDynamicProperty(playerPlayTimeSaveKey, currentTotalSeconds + 1);
+        player.setDynamicProperty(PlayerSaveKeys.playTime, currentTotalSeconds + 1);
     }
-    welcomePlayer(player) {
-        player.sendMessage(this.getPlayerWelcomeMessage(player));
+    onPlayerJoin(player) {
+        this.increasePlayerVisits(player);
+        system.runTimeout(() => {
+            (player.sendMessage(this.getPlayerWelcomeMessage(player)), playerWelcomeMessageDelayTicks);
+        }); //small delay to avoid duplicate welcome message, due to UI reload at startup
     }
     getPlayerWelcomeMessage(player) {
         const totalSeconds = this.getPlayerPlayTime(player);
-        const playerNameText = MessageUtility.getFormattedString(`${player.nameTag}`, MessageTextColor.Gold);
-        if (totalSeconds <= 0) {
-            const addonTitleText = MessageUtility.getFormattedString("Fruit Harvest Simulator", MessageTextColor.Gold);
+        const totalVisits = this.getPlayerVisits(player);
+        const playerNameText = MessageUtility.formatString(`${player.nameTag}`, MessageTextColor.Gold);
+        if (totalVisits <= 0) {
+            const addonTitleText = MessageUtility.formatString("Fruit Harvest Simulator", MessageTextColor.Gold);
             return `Welcome to the ${addonTitleText}, have fun ${playerNameText}!`;
         }
-        const playTimeText = MessageUtility.getFormattedString(totalSeconds.toString(), MessageTextColor.Gold);
-        return `Welcome back ${playerNameText}, your current play time: ${playTimeText}`;
+        let totalVisitsText = totalVisits.toString();
+        totalVisitsText = MessageUtility.formatString(totalVisitsText, MessageTextColor.Gold);
+        let playTimeText = MessageUtility.formatStringTime(totalSeconds);
+        playTimeText = MessageUtility.formatString(playTimeText.toString(), MessageTextColor.Gold);
+        return `Welcome back ${playerNameText}!\n` + `Play time: ${playTimeText}\n` + `Total visits: ${totalVisitsText}`;
     }
     getPlayerData(playerId) {
         let playerData = this.playerMap.get(playerId);
@@ -49,11 +61,19 @@ export class PlayerManager {
     }
     getPlayerPlayTime(player) {
         let totalSeconds = 0;
-        const playerPlayTimeProperty = player.getDynamicProperty(playerPlayTimeSaveKey);
+        const playerPlayTimeProperty = player.getDynamicProperty(PlayerSaveKeys.playTime);
         if (playerPlayTimeProperty !== undefined) {
             totalSeconds = playerPlayTimeProperty;
         }
         return totalSeconds;
+    }
+    getPlayerVisits(player) {
+        let totalVisits = 0;
+        const playerTotalVisitsProperty = player.getDynamicProperty(PlayerSaveKeys.totalVisits);
+        if (playerTotalVisitsProperty !== undefined) {
+            totalVisits = playerTotalVisitsProperty;
+        }
+        return totalVisits;
     }
 }
 //# sourceMappingURL=playerManager.js.map

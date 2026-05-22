@@ -6,7 +6,7 @@ function onStartup(event) {
 }
 function onPlayerJoin(event) {
     if (event.initialSpawn) {
-        playerManager.welcomePlayer(event.player);
+        playerManager.onPlayerJoin(event.player);
     }
 }
 function onTick() {
