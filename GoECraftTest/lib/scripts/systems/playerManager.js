@@ -45,11 +45,11 @@ export class PlayerManager {
             const addonTitleText = MessageUtility.formatString("Fruit Harvest Simulator", MessageTextColor.Gold);
             return `Welcome to the ${addonTitleText}, have fun ${playerNameText}!`;
         }
-        let totalVisitsText = totalVisits.toString();
-        totalVisitsText = MessageUtility.formatString(totalVisitsText, MessageTextColor.Gold);
+        let currentVisit = MessageUtility.getCounterNumberString(totalVisits);
+        currentVisit = MessageUtility.formatString(currentVisit, MessageTextColor.Gold);
         let playTimeText = MessageUtility.formatStringTime(totalSeconds);
         playTimeText = MessageUtility.formatString(playTimeText.toString(), MessageTextColor.Gold);
-        return `Welcome back ${playerNameText}!\n` + `Play time: ${playTimeText}\n` + `Total visits: ${totalVisitsText}`;
+        return `Welcome back ${playerNameText}!\n` + `Play time: ${playTimeText}\n` + `Current visit: ${currentVisit}`;
     }
     getPlayerData(playerId) {
         let playerData = this.playerMap.get(playerId);

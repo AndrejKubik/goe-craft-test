@@ -19,5 +19,22 @@ export class MessageUtility {
         }
         return `${number.toString().padStart(minSymbols, "0")}`;
     }
+    static getCounterNumberString(value) {
+        const mod10 = value % 10; //right-most first number
+        const mod100 = value % 100; //right-most first two numbers
+        if (mod100 >= 11 && mod100 <= 13) {
+            return `${value}th`;
+        }
+        switch (mod10) {
+            case 1:
+                return `${value}st`;
+            case 2:
+                return `${value}nd`;
+            case 3:
+                return `${value}rd`;
+            default:
+                return `${value}th`;
+        }
+    }
 }
 //# sourceMappingURL=MessageUtility.js.map

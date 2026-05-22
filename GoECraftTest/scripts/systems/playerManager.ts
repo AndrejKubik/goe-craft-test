@@ -62,13 +62,13 @@ export class PlayerManager {
       return `Welcome to the ${addonTitleText}, have fun ${playerNameText}!`;
     }
 
-    let totalVisitsText = totalVisits.toString();
-    totalVisitsText = MessageUtility.formatString(totalVisitsText, MessageTextColor.Gold);
+    let currentVisit = MessageUtility.getCounterNumberString(totalVisits);
+    currentVisit = MessageUtility.formatString(currentVisit, MessageTextColor.Gold);
 
     let playTimeText = MessageUtility.formatStringTime(totalSeconds);
     playTimeText = MessageUtility.formatString(playTimeText.toString(), MessageTextColor.Gold);
 
-    return `Welcome back ${playerNameText}!\n` + `Play time: ${playTimeText}\n` + `Total visits: ${totalVisitsText}`;
+    return `Welcome back ${playerNameText}!\n` + `Play time: ${playTimeText}\n` + `Current visit: ${currentVisit}`;
   }
 
   private getPlayerData(playerId: string): PlayerData {
