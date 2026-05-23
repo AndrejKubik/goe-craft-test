@@ -4,6 +4,7 @@ export class WorldSettingsManager {
         this.speedCheatEnabled = false;
         this.onStartup = this.onStartup.bind(this);
         this.isSpeedCheatEnabled = this.isSpeedCheatEnabled.bind(this);
+        this.toggleSpeedCheatState = this.toggleSpeedCheatState.bind(this);
         this.enableSpeedCheat = this.enableSpeedCheat.bind(this);
     }
     onStartup() {
@@ -11,6 +12,9 @@ export class WorldSettingsManager {
     }
     isSpeedCheatEnabled() {
         return this.speedCheatEnabled;
+    }
+    toggleSpeedCheatState() {
+        this.enableSpeedCheat(!this.isSpeedCheatEnabled());
     }
     enableSpeedCheat(newState) {
         this.speedCheatEnabled = newState;
