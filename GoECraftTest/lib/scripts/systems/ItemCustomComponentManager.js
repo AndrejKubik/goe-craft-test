@@ -24,7 +24,7 @@ export class ItemCustomComponentManager {
         this.addCustomComponentsToItem("minecraft:iron_sword", [this.dashOnUseComponent]);
     }
     registerItemCustomComponents(itemComponentRegistry) {
-        itemComponentRegistry.registerCustomComponent(this.dashOnUseComponent.getFullId(), this.dashOnUseComponent);
+        itemComponentRegistry.registerCustomComponent(this.showDebugTabletOnUseComponent.getFullId(), this.showDebugTabletOnUseComponent);
     }
     addCustomComponentsToItem(itemId, components) {
         this.modifiedVanillaItems.set(itemId, components);

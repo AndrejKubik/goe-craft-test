@@ -32,7 +32,10 @@ export class ItemCustomComponentManager {
   }
 
   private registerItemCustomComponents(itemComponentRegistry: ItemComponentRegistry): void {
-    itemComponentRegistry.registerCustomComponent(this.dashOnUseComponent.getFullId(), this.dashOnUseComponent);
+    itemComponentRegistry.registerCustomComponent(
+      this.showDebugTabletOnUseComponent.getFullId(),
+      this.showDebugTabletOnUseComponent
+    );
   }
 
   private addCustomComponentsToItem<T extends ItemCustomComponent>(itemId: string, components: T[]): void {
