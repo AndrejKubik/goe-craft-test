@@ -10,21 +10,21 @@ export class DashOnUseComponent extends ItemCustomComponent {
         return "dash_on_use";
     }
     onUse(event) {
-        this.tryPlayerDash(event.source);
+        tryPlayerDash(event.source, this.horizontalStrength, this.verticalStrength, this.isGroundDashAllowed);
     }
     onUseVanilla(event) {
-        this.tryPlayerDash(event.source);
+        tryPlayerDash(event.source, this.horizontalStrength, this.verticalStrength, this.isGroundDashAllowed);
     }
-    tryPlayerDash(player) {
-        if (player.isOnGround && !this.isGroundDashAllowed) {
-            return;
-        }
-        const lookDirection = player.getViewDirection();
-        const dashDirection = {
-            x: lookDirection.x * this.horizontalStrength,
-            z: lookDirection.z * this.horizontalStrength,
-        };
-        player.applyKnockback(dashDirection, this.verticalStrength);
+}
+function tryPlayerDash(player, horizontalStrength, verticalStrength, isGroundDashAllowed) {
+    if (player.isOnGround && !isGroundDashAllowed) {
+        return;
     }
+    const lookDirection = player.getViewDirection();
+    const dashDirection = {
+        x: lookDirection.x * horizontalStrength,
+        z: lookDirection.z * horizontalStrength,
+    };
+    player.applyKnockback(dashDirection, verticalStrength);
 }
 //# sourceMappingURL=DashOnUseComponent.js.map

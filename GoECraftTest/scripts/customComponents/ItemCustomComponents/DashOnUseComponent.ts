@@ -11,25 +11,30 @@ export class DashOnUseComponent extends ItemCustomComponent {
   }
 
   public onUse(event: ItemComponentUseEvent): void {
-    this.tryPlayerDash(event.source);
+    tryPlayerDash(event.source, this.horizontalStrength, this.verticalStrength, this.isGroundDashAllowed);
   }
 
   public onUseVanilla(event: ItemUseAfterEvent): void {
-    this.tryPlayerDash(event.source);
+    tryPlayerDash(event.source, this.horizontalStrength, this.verticalStrength, this.isGroundDashAllowed);
+  }
+}
+
+function tryPlayerDash(
+  player: Player,
+  horizontalStrength: number,
+  verticalStrength: number,
+  isGroundDashAllowed: boolean
+): void {
+  if (player.isOnGround && !isGroundDashAllowed) {
+    return;
   }
 
-  public tryPlayerDash(player: Player): void {
-    if (player.isOnGround && !this.isGroundDashAllowed) {
-      return;
-    }
+  const lookDirection = player.getViewDirection();
 
-    const lookDirection = player.getViewDirection();
+  const dashDirection = {
+    x: lookDirection.x * horizontalStrength,
+    z: lookDirection.z * horizontalStrength,
+  };
 
-    const dashDirection = {
-      x: lookDirection.x * this.horizontalStrength,
-      z: lookDirection.z * this.horizontalStrength,
-    };
-
-    player.applyKnockback(dashDirection, this.verticalStrength);
-  }
+  player.applyKnockback(dashDirection, verticalStrength);
 }

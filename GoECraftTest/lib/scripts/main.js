@@ -1,17 +1,8 @@
 import { system, world } from "@minecraft/server";
 import { PlayerManager } from "./systems/PlayerManager";
-import { VanillaItemCustomComponentManager } from "./systems/VanillaItemCustomComponentManager";
+import { ItemCustomComponentManager } from "./systems/ItemCustomComponentManager";
 const playerManager = new PlayerManager();
-const vanillaItemCustomComponentManager = new VanillaItemCustomComponentManager();
-function onStartup(event) { }
-function onPlayerSpawn(event) {
-    if (event.initialSpawn) {
-        playerManager.onPlayerJoin(event.player);
-    }
-}
-function onTick() {
-    playerManager.onTick();
-}
+const itemCustomComponentManager = new ItemCustomComponentManager();
 function mainTick() {
     try {
         onTick();
@@ -21,8 +12,22 @@ function mainTick() {
     }
     system.run(mainTick);
 }
+function onStartup(event) {
+    itemCustomComponentManager.onStartup(event);
+}
+function onTick() {
+    playerManager.onTick();
+}
+function onPlayerSpawn(event) {
+    if (event.initialSpawn) {
+        playerManager.onPlayerJoin(event.player);
+    }
+}
+function onUseItem(event) {
+    itemCustomComponentManager.onUseItem(event);
+}
 system.beforeEvents.startup.subscribe(onStartup);
 world.afterEvents.playerSpawn.subscribe(onPlayerSpawn);
-world.afterEvents.itemUse.subscribe(vanillaItemCustomComponentManager.onUseItem.bind(vanillaItemCustomComponentManager));
+world.afterEvents.itemUse.subscribe(onUseItem);
 system.run(mainTick);
 //# sourceMappingURL=main.js.map
