@@ -1,8 +1,8 @@
-import { world } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 import { ItemCustomComponent } from "../baseClasses/ItemCustomComponent";
 import { MessageUtility } from "../../utilities/MessageUtility";
 import { MessageTextColor } from "../../data/messageUtility/MessageTextColor";
+import { WorldDataPersistanceManager } from "../../systems/WorldDataPersistanceManager";
 const speedCheatPropertyId = "DEBUG_SPEED_CHEAT";
 export class ShowDebugTabletOnUseComponent extends ItemCustomComponent {
     getId() {
@@ -13,7 +13,7 @@ export class ShowDebugTabletOnUseComponent extends ItemCustomComponent {
     }
 }
 async function showDebugTablet(player) {
-    let speedCheatEnabled = getSpeedCheatEnabled();
+    const speedCheatEnabled = WorldDataPersistanceManager.getSpeedCheatEnabled();
     let debugTablet;
     try {
         debugTablet = await showDebugTabletForm(player, speedCheatEnabled);
@@ -25,8 +25,7 @@ async function showDebugTablet(player) {
         return;
     }
     if (debugTablet.selection === 0) {
-        speedCheatEnabled = !speedCheatEnabled;
-        world.setDynamicProperty(speedCheatPropertyId, speedCheatEnabled);
+        onSpeedCheatButtonClick(speedCheatEnabled);
     }
 }
 async function showDebugTabletForm(player, speedCheatEnabled) {
@@ -34,9 +33,8 @@ async function showDebugTabletForm(player, speedCheatEnabled) {
     const form = new ActionFormData().title("Debug Tablet").button(speedCheatButtonText);
     return await form.show(player);
 }
-function getSpeedCheatEnabled() {
-    const property = world.getDynamicProperty(speedCheatPropertyId);
-    return property !== undefined && property;
+function onSpeedCheatButtonClick(speedCheatEnabled) {
+    WorldDataPersistanceManager.setSpeedCheatEnabled(!speedCheatEnabled);
 }
 function getSpeedCheatButtonText(speedCheatEnabled) {
     const stateText = speedCheatEnabled

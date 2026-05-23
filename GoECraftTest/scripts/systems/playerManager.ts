@@ -1,8 +1,8 @@
 import { Player, system, world } from "@minecraft/server";
 import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
-import { PlayerSaveKeys } from "../data/player/PlayerSaveKeys";
 import { PlayerData } from "../data/player/PlayerData";
+import { PlayerDataPersistanceManager } from "./PlayerDataPersistanceManager";
 
 const fullSecondTicks = 20;
 const playerWelcomeMessageDelayTicks = 30;
@@ -12,94 +12,72 @@ export class PlayerManager {
 
   public onTick(): void {
     for (const player of world.getPlayers()) {
-      this.updatePlayerPlayTime(player);
+      updatePlayerPlayTime(player, this.playerMap);
     }
-  }
-
-  private updatePlayerPlayTime(player: Player) {
-    const playerData = this.getPlayerData(player.id);
-
-    playerData.playTimeSecondTicks++;
-
-    if (playerData.playTimeSecondTicks < fullSecondTicks) {
-      return;
-    }
-
-    this.increasePlayerPlayTimeSeconds(player);
-
-    playerData.playTimeSecondTicks = 0;
-  }
-
-  private increasePlayerVisits(player: Player) {
-    const currentVisits = this.getPlayerVisits(player);
-
-    player.setDynamicProperty(PlayerSaveKeys.totalVisits, currentVisits + 1);
-  }
-
-  private increasePlayerPlayTimeSeconds(player: Player) {
-    const currentTotalSeconds = this.getPlayerPlayTime(player);
-
-    player.setDynamicProperty(PlayerSaveKeys.playTime, currentTotalSeconds + 1);
   }
 
   public onPlayerJoin(player: Player): void {
-    this.increasePlayerVisits(player);
+    increasePlayerVisits(player);
 
     system.runTimeout(() => {
-      player.sendMessage(this.getPlayerWelcomeMessage(player));
+      player.sendMessage(getPlayerWelcomeMessage(player));
     }, playerWelcomeMessageDelayTicks); //small delay to avoid duplicate welcome message, due to UI reload at startup
   }
+}
 
-  private getPlayerWelcomeMessage(player: Player): string {
-    const totalSeconds = this.getPlayerPlayTime(player);
-    const totalVisits = this.getPlayerVisits(player);
-    const playerNameText = MessageUtility.formatString(`${player.nameTag}`, MessageTextColor.Gold);
+function updatePlayerPlayTime(player: Player, playerMap: Map<string, PlayerData>) {
+  const playerData = getPlayerData(player.id, playerMap);
 
-    if (totalVisits <= 0) {
-      const addonTitleText = MessageUtility.formatString("Fruit Harvest Simulator", MessageTextColor.Gold);
+  playerData.playTimeSecondTicks++;
 
-      return `Welcome to the ${addonTitleText}, have fun ${playerNameText}!`;
-    }
-
-    let currentVisit = MessageUtility.getCounterNumberString(totalVisits);
-    currentVisit = MessageUtility.formatString(currentVisit, MessageTextColor.Gold);
-
-    let playTimeText = MessageUtility.formatStringTime(totalSeconds);
-    playTimeText = MessageUtility.formatString(playTimeText.toString(), MessageTextColor.Gold);
-
-    return `Welcome back ${playerNameText}!\n` + `Play time: ${playTimeText}\n` + `Current visit: ${currentVisit}`;
+  if (playerData.playTimeSecondTicks < fullSecondTicks) {
+    return;
   }
 
-  private getPlayerData(playerId: string): PlayerData {
-    let playerData = this.playerMap.get(playerId);
+  increasePlayerPlayTimeSeconds(player);
 
-    if (playerData === undefined) {
-      playerData = new PlayerData();
-      this.playerMap.set(playerId, playerData);
-    }
+  playerData.playTimeSecondTicks = 0;
+}
 
-    return playerData;
+function increasePlayerPlayTimeSeconds(player: Player) {
+  const currentTotalSeconds = PlayerDataPersistanceManager.getPlayerPlayTime(player);
+
+  PlayerDataPersistanceManager.setPlayTime(player, currentTotalSeconds + 1);
+}
+
+function increasePlayerVisits(player: Player) {
+  const currentVisits = PlayerDataPersistanceManager.getVisitCount(player);
+
+  PlayerDataPersistanceManager.setVisitCount(player, currentVisits + 1);
+}
+
+function getPlayerWelcomeMessage(player: Player): string {
+  const totalSeconds = PlayerDataPersistanceManager.getPlayerPlayTime(player);
+  const totalVisits = PlayerDataPersistanceManager.getVisitCount(player);
+  const playerNameText = MessageUtility.formatString(`${player.nameTag}`, MessageTextColor.Gold);
+
+  if (totalVisits <= 1) {
+    const addonTitleText = MessageUtility.formatString("Fruit Harvest Simulator", MessageTextColor.Gold);
+
+    return `Welcome to the ${addonTitleText}, have fun ${playerNameText}!`;
   }
 
-  private getPlayerPlayTime(player: Player): number {
-    let totalSeconds = 0;
-    const playerPlayTimeProperty = player.getDynamicProperty(PlayerSaveKeys.playTime);
+  let currentVisit = MessageUtility.getCounterNumberString(totalVisits);
+  currentVisit = MessageUtility.formatString(currentVisit, MessageTextColor.Gold);
 
-    if (playerPlayTimeProperty !== undefined) {
-      totalSeconds = playerPlayTimeProperty as number;
-    }
+  let playTimeText = MessageUtility.formatStringTime(totalSeconds);
+  playTimeText = MessageUtility.formatString(playTimeText.toString(), MessageTextColor.Gold);
 
-    return totalSeconds;
+  return `Welcome back ${playerNameText}!\n` + `Play time: ${playTimeText}\n` + `Current visit: ${currentVisit}`;
+}
+
+function getPlayerData(playerId: string, playerMap: Map<string, PlayerData>): PlayerData {
+  let playerData = playerMap.get(playerId);
+
+  if (playerData === undefined) {
+    playerData = new PlayerData();
+    playerMap.set(playerId, playerData);
   }
 
-  private getPlayerVisits(player: Player) {
-    let totalVisits = 0;
-    const playerTotalVisitsProperty = player.getDynamicProperty(PlayerSaveKeys.totalVisits);
-
-    if (playerTotalVisitsProperty !== undefined) {
-      totalVisits = playerTotalVisitsProperty as number;
-    }
-
-    return totalVisits;
-  }
+  return playerData;
 }
