@@ -19,7 +19,7 @@ export class DashOnUseComponent extends ItemCustomComponent {
   }
 
   public tryPlayerDash(player: Player): void {
-    if (player.isOnGround || !this.isGroundDashAllowed) {
+    if (player.isOnGround && !this.isGroundDashAllowed) {
       return;
     }
 

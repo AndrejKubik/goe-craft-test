@@ -16,7 +16,7 @@ export class DashOnUseComponent extends ItemCustomComponent {
         this.tryPlayerDash(event.source);
     }
     tryPlayerDash(player) {
-        if (player.isOnGround || !this.isGroundDashAllowed) {
+        if (player.isOnGround && !this.isGroundDashAllowed) {
             return;
         }
         const lookDirection = player.getViewDirection();
