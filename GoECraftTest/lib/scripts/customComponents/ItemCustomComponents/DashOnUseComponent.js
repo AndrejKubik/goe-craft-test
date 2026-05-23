@@ -4,17 +4,21 @@ export class DashOnUseComponent extends ItemCustomComponent {
         super(...arguments);
         this.horizontalStrength = 2.2;
         this.verticalStrength = 0.5;
+        this.isGroundDashAllowed = false;
     }
     getId() {
         return "dash_on_use";
     }
     onUse(event) {
-        this.applyPlayerDash(event.source);
+        this.tryPlayerDash(event.source);
     }
     onUseVanilla(event) {
-        this.applyPlayerDash(event.source);
+        this.tryPlayerDash(event.source);
     }
-    applyPlayerDash(player) {
+    tryPlayerDash(player) {
+        if (player.isOnGround || !this.isGroundDashAllowed) {
+            return;
+        }
         const lookDirection = player.getViewDirection();
         const dashDirection = {
             x: lookDirection.x * this.horizontalStrength,
