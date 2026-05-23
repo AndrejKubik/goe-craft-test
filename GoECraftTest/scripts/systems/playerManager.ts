@@ -1,11 +1,11 @@
 import { Player, system, world } from "@minecraft/server";
 import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
-import { PlayerData } from "../data/player/PlayerData";
-import { PlayerDataPersistanceManager } from "./PlayerDataPersistanceManager";
+import { PlayerData } from "../data/dataPersistence/PlayerData";
+import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
 
 const fullSecondTicks = 20;
-const playerWelcomeMessageDelayTicks = 30;
+const playerWelcomeMessageDelayTicks = 35;
 
 export class PlayerManager {
   private playerMap = new Map<string, PlayerData>();
@@ -40,20 +40,20 @@ function updatePlayerPlayTime(player: Player, playerMap: Map<string, PlayerData>
 }
 
 function increasePlayerPlayTimeSeconds(player: Player) {
-  const currentTotalSeconds = PlayerDataPersistanceManager.getPlayerPlayTime(player);
+  const currentTotalSeconds = PlayerDataPersistenceManager.getPlayerPlayTime(player);
 
-  PlayerDataPersistanceManager.setPlayTime(player, currentTotalSeconds + 1);
+  PlayerDataPersistenceManager.setPlayTime(player, currentTotalSeconds + 1);
 }
 
 function increasePlayerVisits(player: Player) {
-  const currentVisits = PlayerDataPersistanceManager.getVisitCount(player);
+  const currentVisits = PlayerDataPersistenceManager.getVisitCount(player);
 
-  PlayerDataPersistanceManager.setVisitCount(player, currentVisits + 1);
+  PlayerDataPersistenceManager.setVisitCount(player, currentVisits + 1);
 }
 
 function getPlayerWelcomeMessage(player: Player): string {
-  const totalSeconds = PlayerDataPersistanceManager.getPlayerPlayTime(player);
-  const totalVisits = PlayerDataPersistanceManager.getVisitCount(player);
+  const totalSeconds = PlayerDataPersistenceManager.getPlayerPlayTime(player);
+  const totalVisits = PlayerDataPersistenceManager.getVisitCount(player);
   const playerNameText = MessageUtility.formatString(`${player.nameTag}`, MessageTextColor.Gold);
 
   if (totalVisits <= 1) {

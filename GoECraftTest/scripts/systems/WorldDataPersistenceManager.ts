@@ -1,7 +1,7 @@
 import { world } from "@minecraft/server";
-import { WorldSaveKeys } from "../data/player/WorldSaveKeys";
+import { WorldSaveKeys } from "../data/dataPersistence/WorldSaveKeys";
 
-export class WorldDataPersistanceManager {
+export class WorldDataPersistenceManager {
   static setSpeedCheatEnabled(newState: boolean): void {
     world.setDynamicProperty(WorldSaveKeys.speedCheatEnabled, newState);
   }

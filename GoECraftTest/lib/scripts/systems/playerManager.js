@@ -1,10 +1,10 @@
 import { system, world } from "@minecraft/server";
 import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
-import { PlayerData } from "../data/player/PlayerData";
-import { PlayerDataPersistanceManager } from "./PlayerDataPersistanceManager";
+import { PlayerData } from "../data/dataPersistence/PlayerData";
+import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
 const fullSecondTicks = 20;
-const playerWelcomeMessageDelayTicks = 30;
+const playerWelcomeMessageDelayTicks = 35;
 export class PlayerManager {
     constructor() {
         this.playerMap = new Map();
@@ -31,16 +31,16 @@ function updatePlayerPlayTime(player, playerMap) {
     playerData.playTimeSecondTicks = 0;
 }
 function increasePlayerPlayTimeSeconds(player) {
-    const currentTotalSeconds = PlayerDataPersistanceManager.getPlayerPlayTime(player);
-    PlayerDataPersistanceManager.setPlayTime(player, currentTotalSeconds + 1);
+    const currentTotalSeconds = PlayerDataPersistenceManager.getPlayerPlayTime(player);
+    PlayerDataPersistenceManager.setPlayTime(player, currentTotalSeconds + 1);
 }
 function increasePlayerVisits(player) {
-    const currentVisits = PlayerDataPersistanceManager.getVisitCount(player);
-    PlayerDataPersistanceManager.setVisitCount(player, currentVisits + 1);
+    const currentVisits = PlayerDataPersistenceManager.getVisitCount(player);
+    PlayerDataPersistenceManager.setVisitCount(player, currentVisits + 1);
 }
 function getPlayerWelcomeMessage(player) {
-    const totalSeconds = PlayerDataPersistanceManager.getPlayerPlayTime(player);
-    const totalVisits = PlayerDataPersistanceManager.getVisitCount(player);
+    const totalSeconds = PlayerDataPersistenceManager.getPlayerPlayTime(player);
+    const totalVisits = PlayerDataPersistenceManager.getVisitCount(player);
     const playerNameText = MessageUtility.formatString(`${player.nameTag}`, MessageTextColor.Gold);
     if (totalVisits <= 1) {
         const addonTitleText = MessageUtility.formatString("Fruit Harvest Simulator", MessageTextColor.Gold);

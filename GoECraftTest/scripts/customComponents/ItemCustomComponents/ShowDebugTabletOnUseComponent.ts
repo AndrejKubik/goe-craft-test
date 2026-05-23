@@ -3,22 +3,27 @@ import { ActionFormData, ActionFormResponse, ModalFormData } from "@minecraft/se
 import { ItemCustomComponent } from "../baseClasses/ItemCustomComponent";
 import { MessageUtility } from "../../utilities/MessageUtility";
 import { MessageTextColor } from "../../data/messageUtility/MessageTextColor";
-import { WorldDataPersistanceManager } from "../../systems/WorldDataPersistanceManager";
+import { WorldDataPersistenceManager } from "../../systems/WorldDataPersistenceManager";
+import { WorldSettingsManager } from "../../systems/WorldSettingsManager";
 
 const speedCheatPropertyId = "DEBUG_SPEED_CHEAT";
 
 export class ShowDebugTabletOnUseComponent extends ItemCustomComponent {
-  getId(): string {
+  constructor(private readonly worldSettingsManager: WorldSettingsManager) {
+    super();
+  }
+
+  public getId(): string {
     return "show_debug_tablet_on_use";
   }
 
   public onUse(event: ItemComponentUseEvent): void {
-    showDebugTablet(event.source);
+    showDebugTablet(event.source, this.worldSettingsManager);
   }
 }
 
-async function showDebugTablet(player: Player): Promise<void> {
-  const speedCheatEnabled = WorldDataPersistanceManager.getSpeedCheatEnabled();
+async function showDebugTablet(player: Player, worldSettingsManager: WorldSettingsManager): Promise<void> {
+  const speedCheatEnabled = worldSettingsManager.isSpeedCheatEnabled();
   let debugTablet: ActionFormResponse;
 
   try {
@@ -32,7 +37,7 @@ async function showDebugTablet(player: Player): Promise<void> {
   }
 
   if (debugTablet.selection === 0) {
-    onSpeedCheatButtonClick(speedCheatEnabled);
+    onSpeedCheatButtonClick(worldSettingsManager);
   }
 }
 
@@ -43,8 +48,8 @@ async function showDebugTabletForm(player: Player, speedCheatEnabled: boolean): 
   return await form.show(player);
 }
 
-function onSpeedCheatButtonClick(speedCheatEnabled: boolean): void {
-  WorldDataPersistanceManager.setSpeedCheatEnabled(!speedCheatEnabled);
+function onSpeedCheatButtonClick(worldSettingsManager: WorldSettingsManager): void {
+  worldSettingsManager.enableSpeedCheat(!worldSettingsManager.isSpeedCheatEnabled());
 }
 
 function getSpeedCheatButtonText(speedCheatEnabled: boolean): string {

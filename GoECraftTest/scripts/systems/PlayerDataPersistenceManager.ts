@@ -1,7 +1,7 @@
 import { Player } from "@minecraft/server";
-import { PlayerSaveKeys } from "../data/player/PlayerSaveKeys";
+import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 
-export class PlayerDataPersistanceManager {
+export class PlayerDataPersistenceManager {
   static setVisitCount(player: Player, value: number): void {
     player.setDynamicProperty(PlayerSaveKeys.totalVisits, value);
   }

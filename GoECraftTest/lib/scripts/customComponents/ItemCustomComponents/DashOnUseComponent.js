@@ -1,30 +1,43 @@
 import { ItemCustomComponent } from "../baseClasses/ItemCustomComponent";
 export class DashOnUseComponent extends ItemCustomComponent {
-    constructor() {
-        super(...arguments);
-        this.horizontalStrength = 2.2;
-        this.verticalStrength = 0.5;
-        this.isGroundDashAllowed = false;
+    constructor(worldSettingsManager) {
+        super();
+        this.worldSettingsManager = worldSettingsManager;
+        this.config = {
+            horizontalStrength: 2.2,
+            verticalStrength: 0.5,
+            isGroundDashAllowed: false,
+        };
     }
     getId() {
         return "dash_on_use";
     }
     onUse(event) {
-        tryPlayerDash(event.source, this.horizontalStrength, this.verticalStrength, this.isGroundDashAllowed);
+        if (this.worldSettingsManager.isSpeedCheatEnabled()) {
+            tryPlayerDash(event.source, this.config);
+        }
+        else {
+            console.warn("speed cheat disabled.");
+        }
     }
     onUseVanilla(event) {
-        tryPlayerDash(event.source, this.horizontalStrength, this.verticalStrength, this.isGroundDashAllowed);
+        if (this.worldSettingsManager.isSpeedCheatEnabled()) {
+            tryPlayerDash(event.source, this.config);
+        }
+        else {
+            console.warn("speed cheat disabled.");
+        }
     }
 }
-function tryPlayerDash(player, horizontalStrength, verticalStrength, isGroundDashAllowed) {
-    if (player.isOnGround && !isGroundDashAllowed) {
+function tryPlayerDash(player, config) {
+    if (player.isOnGround && !config.isGroundDashAllowed) {
         return;
     }
     const lookDirection = player.getViewDirection();
     const dashDirection = {
-        x: lookDirection.x * horizontalStrength,
-        z: lookDirection.z * horizontalStrength,
+        x: lookDirection.x * config.horizontalStrength,
+        z: lookDirection.z * config.horizontalStrength,
     };
-    player.applyKnockback(dashDirection, verticalStrength);
+    player.applyKnockback(dashDirection, config.verticalStrength);
 }
 //# sourceMappingURL=DashOnUseComponent.js.map

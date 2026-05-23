@@ -1,9 +1,11 @@
 import { system, StartupEvent, world, PlayerSpawnAfterEvent, ItemUseAfterEvent } from "@minecraft/server";
 import { PlayerManager } from "./systems/PlayerManager";
 import { ItemCustomComponentManager } from "./systems/ItemCustomComponentManager";
+import { WorldSettingsManager } from "./systems/WorldSettingsManager";
 
 const playerManager = new PlayerManager();
-const itemCustomComponentManager = new ItemCustomComponentManager();
+const worldSettingsManager = new WorldSettingsManager();
+const itemCustomComponentManager = new ItemCustomComponentManager(worldSettingsManager);
 
 function mainTick(): void {
   try {
@@ -16,6 +18,8 @@ function mainTick(): void {
 }
 
 function onStartup(event: StartupEvent): void {
+  system.run(worldSettingsManager.onStartup);
+  // worldSettingsManager.onStartup();
   itemCustomComponentManager.onStartup(event);
 }
 

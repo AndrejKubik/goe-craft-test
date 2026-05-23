@@ -1,14 +1,13 @@
 import { DashOnUseComponent } from "../customComponents/ItemCustomComponents/DashOnUseComponent";
 import { ShowDebugTabletOnUseComponent } from "../customComponents/ItemCustomComponents/ShowDebugTabletOnUseComponent";
 export class ItemCustomComponentManager {
-    constructor() {
-        this.dashOnUseComponent = new DashOnUseComponent();
-        this.showDebugTabletOnUseComponent = new ShowDebugTabletOnUseComponent();
+    constructor(worldSettingsManager) {
+        this.worldSettingsManager = worldSettingsManager;
         this.modifiedVanillaItems = new Map();
     }
     onStartup(event) {
-        this.registerItemCustomComponents(event.itemComponentRegistry);
-        this.registerVanillaItemCustomComponents();
+        registerItemCustomComponents(event.itemComponentRegistry, this.worldSettingsManager);
+        addCustomComponentsToVanillaItems(this.modifiedVanillaItems, this.worldSettingsManager);
     }
     onUseItem(event) {
         const itemId = event.itemStack.typeId;
@@ -20,14 +19,17 @@ export class ItemCustomComponentManager {
             component.onUseVanilla(event);
         }
     }
-    registerVanillaItemCustomComponents() {
-        this.addCustomComponentsToItem("minecraft:iron_sword", [this.dashOnUseComponent]);
-    }
-    registerItemCustomComponents(itemComponentRegistry) {
-        itemComponentRegistry.registerCustomComponent(this.showDebugTabletOnUseComponent.getFullId(), this.showDebugTabletOnUseComponent);
-    }
-    addCustomComponentsToItem(itemId, components) {
-        this.modifiedVanillaItems.set(itemId, components);
-    }
+}
+function addCustomComponentsToVanillaItems(modifiedVanillaItems, worldSettingsManager) {
+    addCustomComponentsToItem("minecraft:iron_sword", [new DashOnUseComponent(worldSettingsManager)], modifiedVanillaItems);
+}
+function addCustomComponentsToItem(itemId, components, modifiedVanillaItems) {
+    modifiedVanillaItems.set(itemId, components);
+}
+function registerItemCustomComponents(itemComponentRegistry, worldSettingsManager) {
+    registerCustomComponent(new ShowDebugTabletOnUseComponent(worldSettingsManager), itemComponentRegistry);
+}
+function registerCustomComponent(customComponent, itemComponentRegistry) {
+    itemComponentRegistry.registerCustomComponent(customComponent.getFullId(), customComponent);
 }
 //# sourceMappingURL=ItemCustomComponentManager.js.map

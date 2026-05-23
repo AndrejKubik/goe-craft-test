@@ -2,16 +2,16 @@ import { ItemComponentRegistry, ItemUseAfterEvent, StartupEvent } from "@minecra
 import { ItemCustomComponent } from "../customComponents/baseClasses/ItemCustomComponent";
 import { DashOnUseComponent } from "../customComponents/ItemCustomComponents/DashOnUseComponent";
 import { ShowDebugTabletOnUseComponent } from "../customComponents/ItemCustomComponents/ShowDebugTabletOnUseComponent";
+import { WorldSettingsManager } from "./WorldSettingsManager";
 
 export class ItemCustomComponentManager {
-  private dashOnUseComponent = new DashOnUseComponent();
-  private showDebugTabletOnUseComponent = new ShowDebugTabletOnUseComponent();
+  constructor(private readonly worldSettingsManager: WorldSettingsManager) {}
 
   private modifiedVanillaItems = new Map<string, ItemCustomComponent[]>();
 
   public onStartup(event: StartupEvent) {
-    this.registerItemCustomComponents(event.itemComponentRegistry);
-    this.registerVanillaItemCustomComponents();
+    registerItemCustomComponents(event.itemComponentRegistry, this.worldSettingsManager);
+    addCustomComponentsToVanillaItems(this.modifiedVanillaItems, this.worldSettingsManager);
   }
 
   public onUseItem(event: ItemUseAfterEvent): void {
@@ -26,19 +26,34 @@ export class ItemCustomComponentManager {
       component.onUseVanilla(event);
     }
   }
+}
 
-  private registerVanillaItemCustomComponents(): void {
-    this.addCustomComponentsToItem("minecraft:iron_sword", [this.dashOnUseComponent]);
-  }
+function addCustomComponentsToVanillaItems(
+  modifiedVanillaItems: Map<string, ItemCustomComponent[]>,
+  worldSettingsManager: WorldSettingsManager
+): void {
+  addCustomComponentsToItem(
+    "minecraft:iron_sword",
+    [new DashOnUseComponent(worldSettingsManager)],
+    modifiedVanillaItems
+  );
+}
 
-  private registerItemCustomComponents(itemComponentRegistry: ItemComponentRegistry): void {
-    itemComponentRegistry.registerCustomComponent(
-      this.showDebugTabletOnUseComponent.getFullId(),
-      this.showDebugTabletOnUseComponent
-    );
-  }
+function addCustomComponentsToItem(
+  itemId: string,
+  components: ItemCustomComponent[],
+  modifiedVanillaItems: Map<string, ItemCustomComponent[]>
+): void {
+  modifiedVanillaItems.set(itemId, components);
+}
 
-  private addCustomComponentsToItem<T extends ItemCustomComponent>(itemId: string, components: T[]): void {
-    this.modifiedVanillaItems.set(itemId, components);
-  }
+function registerItemCustomComponents(
+  itemComponentRegistry: ItemComponentRegistry,
+  worldSettingsManager: WorldSettingsManager
+): void {
+  registerCustomComponent(new ShowDebugTabletOnUseComponent(worldSettingsManager), itemComponentRegistry);
+}
+
+function registerCustomComponent(customComponent: ItemCustomComponent, itemComponentRegistry: ItemComponentRegistry) {
+  itemComponentRegistry.registerCustomComponent(customComponent.getFullId(), customComponent);
 }

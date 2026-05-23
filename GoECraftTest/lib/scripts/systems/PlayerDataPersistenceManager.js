@@ -1,5 +1,5 @@
-import { PlayerSaveKeys } from "../data/player/PlayerSaveKeys";
-export class PlayerDataPersistanceManager {
+import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
+export class PlayerDataPersistenceManager {
     static setVisitCount(player, value) {
         player.setDynamicProperty(PlayerSaveKeys.totalVisits, value);
     }
@@ -15,4 +15,4 @@ export class PlayerDataPersistanceManager {
         return property !== undefined ? property : 0;
     }
 }
-//# sourceMappingURL=PlayerDataPersistanceManager.js.map
+//# sourceMappingURL=PlayerDataPersistenceManager.js.map

@@ -2,18 +2,21 @@ import { ActionFormData } from "@minecraft/server-ui";
 import { ItemCustomComponent } from "../baseClasses/ItemCustomComponent";
 import { MessageUtility } from "../../utilities/MessageUtility";
 import { MessageTextColor } from "../../data/messageUtility/MessageTextColor";
-import { WorldDataPersistanceManager } from "../../systems/WorldDataPersistanceManager";
 const speedCheatPropertyId = "DEBUG_SPEED_CHEAT";
 export class ShowDebugTabletOnUseComponent extends ItemCustomComponent {
+    constructor(worldSettingsManager) {
+        super();
+        this.worldSettingsManager = worldSettingsManager;
+    }
     getId() {
         return "show_debug_tablet_on_use";
     }
     onUse(event) {
-        showDebugTablet(event.source);
+        showDebugTablet(event.source, this.worldSettingsManager);
     }
 }
-async function showDebugTablet(player) {
-    const speedCheatEnabled = WorldDataPersistanceManager.getSpeedCheatEnabled();
+async function showDebugTablet(player, worldSettingsManager) {
+    const speedCheatEnabled = worldSettingsManager.isSpeedCheatEnabled();
     let debugTablet;
     try {
         debugTablet = await showDebugTabletForm(player, speedCheatEnabled);
@@ -25,7 +28,7 @@ async function showDebugTablet(player) {
         return;
     }
     if (debugTablet.selection === 0) {
-        onSpeedCheatButtonClick(speedCheatEnabled);
+        onSpeedCheatButtonClick(worldSettingsManager);
     }
 }
 async function showDebugTabletForm(player, speedCheatEnabled) {
@@ -33,8 +36,8 @@ async function showDebugTabletForm(player, speedCheatEnabled) {
     const form = new ActionFormData().title("Debug Tablet").button(speedCheatButtonText);
     return await form.show(player);
 }
-function onSpeedCheatButtonClick(speedCheatEnabled) {
-    WorldDataPersistanceManager.setSpeedCheatEnabled(!speedCheatEnabled);
+function onSpeedCheatButtonClick(worldSettingsManager) {
+    worldSettingsManager.enableSpeedCheat(!worldSettingsManager.isSpeedCheatEnabled());
 }
 function getSpeedCheatButtonText(speedCheatEnabled) {
     const stateText = speedCheatEnabled
