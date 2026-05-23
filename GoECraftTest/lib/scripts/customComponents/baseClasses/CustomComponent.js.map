@@ -1,0 +1,1 @@
+{"version":3,"file":"CustomComponent.js","sourceRoot":"","sources":["../../../../scripts/customComponents/baseClasses/CustomComponent.ts"],"names":[],"mappings":"AAAA,MAAM,SAAS,GAAG,iBAAiB,CAAC;AAEpC,MAAM,OAAgB,eAAe;IAC5B,SAAS;QACd,OAAO,GAAG,SAAS,IAAI,IAAI,CAAC,KAAK,EAAE,EAAE,CAAC;IACxC,CAAC;CAGF"}

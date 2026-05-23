@@ -1,13 +1,13 @@
-import { system, StartupEvent, world, PlayerSpawnAfterEvent } from "@minecraft/server";
-import { SystemFactory } from "./factories/SystemFactory";
+import { system, StartupEvent, world, PlayerSpawnAfterEvent, ItemUseAfterEvent } from "@minecraft/server";
+import { PlayerManager } from "./systems/PlayerManager";
+import { VanillaItemCustomComponentManager } from "./systems/VanillaItemCustomComponentManager";
 
-const playerManager = SystemFactory.createPlayerManager();
+const playerManager = new PlayerManager();
+const vanillaItemCustomComponentManager = new VanillaItemCustomComponentManager();
 
-function onStartup(event: StartupEvent): void {
-  console.warn("Startup placeholder");
-}
+function onStartup(event: StartupEvent): void {}
 
-function onPlayerJoin(event: PlayerSpawnAfterEvent): void {
+function onPlayerSpawn(event: PlayerSpawnAfterEvent): void {
   if (event.initialSpawn) {
     playerManager.onPlayerJoin(event.player);
   }
@@ -28,5 +28,10 @@ function mainTick(): void {
 }
 
 system.beforeEvents.startup.subscribe(onStartup);
-world.afterEvents.playerSpawn.subscribe(onPlayerJoin);
+world.afterEvents.playerSpawn.subscribe(onPlayerSpawn);
+
+world.afterEvents.itemUse.subscribe(
+  vanillaItemCustomComponentManager.onUseItem.bind(vanillaItemCustomComponentManager)
+);
+
 system.run(mainTick);

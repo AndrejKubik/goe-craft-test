@@ -1,8 +1,8 @@
 import { system, world } from "@minecraft/server";
-import { DataFactory } from "../factories/DataFactory";
 import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { PlayerSaveKeys } from "../data/player/PlayerSaveKeys";
+import { PlayerData } from "../data/player/PlayerData";
 const fullSecondTicks = 20;
 const playerWelcomeMessageDelayTicks = 30;
 export class PlayerManager {
@@ -54,7 +54,7 @@ export class PlayerManager {
     getPlayerData(playerId) {
         let playerData = this.playerMap.get(playerId);
         if (playerData === undefined) {
-            playerData = DataFactory.createPlayerData();
+            playerData = new PlayerData();
             this.playerMap.set(playerId, playerData);
         }
         return playerData;

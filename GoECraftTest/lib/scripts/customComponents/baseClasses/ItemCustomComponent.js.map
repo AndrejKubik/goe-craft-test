@@ -1,0 +1,1 @@
+{"version":3,"file":"ItemCustomComponent.js","sourceRoot":"","sources":["../../../../scripts/customComponents/baseClasses/ItemCustomComponent.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,eAAe,EAAE,MAAM,mBAAmB,CAAC;AAEpD,MAAM,OAAgB,mBAAoB,SAAQ,eAAe;IACxD,KAAK,CAAC,KAA4B,IAAS,CAAC;IAC5C,YAAY,CAAC,KAAwB,IAAS,CAAC;CACvD"}

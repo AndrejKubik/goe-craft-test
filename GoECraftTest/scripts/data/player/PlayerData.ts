@@ -1,3 +1,3 @@
-export type PlayerData = {
-  playTimeSecondTicks: number;
-};
+export class PlayerData {
+  public playTimeSecondTicks = 0;
+}
