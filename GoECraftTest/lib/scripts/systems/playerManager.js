@@ -3,8 +3,9 @@ import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { PlayerData } from "../data/dataPersistence/PlayerData";
 import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
+import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 const fullSecondTicks = 20;
-const playerWelcomeMessageDelayTicks = 35;
+const playerWelcomeMessageDelayTicks = 40;
 export class PlayerManager {
     constructor() {
         this.playerMap = new Map();
@@ -16,9 +17,8 @@ export class PlayerManager {
     }
     onPlayerSpawn(player) {
         this.increasePlayerVisits(player);
-        system.runTimeout(() => {
-            player.sendMessage(this.getPlayerWelcomeMessage(player));
-        }, playerWelcomeMessageDelayTicks); //small delay to avoid duplicate welcome message, due to UI reload at startup
+        system.runTimeout(player.sendMessage.bind(player, this.getPlayerWelcomeMessage(player)), playerWelcomeMessageDelayTicks //small delay to avoid duplicate welcome message, due to UI reload at startup
+        );
     }
     updatePlayerPlayTime(player) {
         const playerData = this.getPlayerData(player.id);
@@ -58,6 +58,19 @@ export class PlayerManager {
             this.playerMap.set(playerId, playerData);
         }
         return playerData;
+    }
+    addFarmPlotLocationToPlayer(player, plotLocation) {
+        const playerData = this.getPlayerData(player.id);
+        if (playerData.farmPlotLocations.length >= 3) {
+            player.sendMessage("Farm plot limit reached, this block's location will not be saved.");
+            return;
+        }
+        playerData.farmPlotLocations.push(plotLocation);
+        PlayerDataPersistenceManager.setFarmPlotLocations(player, playerData.farmPlotLocations);
+    }
+    printPlayerBlocks(player) {
+        const playerData = this.getPlayerData(player.id);
+        player.sendMessage(player.getDynamicProperty(PlayerSaveKeys.farmPlotLocations));
     }
 }
 //# sourceMappingURL=PlayerManager.js.map

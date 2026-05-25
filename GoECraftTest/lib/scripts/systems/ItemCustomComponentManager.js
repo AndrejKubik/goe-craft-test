@@ -29,8 +29,8 @@ export class ItemCustomComponentManager {
     registerItemCustomComponents(itemComponentRegistry) {
         this.registerCustomComponent(new ShowDebugTabletOnUseComponent(this.worldSettingsManager, this.gameModeManager), itemComponentRegistry);
     }
-    registerCustomComponent(customComponent, itemComponentRegistry) {
-        itemComponentRegistry.registerCustomComponent(customComponent.getFullId(), customComponent);
+    registerCustomComponent(customComponent, componentRegistry) {
+        componentRegistry.registerCustomComponent(customComponent.getFullId(), customComponent);
     }
 }
 //# sourceMappingURL=ItemCustomComponentManager.js.map

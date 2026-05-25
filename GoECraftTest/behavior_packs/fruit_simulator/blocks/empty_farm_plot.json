@@ -24,7 +24,9 @@
       },
 
       "minecraft:collision_box": true,
-      "minecraft:selection_box": true
+      "minecraft:selection_box": true,
+
+      "minecraft:custom_components": ["fruit_simulator:empty_farm_plot"]
     }
   }
 }

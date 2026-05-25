@@ -46,7 +46,7 @@ export class ItemCustomComponentManager {
     );
   }
 
-  private registerCustomComponent(customComponent: ItemCustomComponent, itemComponentRegistry: ItemComponentRegistry) {
-    itemComponentRegistry.registerCustomComponent(customComponent.getFullId(), customComponent);
+  private registerCustomComponent(customComponent: ItemCustomComponent, componentRegistry: ItemComponentRegistry) {
+    componentRegistry.registerCustomComponent(customComponent.getFullId(), customComponent);
   }
 }

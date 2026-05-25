@@ -3,11 +3,13 @@ import { PlayerManager } from "./systems/PlayerManager";
 import { ItemCustomComponentManager } from "./systems/ItemCustomComponentManager";
 import { WorldSettingsManager } from "./systems/WorldSettingsManager";
 import { GameModeManager } from "./systems/GameModeManager";
+import { BlockCustomComponentManager } from "./systems/BlockCustomComponentManager";
 
 const gameModeManager = new GameModeManager();
 const playerManager = new PlayerManager();
 const worldSettingsManager = new WorldSettingsManager();
 const itemCustomComponentManager = new ItemCustomComponentManager(worldSettingsManager, gameModeManager);
+const blockCustomComponentManager = new BlockCustomComponentManager();
 
 function mainTick(): void {
   try {
@@ -23,6 +25,7 @@ function onStartup(event: StartupEvent): void {
   system.run(gameModeManager.onStartup.bind(gameModeManager));
   system.run(worldSettingsManager.onStartup.bind(worldSettingsManager));
   itemCustomComponentManager.onStartup(event);
+  blockCustomComponentManager.onStartup(event);
 }
 
 function onTick(): void {

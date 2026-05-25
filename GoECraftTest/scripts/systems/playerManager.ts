@@ -1,11 +1,12 @@
-import { Player, system, world } from "@minecraft/server";
+import { Player, system, Vector3, world } from "@minecraft/server";
 import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { PlayerData } from "../data/dataPersistence/PlayerData";
 import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
+import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 
 const fullSecondTicks = 20;
-const playerWelcomeMessageDelayTicks = 35;
+const playerWelcomeMessageDelayTicks = 40;
 
 export class PlayerManager {
   private playerMap = new Map<string, PlayerData>();
@@ -19,9 +20,10 @@ export class PlayerManager {
   public onPlayerSpawn(player: Player): void {
     this.increasePlayerVisits(player);
 
-    system.runTimeout(() => {
-      player.sendMessage(this.getPlayerWelcomeMessage(player));
-    }, playerWelcomeMessageDelayTicks); //small delay to avoid duplicate welcome message, due to UI reload at startup
+    system.runTimeout(
+      player.sendMessage.bind(player, this.getPlayerWelcomeMessage(player)),
+      playerWelcomeMessageDelayTicks //small delay to avoid duplicate welcome message, due to UI reload at startup
+    );
   }
 
   private updatePlayerPlayTime(player: Player) {
@@ -80,5 +82,24 @@ export class PlayerManager {
     }
 
     return playerData;
+  }
+
+  public addFarmPlotLocationToPlayer(player: Player, plotLocation: Vector3): void {
+    const playerData = this.getPlayerData(player.id);
+
+    if (playerData.farmPlotLocations.length >= 3) {
+      player.sendMessage("Farm plot limit reached, this block's location will not be saved.");
+
+      return;
+    }
+
+    playerData.farmPlotLocations.push(plotLocation);
+    PlayerDataPersistenceManager.setFarmPlotLocations(player, playerData.farmPlotLocations);
+  }
+
+  private printPlayerBlocks(player: Player): void {
+    const playerData = this.getPlayerData(player.id);
+
+    player.sendMessage(player.getDynamicProperty(PlayerSaveKeys.farmPlotLocations) as string);
   }
 }
