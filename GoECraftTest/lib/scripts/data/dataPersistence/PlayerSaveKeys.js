@@ -1,5 +1,6 @@
 export const PlayerSaveKeys = {
     playTime: "PLAYER_PLAY_TIME",
     totalVisits: "PLAYER_VISITS",
+    farmPlotLocations: "FARM_PLOT_LOCATIONS",
 };
 //# sourceMappingURL=PlayerSaveKeys.js.map

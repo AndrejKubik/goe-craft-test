@@ -20,5 +20,20 @@ export class PlayerDataPersistenceManager {
         }
         return property;
     }
+    static setFarmPlotLocations(player, locations) {
+        player.setDynamicProperty(PlayerSaveKeys.farmPlotLocations, JSON.stringify(locations));
+    }
+    static getFarmPlotLocations(player) {
+        const property = player.getDynamicProperty(PlayerSaveKeys.farmPlotLocations);
+        if (property === undefined || typeof property !== "string") {
+            return [];
+        }
+        try {
+            return JSON.parse(property);
+        }
+        catch {
+            return [];
+        }
+    }
 }
 //# sourceMappingURL=PlayerDataPersistenceManager.js.map

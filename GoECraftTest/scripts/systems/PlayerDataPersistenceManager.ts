@@ -1,4 +1,4 @@
-import { Player } from "@minecraft/server";
+import { Player, Vector3 } from "@minecraft/server";
 import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 
 export class PlayerDataPersistenceManager {
@@ -28,5 +28,23 @@ export class PlayerDataPersistenceManager {
     }
 
     return property as number;
+  }
+
+  static setFarmPlotLocations(player: Player, locations: Vector3[]): void {
+    player.setDynamicProperty(PlayerSaveKeys.farmPlotLocations, JSON.stringify(locations));
+  }
+
+  static getFarmPlotLocations(player: Player): Vector3[] {
+    const property = player.getDynamicProperty(PlayerSaveKeys.farmPlotLocations);
+
+    if (property === undefined || typeof property !== "string") {
+      return [];
+    }
+
+    try {
+      return JSON.parse(property) as Vector3[];
+    } catch {
+      return [];
+    }
   }
 }
