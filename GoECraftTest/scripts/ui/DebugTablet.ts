@@ -5,10 +5,7 @@ import { WorldSettingsManager } from "../systems/WorldSettingsManager";
 import { MessageUtility } from "../utilities/MessageUtility";
 
 export class DebugTablet {
-  constructor(private readonly worldSettingsManager: WorldSettingsManager) {
-    this.show = this.show.bind(this);
-    this.onSpeedCheatButtonClick = this.onSpeedCheatButtonClick.bind(this);
-  }
+  constructor(private readonly worldSettingsManager: WorldSettingsManager) {}
 
   public async show(player: Player): Promise<void> {
     const speedCheatEnabled = this.worldSettingsManager.isSpeedCheatEnabled();

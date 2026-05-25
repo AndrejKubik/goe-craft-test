@@ -20,7 +20,7 @@ function mainTick(): void {
 }
 
 function onStartup(event: StartupEvent): void {
-  system.run(worldSettingsManager.onStartup);
+  system.run(worldSettingsManager.onStartup.bind(worldSettingsManager));
   itemCustomComponentManager.onStartup(event);
 }
 

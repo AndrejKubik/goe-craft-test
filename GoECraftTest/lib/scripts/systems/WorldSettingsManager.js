@@ -3,10 +3,6 @@ import { WorldDataPersistenceManager } from "./WorldDataPersistenceManager";
 export class WorldSettingsManager {
     constructor() {
         this.speedCheatEnabled = false;
-        this.onStartup = this.onStartup.bind(this);
-        this.isSpeedCheatEnabled = this.isSpeedCheatEnabled.bind(this);
-        this.toggleSpeedCheatState = this.toggleSpeedCheatState.bind(this);
-        this.enableSpeedCheat = this.enableSpeedCheat.bind(this);
     }
     onStartup() {
         this.speedCheatEnabled = WorldDataPersistenceManager.getSpeedCheatEnabled();

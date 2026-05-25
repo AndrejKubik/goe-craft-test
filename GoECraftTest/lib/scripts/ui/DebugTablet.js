@@ -4,8 +4,6 @@ import { MessageUtility } from "../utilities/MessageUtility";
 export class DebugTablet {
     constructor(worldSettingsManager) {
         this.worldSettingsManager = worldSettingsManager;
-        this.show = this.show.bind(this);
-        this.onSpeedCheatButtonClick = this.onSpeedCheatButtonClick.bind(this);
     }
     async show(player) {
         const speedCheatEnabled = this.worldSettingsManager.isSpeedCheatEnabled();
