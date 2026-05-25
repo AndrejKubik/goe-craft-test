@@ -7,16 +7,16 @@ import { GameModeManager } from "../systems/GameModeManager";
 
 export class DebugTablet {
   constructor(
-    private readonly worldSettingsManager: WorldSettingsManager
-    // private readonly gameModeManager: GameModeManager
+    private readonly player: Player,
+    private readonly worldSettingsManager: WorldSettingsManager,
+    private readonly gameModeManager: GameModeManager
   ) {}
 
-  public async show(player: Player): Promise<void> {
-    const speedCheatEnabled = this.worldSettingsManager.isSpeedCheatEnabled();
+  public async show(): Promise<void> {
     let debugTablet: ModalFormResponse;
 
     try {
-      debugTablet = await showModelForm(player, speedCheatEnabled);
+      debugTablet = await this.showModalForm();
     } catch (error) {
       return;
     }
@@ -35,23 +35,27 @@ export class DebugTablet {
     }
 
     this.worldSettingsManager.enableSpeedCheat(modalFormValues[0] as boolean);
+    this.gameModeManager.setEnforcedGameMode(modalFormValues[1] as number);
   }
-}
 
-async function showModelForm(player: Player, speedCheatEnabled: boolean): Promise<ModalFormResponse> {
-  const speedCheatButtonText = getSpeedCheatButtonText(speedCheatEnabled);
-  const form = new ModalFormData()
-    .title("Debug Tablet")
-    .toggle(speedCheatButtonText, { defaultValue: speedCheatEnabled })
-    .dropdown("Game Mode", ["Enforced Survival", "Enforced Adventure", "Free"], { defaultValueIndex: 0 });
+  private async showModalForm(): Promise<ModalFormResponse> {
+    const form = new ModalFormData()
+      .title("Debug Tablet")
+      .toggle(this.getSpeedCheatToggleLabel(), {
+        defaultValue: this.worldSettingsManager.isSpeedCheatEnabled(),
+      })
+      .dropdown("Game Mode", ["Enforced Survival", "Enforced Adventure", "Free"], {
+        defaultValueIndex: this.gameModeManager.getCurrentEnforcedMode(),
+      });
 
-  return await form.show(player);
-}
+    return await form.show(this.player);
+  }
 
-function getSpeedCheatButtonText(speedCheatEnabled: boolean): string {
-  const stateText = "Speed cheat enabled";
+  private getSpeedCheatToggleLabel(): string {
+    const stateText = "Speed cheat enabled";
 
-  return speedCheatEnabled
-    ? MessageUtility.formatString(stateText, MessageTextColor.DarkGreen)
-    : MessageUtility.formatString(stateText, MessageTextColor.Red);
+    return this.worldSettingsManager.isSpeedCheatEnabled()
+      ? MessageUtility.formatString(stateText, MessageTextColor.DarkGreen)
+      : MessageUtility.formatString(stateText, MessageTextColor.Red);
+  }
 }

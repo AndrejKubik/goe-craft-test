@@ -1,8 +1,9 @@
 import { GameMode, world } from "@minecraft/server";
 import { EnforcedGameMode } from "../data/dataPersistence/EnforcedGameMode";
+import { WorldDataPersistenceManager } from "./WorldDataPersistenceManager";
 export class GameModeManager {
     constructor() {
-        this.currentEnforcedMode = EnforcedGameMode.Free;
+        this.currentEnforcedMode = EnforcedGameMode.None;
     }
     onPlayerSpawn(player) {
         if (this.currentEnforcedMode === EnforcedGameMode.Survival) {
@@ -12,17 +13,36 @@ export class GameModeManager {
             player.setGameMode(GameMode.Creative);
         }
     }
+    onStartup() {
+        this.currentEnforcedMode = WorldDataPersistenceManager.getEnforcedGameMode();
+    }
     onTick() {
         this.enforceGameMode(this.currentEnforcedMode);
     }
     setEnforcedGameMode(gameMode) {
+        if (gameMode === this.currentEnforcedMode) {
+            return;
+        }
         this.currentEnforcedMode = gameMode;
+        world.sendMessage(this.getGameModeChangeMessage());
+        WorldDataPersistenceManager.setEnforcedGameMode(this.currentEnforcedMode);
+    }
+    getGameModeChangeMessage() {
+        const messageBase = "New game mode has been enforced:";
+        switch (this.currentEnforcedMode) {
+            case EnforcedGameMode.Survival:
+                return `${messageBase} Survival`;
+            case EnforcedGameMode.Adventure:
+                return `${messageBase} Adventure`;
+            default:
+                return "Enforced game mode is now disabled, players are free to choose their own.";
+        }
     }
     getCurrentEnforcedMode() {
         return this.currentEnforcedMode;
     }
     enforceGameMode(mode) {
-        if (mode === EnforcedGameMode.Free) {
+        if (mode === EnforcedGameMode.None) {
             return;
         }
         if (mode === EnforcedGameMode.Survival) {
@@ -34,8 +54,9 @@ export class GameModeManager {
     }
     setModeForAllPlayers(gameMode) {
         for (const player of world.getPlayers()) {
-            if (player.getGameMode() !== gameMode) {
-                player.sendMessage(`Enforced new game mode: ${gameMode.toString()}`);
+            const playerGameMode = player.getGameMode();
+            if (playerGameMode !== gameMode) {
+                player.sendMessage(`Your current game mode is ${playerGameMode},\nChanging to enforced game mode : ${gameMode}`);
             }
             player.setGameMode(gameMode);
         }

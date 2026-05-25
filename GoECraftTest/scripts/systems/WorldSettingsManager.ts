@@ -13,6 +13,10 @@ export class WorldSettingsManager {
   }
 
   public enableSpeedCheat(newState: boolean): void {
+    if (newState === this.speedCheatEnabled) {
+      return;
+    }
+
     this.speedCheatEnabled = newState;
 
     WorldDataPersistenceManager.setSpeedCheatEnabled(newState);

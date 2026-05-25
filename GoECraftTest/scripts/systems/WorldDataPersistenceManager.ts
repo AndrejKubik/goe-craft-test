@@ -18,14 +18,14 @@ export class WorldDataPersistenceManager {
   }
 
   static setEnforcedGameMode(gameMode: EnforcedGameMode) {
-    world.setDynamicProperty(WorldSaveKeys.enforcedGameMode, gameMode.toString());
+    world.setDynamicProperty(WorldSaveKeys.enforcedGameMode, gameMode);
   }
 
   static getEnforcedGameMode(): EnforcedGameMode {
     const property = world.getDynamicProperty(WorldSaveKeys.enforcedGameMode);
 
-    if (property === undefined || typeof property !== "string") {
-      return EnforcedGameMode.Free;
+    if (property === undefined || typeof property !== "number") {
+      return EnforcedGameMode.None;
     }
 
     return property as EnforcedGameMode;

@@ -6,7 +6,7 @@ import { GameModeManager } from "./systems/GameModeManager";
 const gameModeManager = new GameModeManager();
 const playerManager = new PlayerManager();
 const worldSettingsManager = new WorldSettingsManager();
-const itemCustomComponentManager = new ItemCustomComponentManager(worldSettingsManager);
+const itemCustomComponentManager = new ItemCustomComponentManager(worldSettingsManager, gameModeManager);
 function mainTick() {
     try {
         onTick();
@@ -17,6 +17,7 @@ function mainTick() {
     system.run(mainTick);
 }
 function onStartup(event) {
+    system.run(gameModeManager.onStartup.bind(gameModeManager));
     system.run(worldSettingsManager.onStartup.bind(worldSettingsManager));
     itemCustomComponentManager.onStartup(event);
 }

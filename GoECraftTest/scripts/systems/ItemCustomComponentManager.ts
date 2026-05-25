@@ -3,15 +3,19 @@ import { ItemCustomComponent } from "../customComponents/baseClasses/ItemCustomC
 import { DashOnUseComponent } from "../customComponents/ItemCustomComponents/DashOnUseComponent";
 import { ShowDebugTabletOnUseComponent } from "../customComponents/ItemCustomComponents/ShowDebugTabletOnUseComponent";
 import { WorldSettingsManager } from "./WorldSettingsManager";
+import { GameModeManager } from "./GameModeManager";
 
 export class ItemCustomComponentManager {
-  constructor(private readonly worldSettingsManager: WorldSettingsManager) {}
+  constructor(
+    private readonly worldSettingsManager: WorldSettingsManager,
+    private readonly gameModeManager: GameModeManager
+  ) {}
 
   private modifiedVanillaItems = new Map<string, ItemCustomComponent[]>();
 
   public onStartup(event: StartupEvent) {
-    registerItemCustomComponents(event.itemComponentRegistry, this.worldSettingsManager);
-    addCustomComponentsToVanillaItems(this.modifiedVanillaItems, this.worldSettingsManager);
+    this.registerItemCustomComponents(event.itemComponentRegistry);
+    this.addCustomComponentsToVanillaItems();
   }
 
   public onUseItem(event: ItemUseAfterEvent): void {
@@ -26,34 +30,23 @@ export class ItemCustomComponentManager {
       component.onUseVanilla(event);
     }
   }
-}
 
-function addCustomComponentsToVanillaItems(
-  modifiedVanillaItems: Map<string, ItemCustomComponent[]>,
-  worldSettingsManager: WorldSettingsManager
-): void {
-  addCustomComponentsToItem(
-    "minecraft:iron_sword",
-    [new DashOnUseComponent(worldSettingsManager)],
-    modifiedVanillaItems
-  );
-}
+  private addCustomComponentsToVanillaItems(): void {
+    this.addCustomComponentsToItem("minecraft:iron_sword", [new DashOnUseComponent(this.worldSettingsManager)]);
+  }
 
-function addCustomComponentsToItem(
-  itemId: string,
-  components: ItemCustomComponent[],
-  modifiedVanillaItems: Map<string, ItemCustomComponent[]>
-): void {
-  modifiedVanillaItems.set(itemId, components);
-}
+  private addCustomComponentsToItem(itemId: string, components: ItemCustomComponent[]): void {
+    this.modifiedVanillaItems.set(itemId, components);
+  }
 
-function registerItemCustomComponents(
-  itemComponentRegistry: ItemComponentRegistry,
-  worldSettingsManager: WorldSettingsManager
-): void {
-  registerCustomComponent(new ShowDebugTabletOnUseComponent(worldSettingsManager), itemComponentRegistry);
-}
+  private registerItemCustomComponents(itemComponentRegistry: ItemComponentRegistry): void {
+    this.registerCustomComponent(
+      new ShowDebugTabletOnUseComponent(this.worldSettingsManager, this.gameModeManager),
+      itemComponentRegistry
+    );
+  }
 
-function registerCustomComponent(customComponent: ItemCustomComponent, itemComponentRegistry: ItemComponentRegistry) {
-  itemComponentRegistry.registerCustomComponent(customComponent.getFullId(), customComponent);
+  private registerCustomComponent(customComponent: ItemCustomComponent, itemComponentRegistry: ItemComponentRegistry) {
+    itemComponentRegistry.registerCustomComponent(customComponent.getFullId(), customComponent);
+  }
 }

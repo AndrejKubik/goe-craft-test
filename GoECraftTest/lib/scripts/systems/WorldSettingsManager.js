@@ -11,6 +11,9 @@ export class WorldSettingsManager {
         return this.speedCheatEnabled;
     }
     enableSpeedCheat(newState) {
+        if (newState === this.speedCheatEnabled) {
+            return;
+        }
         this.speedCheatEnabled = newState;
         WorldDataPersistenceManager.setSpeedCheatEnabled(newState);
         const stateText = newState == true ? "enabled" : "disabled";

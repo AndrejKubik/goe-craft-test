@@ -1,13 +1,14 @@
-import { ItemComponentUseEvent, Player, world } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
+import { ItemComponentUseEvent } from "@minecraft/server";
 import { ItemCustomComponent } from "../baseClasses/ItemCustomComponent";
-import { MessageUtility } from "../../utilities/MessageUtility";
-import { MessageTextColor } from "../../data/messageUtility/MessageTextColor";
 import { WorldSettingsManager } from "../../systems/WorldSettingsManager";
 import { DebugTablet } from "../../ui/DebugTablet";
+import { GameModeManager } from "../../systems/GameModeManager";
 
 export class ShowDebugTabletOnUseComponent extends ItemCustomComponent {
-  constructor(private readonly worldSettingsManager: WorldSettingsManager) {
+  constructor(
+    private readonly worldSettingsManager: WorldSettingsManager,
+    private readonly gameModeManager: GameModeManager
+  ) {
     super();
   }
 
@@ -17,8 +18,8 @@ export class ShowDebugTabletOnUseComponent extends ItemCustomComponent {
 
   public onUse(event: ItemComponentUseEvent): void {
     const player = event.source;
-    const debugTablet = new DebugTablet(this.worldSettingsManager);
+    const debugTablet = new DebugTablet(player, this.worldSettingsManager, this.gameModeManager);
 
-    debugTablet.show(player);
+    debugTablet.show();
   }
 }
