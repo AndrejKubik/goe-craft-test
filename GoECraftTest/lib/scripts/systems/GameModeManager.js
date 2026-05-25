@@ -29,7 +29,7 @@ export class GameModeManager {
             this.setModeForAllPlayers(GameMode.Survival);
         }
         else if (mode === EnforcedGameMode.Adventure) {
-            this.setModeForAllPlayers(GameMode.Creative);
+            this.setModeForAllPlayers(GameMode.Adventure);
         }
     }
     setModeForAllPlayers(gameMode) {
