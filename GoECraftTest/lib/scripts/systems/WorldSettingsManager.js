@@ -10,9 +10,6 @@ export class WorldSettingsManager {
     isSpeedCheatEnabled() {
         return this.speedCheatEnabled;
     }
-    toggleSpeedCheatState() {
-        this.enableSpeedCheat(!this.isSpeedCheatEnabled());
-    }
     enableSpeedCheat(newState) {
         this.speedCheatEnabled = newState;
         WorldDataPersistenceManager.setSpeedCheatEnabled(newState);

@@ -1,18 +1,22 @@
 import { Player } from "@minecraft/server";
-import { ActionFormResponse, ActionFormData } from "@minecraft/server-ui";
+import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { WorldSettingsManager } from "../systems/WorldSettingsManager";
 import { MessageUtility } from "../utilities/MessageUtility";
+import { GameModeManager } from "../systems/GameModeManager";
 
 export class DebugTablet {
-  constructor(private readonly worldSettingsManager: WorldSettingsManager) {}
+  constructor(
+    private readonly worldSettingsManager: WorldSettingsManager
+    // private readonly gameModeManager: GameModeManager
+  ) {}
 
   public async show(player: Player): Promise<void> {
     const speedCheatEnabled = this.worldSettingsManager.isSpeedCheatEnabled();
-    let debugTablet: ActionFormResponse;
+    let debugTablet: ModalFormResponse;
 
     try {
-      debugTablet = await showActionForm(player, speedCheatEnabled);
+      debugTablet = await showModelForm(player, speedCheatEnabled);
     } catch (error) {
       return;
     }
@@ -21,27 +25,33 @@ export class DebugTablet {
       return;
     }
 
-    if (debugTablet.selection === 0) {
-      this.onSpeedCheatButtonClick();
-    }
+    this.onSubmit(debugTablet.formValues);
   }
 
-  private onSpeedCheatButtonClick() {
-    this.worldSettingsManager.toggleSpeedCheatState();
+  private onSubmit(modalFormValues: (string | number | boolean | undefined)[] | undefined) {
+    if (modalFormValues === undefined) {
+      console.error("Invalid modal form data provided for debug tablet.");
+      return;
+    }
+
+    this.worldSettingsManager.enableSpeedCheat(modalFormValues[0] as boolean);
   }
 }
 
-async function showActionForm(player: Player, speedCheatEnabled: boolean): Promise<ActionFormResponse> {
+async function showModelForm(player: Player, speedCheatEnabled: boolean): Promise<ModalFormResponse> {
   const speedCheatButtonText = getSpeedCheatButtonText(speedCheatEnabled);
-  const form = new ActionFormData().title("Debug Tablet").button(speedCheatButtonText);
+  const form = new ModalFormData()
+    .title("Debug Tablet")
+    .toggle(speedCheatButtonText, { defaultValue: speedCheatEnabled })
+    .dropdown("Game Mode", ["Enforced Survival", "Enforced Adventure", "Free"], { defaultValueIndex: 0 });
 
   return await form.show(player);
 }
 
 function getSpeedCheatButtonText(speedCheatEnabled: boolean): string {
-  const stateText = speedCheatEnabled
-    ? MessageUtility.formatString("Enabled", MessageTextColor.DarkGreen)
-    : MessageUtility.formatString("Disabled", MessageTextColor.Red);
+  const stateText = "Speed cheat enabled";
 
-  return `Speed Cheat : ${stateText}`;
+  return speedCheatEnabled
+    ? MessageUtility.formatString(stateText, MessageTextColor.DarkGreen)
+    : MessageUtility.formatString(stateText, MessageTextColor.Red);
 }

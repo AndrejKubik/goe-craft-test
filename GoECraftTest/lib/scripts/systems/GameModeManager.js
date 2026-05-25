@@ -2,18 +2,24 @@ import { GameMode, world } from "@minecraft/server";
 import { EnforcedGameMode } from "../data/dataPersistence/EnforcedGameMode";
 export class GameModeManager {
     constructor() {
-        this.currentMode = EnforcedGameMode.Creative;
+        this.currentEnforcedMode = EnforcedGameMode.Free;
     }
     onPlayerSpawn(player) {
-        if (this.currentMode === EnforcedGameMode.Survival) {
+        if (this.currentEnforcedMode === EnforcedGameMode.Survival) {
             player.setGameMode(GameMode.Survival);
         }
-        else if (this.currentMode === EnforcedGameMode.Creative) {
+        else if (this.currentEnforcedMode === EnforcedGameMode.Adventure) {
             player.setGameMode(GameMode.Creative);
         }
     }
     onTick() {
-        this.enforceGameMode(this.currentMode);
+        this.enforceGameMode(this.currentEnforcedMode);
+    }
+    setEnforcedGameMode(gameMode) {
+        this.currentEnforcedMode = gameMode;
+    }
+    getCurrentEnforcedMode() {
+        return this.currentEnforcedMode;
     }
     enforceGameMode(mode) {
         if (mode === EnforcedGameMode.Free) {
@@ -22,7 +28,7 @@ export class GameModeManager {
         if (mode === EnforcedGameMode.Survival) {
             this.setModeForAllPlayers(GameMode.Survival);
         }
-        else if (mode === EnforcedGameMode.Creative) {
+        else if (mode === EnforcedGameMode.Adventure) {
             this.setModeForAllPlayers(GameMode.Creative);
         }
     }
@@ -33,9 +39,6 @@ export class GameModeManager {
             }
             player.setGameMode(gameMode);
         }
-    }
-    getCurrentMode() {
-        return this.currentMode;
     }
 }
 //# sourceMappingURL=GameModeManager.js.map

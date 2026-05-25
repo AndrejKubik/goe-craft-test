@@ -9,7 +9,11 @@ export class PlayerDataPersistenceManager {
   static getVisitCount(player: Player): number {
     const property = player.getDynamicProperty(PlayerSaveKeys.totalVisits);
 
-    return property !== undefined ? (property as number) : 0;
+    if (property === undefined || typeof property !== "number") {
+      return 0;
+    }
+
+    return property as number;
   }
 
   static setPlayTime(player: Player, value: number): void {
@@ -19,6 +23,10 @@ export class PlayerDataPersistenceManager {
   static getPlayerPlayTime(player: Player): number {
     const property = player.getDynamicProperty(PlayerSaveKeys.playTime);
 
-    return property !== undefined ? (property as number) : 0;
+    if (property === undefined || typeof property !== "number") {
+      return 0;
+    }
+
+    return property as number;
   }
 }

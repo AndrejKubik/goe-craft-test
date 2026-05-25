@@ -1,15 +1,17 @@
-import { ActionFormData } from "@minecraft/server-ui";
+import { ModalFormData } from "@minecraft/server-ui";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { MessageUtility } from "../utilities/MessageUtility";
 export class DebugTablet {
-    constructor(worldSettingsManager) {
+    constructor(worldSettingsManager
+    // private readonly gameModeManager: GameModeManager
+    ) {
         this.worldSettingsManager = worldSettingsManager;
     }
     async show(player) {
         const speedCheatEnabled = this.worldSettingsManager.isSpeedCheatEnabled();
         let debugTablet;
         try {
-            debugTablet = await showActionForm(player, speedCheatEnabled);
+            debugTablet = await showModelForm(player, speedCheatEnabled);
         }
         catch (error) {
             return;
@@ -17,23 +19,28 @@ export class DebugTablet {
         if (debugTablet.canceled) {
             return;
         }
-        if (debugTablet.selection === 0) {
-            this.onSpeedCheatButtonClick();
-        }
+        this.onSubmit(debugTablet.formValues);
     }
-    onSpeedCheatButtonClick() {
-        this.worldSettingsManager.toggleSpeedCheatState();
+    onSubmit(modalFormValues) {
+        if (modalFormValues === undefined) {
+            console.error("Invalid modal form data provided for debug tablet.");
+            return;
+        }
+        this.worldSettingsManager.enableSpeedCheat(modalFormValues[0]);
     }
 }
-async function showActionForm(player, speedCheatEnabled) {
+async function showModelForm(player, speedCheatEnabled) {
     const speedCheatButtonText = getSpeedCheatButtonText(speedCheatEnabled);
-    const form = new ActionFormData().title("Debug Tablet").button(speedCheatButtonText);
+    const form = new ModalFormData()
+        .title("Debug Tablet")
+        .toggle(speedCheatButtonText, { defaultValue: speedCheatEnabled })
+        .dropdown("Game Mode", ["Enforced Survival", "Enforced Adventure", "Free"], { defaultValueIndex: 0 });
     return await form.show(player);
 }
 function getSpeedCheatButtonText(speedCheatEnabled) {
-    const stateText = speedCheatEnabled
-        ? MessageUtility.formatString("Enabled", MessageTextColor.DarkGreen)
-        : MessageUtility.formatString("Disabled", MessageTextColor.Red);
-    return `Speed Cheat : ${stateText}`;
+    const stateText = "Speed cheat enabled";
+    return speedCheatEnabled
+        ? MessageUtility.formatString(stateText, MessageTextColor.DarkGreen)
+        : MessageUtility.formatString(stateText, MessageTextColor.Red);
 }
 //# sourceMappingURL=DebugTablet.js.map

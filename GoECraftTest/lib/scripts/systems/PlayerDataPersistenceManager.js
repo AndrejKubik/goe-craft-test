@@ -5,14 +5,20 @@ export class PlayerDataPersistenceManager {
     }
     static getVisitCount(player) {
         const property = player.getDynamicProperty(PlayerSaveKeys.totalVisits);
-        return property !== undefined ? property : 0;
+        if (property === undefined || typeof property !== "number") {
+            return 0;
+        }
+        return property;
     }
     static setPlayTime(player, value) {
         player.setDynamicProperty(PlayerSaveKeys.playTime, value);
     }
     static getPlayerPlayTime(player) {
         const property = player.getDynamicProperty(PlayerSaveKeys.playTime);
-        return property !== undefined ? property : 0;
+        if (property === undefined || typeof property !== "number") {
+            return 0;
+        }
+        return property;
     }
 }
 //# sourceMappingURL=PlayerDataPersistenceManager.js.map
