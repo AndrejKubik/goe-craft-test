@@ -21,7 +21,6 @@ function mainTick(): void {
 
 function onStartup(event: StartupEvent): void {
   system.run(worldSettingsManager.onStartup);
-  // worldSettingsManager.onStartup();
   itemCustomComponentManager.onStartup(event);
 }
 

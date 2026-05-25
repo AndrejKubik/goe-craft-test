@@ -6,16 +6,16 @@ import { MessageUtility } from "../utilities/MessageUtility";
 
 export class DebugTablet {
   constructor(private readonly worldSettingsManager: WorldSettingsManager) {
-    this.showDebugTablet = this.showDebugTablet.bind(this);
+    this.show = this.show.bind(this);
     this.onSpeedCheatButtonClick = this.onSpeedCheatButtonClick.bind(this);
   }
 
-  public async showDebugTablet(player: Player): Promise<void> {
+  public async show(player: Player): Promise<void> {
     const speedCheatEnabled = this.worldSettingsManager.isSpeedCheatEnabled();
     let debugTablet: ActionFormResponse;
 
     try {
-      debugTablet = await showDebugTabletForm(player, speedCheatEnabled);
+      debugTablet = await showActionForm(player, speedCheatEnabled);
     } catch (error) {
       return;
     }
@@ -34,7 +34,7 @@ export class DebugTablet {
   }
 }
 
-async function showDebugTabletForm(player: Player, speedCheatEnabled: boolean): Promise<ActionFormResponse> {
+async function showActionForm(player: Player, speedCheatEnabled: boolean): Promise<ActionFormResponse> {
   const speedCheatButtonText = getSpeedCheatButtonText(speedCheatEnabled);
   const form = new ActionFormData().title("Debug Tablet").button(speedCheatButtonText);
 

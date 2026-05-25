@@ -18,7 +18,6 @@ function mainTick() {
 }
 function onStartup(event) {
     system.run(worldSettingsManager.onStartup);
-    // worldSettingsManager.onStartup();
     itemCustomComponentManager.onStartup(event);
 }
 function onTick() {
