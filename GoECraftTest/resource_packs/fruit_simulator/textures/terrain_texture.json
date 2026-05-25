@@ -1,0 +1,12 @@
+{
+  "resource_pack_name": "Fruit Harvest Simulator",
+  "texture_name": "atlas.terrain",
+  "texture_data": {
+    "empty_farm_plot": {
+      "textures": "textures/blocks/empty_farm_plot"
+    },
+    "used_farm_plot": {
+      "textures": "textures/blocks/used_farm_plot"
+    }
+  }
+}

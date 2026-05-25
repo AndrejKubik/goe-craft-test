@@ -1,0 +1,30 @@
+{
+  "format_version": "1.21.0",
+  "minecraft:block": {
+    "description": {
+      "identifier": "fruit_simulator:empty_farm_plot",
+      "menu_category": {
+        "category": "nature"
+      }
+    },
+
+    "components": {
+      "minecraft:display_name": "Empty Farm Plot",
+      "minecraft:geometry": "geometry.empty_farm_plot",
+
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "empty_farm_plot",
+          "render_method": "opaque"
+        }
+      },
+
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+
+      "minecraft:collision_box": true,
+      "minecraft:selection_box": true
+    }
+  }
+}

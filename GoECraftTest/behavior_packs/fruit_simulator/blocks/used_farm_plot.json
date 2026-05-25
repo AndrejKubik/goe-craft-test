@@ -1,0 +1,27 @@
+{
+  "format_version": "1.21.0",
+  "minecraft:block": {
+    "description": {
+      "identifier": "fruit_simulator:used_farm_plot"
+    },
+
+    "components": {
+      "minecraft:display_name": "Used Farm Plot",
+      "minecraft:geometry": "geometry.empty_farm_plot",
+
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "used_farm_plot",
+          "render_method": "opaque"
+        }
+      },
+
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+
+      "minecraft:collision_box": true,
+      "minecraft:selection_box": true
+    }
+  }
+}
