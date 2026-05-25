@@ -1,3 +1,4 @@
+import { world } from "@minecraft/server";
 import { WorldDataPersistenceManager } from "./WorldDataPersistenceManager";
 export class WorldSettingsManager {
     constructor() {
@@ -19,6 +20,8 @@ export class WorldSettingsManager {
     enableSpeedCheat(newState) {
         this.speedCheatEnabled = newState;
         WorldDataPersistenceManager.setSpeedCheatEnabled(newState);
+        const stateText = newState == true ? "enabled" : "disabled";
+        world.sendMessage(`Speed cheat is now: ${stateText}.`);
     }
 }
 //# sourceMappingURL=WorldSettingsManager.js.map

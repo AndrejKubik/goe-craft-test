@@ -2,6 +2,8 @@ import { system, world } from "@minecraft/server";
 import { PlayerManager } from "./systems/PlayerManager";
 import { ItemCustomComponentManager } from "./systems/ItemCustomComponentManager";
 import { WorldSettingsManager } from "./systems/WorldSettingsManager";
+import { GameModeManager } from "./systems/GameModeManager";
+const gameModeManager = new GameModeManager();
 const playerManager = new PlayerManager();
 const worldSettingsManager = new WorldSettingsManager();
 const itemCustomComponentManager = new ItemCustomComponentManager(worldSettingsManager);
@@ -21,10 +23,11 @@ function onStartup(event) {
 }
 function onTick() {
     playerManager.onTick();
+    gameModeManager.onTick();
 }
 function onPlayerSpawn(event) {
     if (event.initialSpawn) {
-        playerManager.onPlayerJoin(event.player);
+        playerManager.onPlayerSpawn(event.player);
     }
 }
 function onUseItem(event) {

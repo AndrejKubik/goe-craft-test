@@ -14,7 +14,7 @@ export class PlayerManager {
             updatePlayerPlayTime(player, this.playerMap);
         }
     }
-    onPlayerJoin(player) {
+    onPlayerSpawn(player) {
         increasePlayerVisits(player);
         system.runTimeout(() => {
             player.sendMessage(getPlayerWelcomeMessage(player));

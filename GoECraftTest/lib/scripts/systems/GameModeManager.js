@@ -1,0 +1,41 @@
+import { GameMode, world } from "@minecraft/server";
+import { EnforcedGameMode } from "../data/dataPersistence/EnforcedGameMode";
+export class GameModeManager {
+    constructor() {
+        this.currentMode = EnforcedGameMode.Creative;
+    }
+    onPlayerSpawn(player) {
+        if (this.currentMode === EnforcedGameMode.Survival) {
+            player.setGameMode(GameMode.Survival);
+        }
+        else if (this.currentMode === EnforcedGameMode.Creative) {
+            player.setGameMode(GameMode.Creative);
+        }
+    }
+    onTick() {
+        this.enforceGameMode(this.currentMode);
+    }
+    enforceGameMode(mode) {
+        if (mode === EnforcedGameMode.Free) {
+            return;
+        }
+        if (mode === EnforcedGameMode.Survival) {
+            this.setModeForAllPlayers(GameMode.Survival);
+        }
+        else if (mode === EnforcedGameMode.Creative) {
+            this.setModeForAllPlayers(GameMode.Creative);
+        }
+    }
+    setModeForAllPlayers(gameMode) {
+        for (const player of world.getPlayers()) {
+            if (player.getGameMode() !== gameMode) {
+                player.sendMessage(`Enforced new game mode: ${gameMode.toString()}`);
+            }
+            player.setGameMode(gameMode);
+        }
+    }
+    getCurrentMode() {
+        return this.currentMode;
+    }
+}
+//# sourceMappingURL=GameModeManager.js.map

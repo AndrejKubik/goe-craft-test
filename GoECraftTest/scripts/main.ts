@@ -2,7 +2,9 @@ import { system, StartupEvent, world, PlayerSpawnAfterEvent, ItemUseAfterEvent }
 import { PlayerManager } from "./systems/PlayerManager";
 import { ItemCustomComponentManager } from "./systems/ItemCustomComponentManager";
 import { WorldSettingsManager } from "./systems/WorldSettingsManager";
+import { GameModeManager } from "./systems/GameModeManager";
 
+const gameModeManager = new GameModeManager();
 const playerManager = new PlayerManager();
 const worldSettingsManager = new WorldSettingsManager();
 const itemCustomComponentManager = new ItemCustomComponentManager(worldSettingsManager);
@@ -25,11 +27,12 @@ function onStartup(event: StartupEvent): void {
 
 function onTick(): void {
   playerManager.onTick();
+  gameModeManager.onTick();
 }
 
 function onPlayerSpawn(event: PlayerSpawnAfterEvent): void {
   if (event.initialSpawn) {
-    playerManager.onPlayerJoin(event.player);
+    playerManager.onPlayerSpawn(event.player);
   }
 }
 

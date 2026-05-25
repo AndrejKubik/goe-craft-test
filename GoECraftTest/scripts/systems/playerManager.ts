@@ -16,7 +16,7 @@ export class PlayerManager {
     }
   }
 
-  public onPlayerJoin(player: Player): void {
+  public onPlayerSpawn(player: Player): void {
     increasePlayerVisits(player);
 
     system.runTimeout(() => {
