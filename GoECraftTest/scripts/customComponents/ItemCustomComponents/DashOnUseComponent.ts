@@ -2,6 +2,7 @@ import { ItemComponentUseEvent, ItemUseAfterEvent, Player } from "@minecraft/ser
 import { ItemCustomComponent } from "../baseClasses/ItemCustomComponent";
 import { DashOnUseComponentConfig } from "../../data/itemCustomComponents/DashOnUseComponentConfig";
 import { WorldSettingsManager } from "../../systems/WorldSettingsManager";
+import { EntityIdUtility } from "../../utilities/EntityIdUtility";
 
 export class DashOnUseComponent extends ItemCustomComponent {
   constructor(private readonly worldSettingsManager: WorldSettingsManager) {
@@ -14,8 +15,8 @@ export class DashOnUseComponent extends ItemCustomComponent {
     isGroundDashAllowed: false,
   };
 
-  public getId(): string {
-    return "dash_on_use";
+  public static getId(): string {
+    return EntityIdUtility.getFullId("dash_on_use");
   }
 
   public onUse(event: ItemComponentUseEvent): void {

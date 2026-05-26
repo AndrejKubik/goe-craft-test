@@ -12,6 +12,7 @@ import { ItemCustomComponentManager } from "./systems/ItemCustomComponentManager
 import { WorldSettingsManager } from "./systems/WorldSettingsManager";
 import { GameModeManager } from "./systems/GameModeManager";
 import { BlockCustomComponentManager } from "./systems/BlockCustomComponentManager";
+import { EmptyFarmPlotComponent } from "./customComponents/blockCustomComponents/EmptyFarmPlotComponent";
 
 const gameModeManager = new GameModeManager();
 const playerManager = new PlayerManager();

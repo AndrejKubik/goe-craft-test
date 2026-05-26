@@ -1,4 +1,5 @@
 export class EntityIdUtility {
+    /**Returns the identifier with the addon namespace included.*/
     static getFullId(entityId) {
         return `${this.namespace}:${entityId}`;
     }

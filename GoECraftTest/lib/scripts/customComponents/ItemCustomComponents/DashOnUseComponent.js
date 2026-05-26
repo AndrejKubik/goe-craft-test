@@ -1,4 +1,5 @@
 import { ItemCustomComponent } from "../baseClasses/ItemCustomComponent";
+import { EntityIdUtility } from "../../utilities/EntityIdUtility";
 export class DashOnUseComponent extends ItemCustomComponent {
     constructor(worldSettingsManager) {
         super();
@@ -9,8 +10,8 @@ export class DashOnUseComponent extends ItemCustomComponent {
             isGroundDashAllowed: false,
         };
     }
-    getId() {
-        return "dash_on_use";
+    static getId() {
+        return EntityIdUtility.getFullId("dash_on_use");
     }
     onUse(event) {
         if (this.worldSettingsManager.isSpeedCheatEnabled()) {

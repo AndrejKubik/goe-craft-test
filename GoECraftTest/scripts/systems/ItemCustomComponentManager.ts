@@ -40,13 +40,9 @@ export class ItemCustomComponentManager {
   }
 
   private registerItemCustomComponents(itemComponentRegistry: ItemComponentRegistry): void {
-    this.registerCustomComponent(
-      new ShowDebugTabletOnUseComponent(this.worldSettingsManager, this.gameModeManager),
-      itemComponentRegistry
+    itemComponentRegistry.registerCustomComponent(
+      ShowDebugTabletOnUseComponent.getId(),
+      new ShowDebugTabletOnUseComponent(this.worldSettingsManager, this.gameModeManager)
     );
-  }
-
-  private registerCustomComponent(customComponent: ItemCustomComponent, componentRegistry: ItemComponentRegistry) {
-    componentRegistry.registerCustomComponent(customComponent.getFullId(), customComponent);
   }
 }

@@ -10,8 +10,8 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     super();
   }
 
-  public getId(): string {
-    return "empty_farm_plot";
+  public static getId(): string {
+    return EntityIdUtility.getFullId("empty_farm_plot");
   }
 
   public onPlace(event: BlockComponentOnPlaceEvent): void {}

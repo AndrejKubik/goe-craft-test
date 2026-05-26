@@ -1,7 +1,6 @@
-const namespace = "fruit_simulator";
 export class CustomComponent {
-    getFullId() {
-        return `${namespace}:${this.getId()}`;
+    static getId() {
+        return "Unassigned";
     }
 }
 //# sourceMappingURL=CustomComponent.js.map

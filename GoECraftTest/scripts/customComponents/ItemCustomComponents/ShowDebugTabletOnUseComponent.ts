@@ -3,6 +3,7 @@ import { ItemCustomComponent } from "../baseClasses/ItemCustomComponent";
 import { WorldSettingsManager } from "../../systems/WorldSettingsManager";
 import { DebugTablet } from "../../ui/DebugTablet";
 import { GameModeManager } from "../../systems/GameModeManager";
+import { EntityIdUtility } from "../../utilities/EntityIdUtility";
 
 export class ShowDebugTabletOnUseComponent extends ItemCustomComponent {
   constructor(
@@ -12,8 +13,8 @@ export class ShowDebugTabletOnUseComponent extends ItemCustomComponent {
     super();
   }
 
-  public getId(): string {
-    return "show_debug_tablet_on_use";
+  public static getId(): string {
+    return EntityIdUtility.getFullId("show_debug_tablet_on_use");
   }
 
   public onUse(event: ItemComponentUseEvent): void {

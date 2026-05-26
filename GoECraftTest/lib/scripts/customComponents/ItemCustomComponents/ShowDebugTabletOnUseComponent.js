@@ -1,13 +1,14 @@
 import { ItemCustomComponent } from "../baseClasses/ItemCustomComponent";
 import { DebugTablet } from "../../ui/DebugTablet";
+import { EntityIdUtility } from "../../utilities/EntityIdUtility";
 export class ShowDebugTabletOnUseComponent extends ItemCustomComponent {
     constructor(worldSettingsManager, gameModeManager) {
         super();
         this.worldSettingsManager = worldSettingsManager;
         this.gameModeManager = gameModeManager;
     }
-    getId() {
-        return "show_debug_tablet_on_use";
+    static getId() {
+        return EntityIdUtility.getFullId("show_debug_tablet_on_use");
     }
     onUse(event) {
         const player = event.source;

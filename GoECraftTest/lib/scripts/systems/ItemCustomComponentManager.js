@@ -27,10 +27,7 @@ export class ItemCustomComponentManager {
         this.modifiedVanillaItems.set(itemId, components);
     }
     registerItemCustomComponents(itemComponentRegistry) {
-        this.registerCustomComponent(new ShowDebugTabletOnUseComponent(this.worldSettingsManager, this.gameModeManager), itemComponentRegistry);
-    }
-    registerCustomComponent(customComponent, componentRegistry) {
-        componentRegistry.registerCustomComponent(customComponent.getFullId(), customComponent);
+        itemComponentRegistry.registerCustomComponent(ShowDebugTabletOnUseComponent.getId(), new ShowDebugTabletOnUseComponent(this.worldSettingsManager, this.gameModeManager));
     }
 }
 //# sourceMappingURL=ItemCustomComponentManager.js.map

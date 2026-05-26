@@ -2,23 +2,19 @@ import { EmptyFarmPlotComponent } from "../customComponents/blockCustomComponent
 export class BlockCustomComponentManager {
     constructor(playerManager) {
         this.playerManager = playerManager;
-        this.emptyFarmPlotComponent = new EmptyFarmPlotComponent(this.playerManager);
     }
     onStartup(event) {
         this.registerCustomComponents(event.blockComponentRegistry);
     }
     onPlaceBlockGlobal(event) {
         const block = event.block;
-        if (block.getComponent(this.emptyFarmPlotComponent.getFullId())) {
+        if (block.getComponent(EmptyFarmPlotComponent.getId())) {
             this.playerManager.addFarmPlotBlockToPlayer(event.player, block);
         }
     }
     onInteractWithBlockGlobal(event) { }
     registerCustomComponents(blockComponentRegistry) {
-        this.registerCustomComponent(this.emptyFarmPlotComponent, blockComponentRegistry);
-    }
-    registerCustomComponent(customComponent, componentRegistry) {
-        componentRegistry.registerCustomComponent(customComponent.getFullId(), customComponent);
+        blockComponentRegistry.registerCustomComponent(EmptyFarmPlotComponent.getId(), new EmptyFarmPlotComponent(this.playerManager));
     }
 }
 //# sourceMappingURL=BlockCustomComponentManager.js.map
