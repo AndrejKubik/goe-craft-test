@@ -104,10 +104,4 @@ export class PlayerManager {
     const playerData = this.getPlayerData(player.id);
     playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
   }
-
-  private printPlayerBlocks(player: Player): void {
-    const playerData = this.getPlayerData(player.id);
-
-    player.sendMessage(player.getDynamicProperty(PlayerSaveKeys.farmPlotLocations) as string);
-  }
 }

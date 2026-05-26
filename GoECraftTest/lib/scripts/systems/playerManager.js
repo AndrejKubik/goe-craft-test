@@ -3,7 +3,6 @@ import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { PlayerData } from "../data/dataPersistence/PlayerData";
 import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
-import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 import { BlockUtility } from "../utilities/BlockUtility";
 const fullSecondTicks = 20;
 const playerWelcomeMessageDelayTicks = 40;
@@ -74,10 +73,6 @@ export class PlayerManager {
     loadPlayerFarmPlotBlocks(player) {
         const playerData = this.getPlayerData(player.id);
         playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
-    }
-    printPlayerBlocks(player) {
-        const playerData = this.getPlayerData(player.id);
-        player.sendMessage(player.getDynamicProperty(PlayerSaveKeys.farmPlotLocations));
     }
 }
 //# sourceMappingURL=PlayerManager.js.map
