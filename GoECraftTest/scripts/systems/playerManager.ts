@@ -20,6 +20,7 @@ export class PlayerManager {
 
   public onPlayerSpawn(player: Player): void {
     this.increasePlayerVisits(player);
+    this.loadPlayerFarmPlotBlocks(player);
 
     system.runTimeout(
       player.sendMessage.bind(player, this.getPlayerWelcomeMessage(player)),
@@ -92,15 +93,16 @@ export class PlayerManager {
       player.sendMessage("Farm plot limit reached");
 
       BlockUtility.removeBlock(block);
-
-      // this.printPlayerBlocks(player);
-      // playerData.farmPlotLocations = [];
-      // PlayerDataPersistenceManager.setFarmPlotLocations(player, playerData.farmPlotLocations);
       return;
     }
 
     playerData.farmPlotLocations.push(block.location);
     PlayerDataPersistenceManager.setFarmPlotLocations(player, playerData.farmPlotLocations);
+  }
+
+  private loadPlayerFarmPlotBlocks(player: Player): void {
+    const playerData = this.getPlayerData(player.id);
+    playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
   }
 
   private printPlayerBlocks(player: Player): void {

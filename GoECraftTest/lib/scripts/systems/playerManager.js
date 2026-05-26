@@ -18,6 +18,7 @@ export class PlayerManager {
     }
     onPlayerSpawn(player) {
         this.increasePlayerVisits(player);
+        this.loadPlayerFarmPlotBlocks(player);
         system.runTimeout(player.sendMessage.bind(player, this.getPlayerWelcomeMessage(player)), playerWelcomeMessageDelayTicks //small delay to avoid duplicate welcome message, due to UI reload at startup
         );
     }
@@ -65,13 +66,14 @@ export class PlayerManager {
         if (playerData.farmPlotLocations.length >= 3) {
             player.sendMessage("Farm plot limit reached");
             BlockUtility.removeBlock(block);
-            // this.printPlayerBlocks(player);
-            // playerData.farmPlotLocations = [];
-            // PlayerDataPersistenceManager.setFarmPlotLocations(player, playerData.farmPlotLocations);
             return;
         }
         playerData.farmPlotLocations.push(block.location);
         PlayerDataPersistenceManager.setFarmPlotLocations(player, playerData.farmPlotLocations);
+    }
+    loadPlayerFarmPlotBlocks(player) {
+        const playerData = this.getPlayerData(player.id);
+        playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
     }
     printPlayerBlocks(player) {
         const playerData = this.getPlayerData(player.id);
