@@ -1,0 +1,18 @@
+{
+  "format_version": "1.21.0",
+  "minecraft:item": {
+    "description": {
+      "identifier": "fruit_simulator:tomato_seed",
+      "menu_category": {
+        "category": "items"
+      }
+    },
+    "components": {
+      "minecraft:icon": "tomato_seed",
+      "minecraft:max_stack_size": 64,
+      "minecraft:display_name": {
+        "value": "Tomato Seed"
+      }
+    }
+  }
+}

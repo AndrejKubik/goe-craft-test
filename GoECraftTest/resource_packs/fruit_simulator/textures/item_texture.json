@@ -1,0 +1,12 @@
+{
+  "resource_pack_name": "Fruit Harvest Simulator",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "tomato_seed": {
+      "textures": "textures/items/tomato_seed"
+    },
+    "cucumber_seed": {
+      "textures": "textures/items/cucumber_seed"
+    }
+  }
+}
