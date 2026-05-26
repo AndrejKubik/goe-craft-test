@@ -22,7 +22,7 @@ export class BlockCustomComponentManager {
     }
   }
 
-  public onInteractWithBlockGlobal(event: PlayerInteractWithBlockBeforeEvent) {}
+  // public onInteractWithBlockGlobal(event: PlayerInteractWithBlockBeforeEvent) {}
 
   private registerCustomComponents(blockComponentRegistry: BlockComponentRegistry) {
     blockComponentRegistry.registerCustomComponent(

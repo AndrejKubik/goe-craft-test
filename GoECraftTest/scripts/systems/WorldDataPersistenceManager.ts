@@ -3,6 +3,10 @@ import { WorldSaveKeys } from "../data/dataPersistence/WorldSaveKeys";
 import { EnforcedGameMode } from "../data/dataPersistence/EnforcedGameMode";
 
 export class WorldDataPersistenceManager {
+  static clearProperty(saveKey: string): void {
+    world.setDynamicProperty(saveKey, undefined);
+  }
+
   static setSpeedCheatEnabled(newState: boolean): void {
     world.setDynamicProperty(WorldSaveKeys.speedCheatEnabled, newState);
   }

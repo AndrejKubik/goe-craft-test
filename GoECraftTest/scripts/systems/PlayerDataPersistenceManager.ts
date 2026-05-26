@@ -2,6 +2,10 @@ import { Player, Vector3 } from "@minecraft/server";
 import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 
 export class PlayerDataPersistenceManager {
+  static clearProperty(player: Player, saveKey: string): void {
+    player.setDynamicProperty(saveKey, undefined);
+  }
+
   static setVisitCount(player: Player, value: number): void {
     player.setDynamicProperty(PlayerSaveKeys.totalVisits, value);
   }

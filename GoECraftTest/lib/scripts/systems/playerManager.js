@@ -3,6 +3,8 @@ import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { PlayerData } from "../data/dataPersistence/PlayerData";
 import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
+import { BlockUtility } from "../utilities/BlockUtility";
+import { MathUtility } from "../utilities/MathUtility";
 const fullSecondTicks = 20;
 const playerWelcomeMessageDelayTicks = 40;
 export class PlayerManager {
@@ -17,6 +19,7 @@ export class PlayerManager {
     onPlayerSpawn(player) {
         this.increasePlayerVisits(player);
         this.loadPlayerFarmPlotBlocks(player);
+        // PlayerDataPersistenceManager.clearProperty(player, PlayerSaveKeys.farmPlotLocations);
         system.runTimeout(player.sendMessage.bind(player, this.getPlayerWelcomeMessage(player)), playerWelcomeMessageDelayTicks //small delay to avoid duplicate welcome message, due to UI reload at startup
         );
     }
@@ -63,7 +66,7 @@ export class PlayerManager {
         const playerData = this.getPlayerData(player.id);
         if (playerData.farmPlotLocations.length >= 3) {
             player.sendMessage("Farm plot limit reached");
-            // BlockUtility.removeBlock(block);
+            BlockUtility.removeBlock(block);
             return;
         }
         playerData.farmPlotLocations.push(block.location);
@@ -72,6 +75,17 @@ export class PlayerManager {
     loadPlayerFarmPlotBlocks(player) {
         const playerData = this.getPlayerData(player.id);
         playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
+    }
+    isFarmPlotOwnedByPlayer(block, player) {
+        const playerData = this.getPlayerData(player.id);
+        const playerFarmPlotLocations = playerData.farmPlotLocations;
+        const blockLocation = block.location;
+        for (const farmPlotLocation of playerFarmPlotLocations) {
+            if (MathUtility.areVectorsEqual(farmPlotLocation, blockLocation)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 //# sourceMappingURL=PlayerManager.js.map

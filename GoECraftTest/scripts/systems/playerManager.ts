@@ -3,6 +3,9 @@ import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { PlayerData } from "../data/dataPersistence/PlayerData";
 import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
+import { BlockUtility } from "../utilities/BlockUtility";
+import { MathUtility } from "../utilities/MathUtility";
+import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 
 const fullSecondTicks = 20;
 const playerWelcomeMessageDelayTicks = 40;
@@ -19,6 +22,7 @@ export class PlayerManager {
   public onPlayerSpawn(player: Player): void {
     this.increasePlayerVisits(player);
     this.loadPlayerFarmPlotBlocks(player);
+    // PlayerDataPersistenceManager.clearProperty(player, PlayerSaveKeys.farmPlotLocations);
 
     system.runTimeout(
       player.sendMessage.bind(player, this.getPlayerWelcomeMessage(player)),
@@ -90,7 +94,7 @@ export class PlayerManager {
     if (playerData.farmPlotLocations.length >= 3) {
       player.sendMessage("Farm plot limit reached");
 
-      // BlockUtility.removeBlock(block);
+      BlockUtility.removeBlock(block);
       return;
     }
 
@@ -101,5 +105,19 @@ export class PlayerManager {
   private loadPlayerFarmPlotBlocks(player: Player): void {
     const playerData = this.getPlayerData(player.id);
     playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
+  }
+
+  public isFarmPlotOwnedByPlayer(block: Block, player: Player): boolean {
+    const playerData = this.getPlayerData(player.id);
+    const playerFarmPlotLocations = playerData.farmPlotLocations;
+    const blockLocation = block.location;
+
+    for (const farmPlotLocation of playerFarmPlotLocations) {
+      if (MathUtility.areVectorsEqual(farmPlotLocation, blockLocation)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

@@ -39,13 +39,13 @@ function onUseItem(event) {
 function onPlaceBlock(event) {
     blockCustomComponentManager.onPlaceBlockGlobal(event);
 }
-function onInteractWithBlock(event) {
-    blockCustomComponentManager.onInteractWithBlockGlobal(event);
-}
+// function onInteractWithBlock(event: PlayerInteractWithBlockBeforeEvent): void {
+//   blockCustomComponentManager.onInteractWithBlockGlobal(event);
+// }
 system.beforeEvents.startup.subscribe(onStartup);
 world.afterEvents.playerSpawn.subscribe(onPlayerSpawn);
 world.afterEvents.playerPlaceBlock.subscribe(onPlaceBlock);
 world.afterEvents.itemUse.subscribe(onUseItem);
-world.beforeEvents.playerInteractWithBlock.subscribe(onInteractWithBlock);
+// world.beforeEvents.playerInteractWithBlock.subscribe(onInteractWithBlock);
 system.run(mainTick);
 //# sourceMappingURL=main.js.map
