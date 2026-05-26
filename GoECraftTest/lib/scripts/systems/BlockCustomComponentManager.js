@@ -8,8 +8,9 @@ export class BlockCustomComponentManager {
         this.registerCustomComponents(event.blockComponentRegistry);
     }
     onPlaceBlockGlobal(event) {
-        if (event.block.getComponent(this.emptyFarmPlotComponent.getFullId())) {
-            this.playerManager.addFarmPlotLocationToPlayer(event.player, event.block.location);
+        const block = event.block;
+        if (block.getComponent(this.emptyFarmPlotComponent.getFullId())) {
+            this.playerManager.addFarmPlotBlockToPlayer(event.player, block);
         }
     }
     registerCustomComponents(blockComponentRegistry) {

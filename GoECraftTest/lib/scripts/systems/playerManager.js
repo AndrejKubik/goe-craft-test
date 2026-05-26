@@ -4,6 +4,7 @@ import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { PlayerData } from "../data/dataPersistence/PlayerData";
 import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
 import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
+import { BlockUtility } from "../utilities/BlockUtility";
 const fullSecondTicks = 20;
 const playerWelcomeMessageDelayTicks = 40;
 export class PlayerManager {
@@ -59,14 +60,17 @@ export class PlayerManager {
         }
         return playerData;
     }
-    addFarmPlotLocationToPlayer(player, plotLocation) {
+    addFarmPlotBlockToPlayer(player, block) {
         const playerData = this.getPlayerData(player.id);
         if (playerData.farmPlotLocations.length >= 3) {
-            player.sendMessage("Farm plot limit reached, this block's location will not be saved.");
-            this.printPlayerBlocks(player);
+            player.sendMessage("Farm plot limit reached");
+            BlockUtility.removeBlock(block);
+            // this.printPlayerBlocks(player);
+            // playerData.farmPlotLocations = [];
+            // PlayerDataPersistenceManager.setFarmPlotLocations(player, playerData.farmPlotLocations);
             return;
         }
-        playerData.farmPlotLocations.push(plotLocation);
+        playerData.farmPlotLocations.push(block.location);
         PlayerDataPersistenceManager.setFarmPlotLocations(player, playerData.farmPlotLocations);
     }
     printPlayerBlocks(player) {
