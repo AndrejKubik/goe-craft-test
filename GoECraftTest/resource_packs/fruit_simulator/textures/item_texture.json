@@ -7,6 +7,12 @@
     },
     "cucumber_seed": {
       "textures": "textures/items/cucumber_seed"
+    },
+    "tomato": {
+      "textures": "textures/items/tomato"
+    },
+    "cucumber": {
+      "textures": "textures/items/cucumber"
     }
   }
 }

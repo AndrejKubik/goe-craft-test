@@ -1,0 +1,32 @@
+{
+  "format_version": "1.21.0",
+  "minecraft:item": {
+    "description": {
+      "identifier": "fruit_simulator:tomato",
+      "menu_category": {
+        "category": "items"
+      }
+    },
+    "components": {
+      "minecraft:icon": "tomato",
+      "minecraft:max_stack_size": 64,
+
+      "minecraft:display_name": {
+        "value": "Tomato"
+      },
+
+      "minecraft:food": {
+        "nutrition": 2,
+        "saturation_modifier": 0.2,
+        "can_always_eat": true
+      },
+
+      "minecraft:use_modifiers": {
+        "use_duration": 1.6,
+        "movement_modifier": 0.35
+      },
+
+      "minecraft:use_animation": "eat"
+    }
+  }
+}
