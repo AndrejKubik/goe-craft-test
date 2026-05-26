@@ -3,7 +3,6 @@ import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { PlayerData } from "../data/dataPersistence/PlayerData";
 import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
-import { BlockUtility } from "../utilities/BlockUtility";
 const fullSecondTicks = 20;
 const playerWelcomeMessageDelayTicks = 40;
 export class PlayerManager {
@@ -64,7 +63,7 @@ export class PlayerManager {
         const playerData = this.getPlayerData(player.id);
         if (playerData.farmPlotLocations.length >= 3) {
             player.sendMessage("Farm plot limit reached");
-            BlockUtility.removeBlock(block);
+            // BlockUtility.removeBlock(block);
             return;
         }
         playerData.farmPlotLocations.push(block.location);

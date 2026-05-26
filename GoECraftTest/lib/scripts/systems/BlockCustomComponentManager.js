@@ -2,7 +2,7 @@ import { EmptyFarmPlotComponent } from "../customComponents/blockCustomComponent
 export class BlockCustomComponentManager {
     constructor(playerManager) {
         this.playerManager = playerManager;
-        this.emptyFarmPlotComponent = new EmptyFarmPlotComponent();
+        this.emptyFarmPlotComponent = new EmptyFarmPlotComponent(this.playerManager);
     }
     onStartup(event) {
         this.registerCustomComponents(event.blockComponentRegistry);
@@ -13,6 +13,7 @@ export class BlockCustomComponentManager {
             this.playerManager.addFarmPlotBlockToPlayer(event.player, block);
         }
     }
+    onInteractWithBlockGlobal(event) { }
     registerCustomComponents(blockComponentRegistry) {
         this.registerCustomComponent(this.emptyFarmPlotComponent, blockComponentRegistry);
     }
