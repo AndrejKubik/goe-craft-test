@@ -1,4 +1,11 @@
-import { system, StartupEvent, world, PlayerSpawnAfterEvent, ItemUseAfterEvent } from "@minecraft/server";
+import {
+  system,
+  StartupEvent,
+  world,
+  PlayerSpawnAfterEvent,
+  ItemUseAfterEvent,
+  PlayerPlaceBlockAfterEvent,
+} from "@minecraft/server";
 import { PlayerManager } from "./systems/PlayerManager";
 import { ItemCustomComponentManager } from "./systems/ItemCustomComponentManager";
 import { WorldSettingsManager } from "./systems/WorldSettingsManager";
@@ -9,7 +16,7 @@ const gameModeManager = new GameModeManager();
 const playerManager = new PlayerManager();
 const worldSettingsManager = new WorldSettingsManager();
 const itemCustomComponentManager = new ItemCustomComponentManager(worldSettingsManager, gameModeManager);
-const blockCustomComponentManager = new BlockCustomComponentManager();
+const blockCustomComponentManager = new BlockCustomComponentManager(playerManager);
 
 function mainTick(): void {
   try {
@@ -43,9 +50,13 @@ function onUseItem(event: ItemUseAfterEvent): void {
   itemCustomComponentManager.onUseItem(event);
 }
 
+function onPlaceBlock(event: PlayerPlaceBlockAfterEvent): void {
+  blockCustomComponentManager.onPlaceBlockGlobal(event);
+}
+
 system.beforeEvents.startup.subscribe(onStartup);
 world.afterEvents.playerSpawn.subscribe(onPlayerSpawn);
-
+world.afterEvents.playerPlaceBlock.subscribe(onPlaceBlock);
 world.afterEvents.itemUse.subscribe(onUseItem);
 
 system.run(mainTick);

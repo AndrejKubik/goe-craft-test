@@ -1,4 +1,4 @@
-import { system, world } from "@minecraft/server";
+import { system, world, } from "@minecraft/server";
 import { PlayerManager } from "./systems/PlayerManager";
 import { ItemCustomComponentManager } from "./systems/ItemCustomComponentManager";
 import { WorldSettingsManager } from "./systems/WorldSettingsManager";
@@ -8,7 +8,7 @@ const gameModeManager = new GameModeManager();
 const playerManager = new PlayerManager();
 const worldSettingsManager = new WorldSettingsManager();
 const itemCustomComponentManager = new ItemCustomComponentManager(worldSettingsManager, gameModeManager);
-const blockCustomComponentManager = new BlockCustomComponentManager();
+const blockCustomComponentManager = new BlockCustomComponentManager(playerManager);
 function mainTick() {
     try {
         onTick();
@@ -36,8 +36,12 @@ function onPlayerSpawn(event) {
 function onUseItem(event) {
     itemCustomComponentManager.onUseItem(event);
 }
+function onPlaceBlock(event) {
+    blockCustomComponentManager.onPlaceBlockGlobal(event);
+}
 system.beforeEvents.startup.subscribe(onStartup);
 world.afterEvents.playerSpawn.subscribe(onPlayerSpawn);
+world.afterEvents.playerPlaceBlock.subscribe(onPlaceBlock);
 world.afterEvents.itemUse.subscribe(onUseItem);
 system.run(mainTick);
 //# sourceMappingURL=main.js.map

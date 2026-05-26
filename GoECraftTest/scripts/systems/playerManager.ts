@@ -89,6 +89,7 @@ export class PlayerManager {
 
     if (playerData.farmPlotLocations.length >= 3) {
       player.sendMessage("Farm plot limit reached, this block's location will not be saved.");
+      this.printPlayerBlocks(player);
 
       return;
     }

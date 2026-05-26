@@ -6,7 +6,5 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     return "empty_farm_plot";
   }
 
-  public onPlace(event: BlockComponentOnPlaceEvent): void {
-    world.sendMessage("Farm plot placed.");
-  }
+  public onPlace(event: BlockComponentOnPlaceEvent): void {}
 }
