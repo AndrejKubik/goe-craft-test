@@ -6,8 +6,16 @@ import { PlayerInventoryUtility } from "../../utilities/PlayerInventoryUtility";
 import { IPlantData } from "../../data/blockCustomComponents/IPlantData";
 import { MathUtility } from "../../utilities/MathUtility";
 import { TimeUtility } from "../../utilities/TimeUtility";
+import { CustomItemIds } from "../../data/idContainers/CustomItemIds";
+import { PlantDefinitions } from "../../data/blockCustomComponents/PlantDefinitions";
+import { PlayerDataPersistenceManager } from "../../systems/PlayerDataPersistenceManager";
 
-const vanillaBookId = "minecraft:book";
+const bookItemId = "minecraft:book";
+const fertilizerItemId = EntityIdUtility.getFullId(CustomItemIds.fertilizer);
+const uberFertilizerItemId = EntityIdUtility.getFullId(CustomItemIds.uberFertilizer);
+
+const fertilizerBoostAmount = 30;
+const uberFertilizerBoostAmount = 60;
 
 export class PlayerGrownPlantComponent extends BlockCustomComponent {
   constructor(private readonly playerManager: PlayerManager) {
@@ -19,26 +27,71 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
   }
 
   public onInteract(player: Player, event: BlockComponentPlayerInteractEvent): void {
-    const plantData = this.getPlantData(player, event.block);
+    const playerData = this.playerManager.getPlayerData(player.id);
+    const playerPlants = playerData.plants;
+    const plantData = this.getPlantData(playerData.plants, event.block);
 
     if (!plantData) {
       return; //this means player does not own the block
     }
 
-    if (PlayerInventoryUtility.isPlayerHoldingItem(player, vanillaBookId)) {
-      const currentGrowthStage = plantData.growthStage;
-      const timeUntilNextGrowthStage = TimeUtility.ticksToSeconds(plantData.ticksUntilNextStage);
+    const plantDefinition = PlantDefinitions[plantData.plantDefinitionKey];
+    const maxGrowthStage = plantDefinition.maxGrowthStage;
 
-      player.onScreenDisplay.setActionBar(
-        `Growth stage: ${currentGrowthStage} | Next stage in: ${timeUntilNextGrowthStage}`
-      );
+    let isPlayerDataChanged = false;
+
+    if (PlayerInventoryUtility.isPlayerHoldingItem(player, bookItemId)) {
+      this.showPlantGrowthInfo(player, plantData, maxGrowthStage);
+    } else if (PlayerInventoryUtility.isPlayerHoldingItem(player, fertilizerItemId)) {
+      isPlayerDataChanged = this.tryBoostPlantGrowth(player, plantData, maxGrowthStage, fertilizerBoostAmount);
+    } else if (PlayerInventoryUtility.isPlayerHoldingItem(player, uberFertilizerItemId)) {
+      isPlayerDataChanged = this.tryBoostPlantGrowth(player, plantData, maxGrowthStage, uberFertilizerBoostAmount);
+    }
+
+    if (isPlayerDataChanged) {
+      PlayerDataPersistenceManager.setPlants(player, playerPlants);
     }
   }
 
-  private getPlantData(player: Player, block: Block): IPlantData | null {
-    const playerData = this.playerManager.getPlayerData(player.id);
-    const playerPlants = playerData.plants;
+  private showPlantGrowthInfo(player: Player, plantData: IPlantData, maxGrowthStage: number): void {
+    const currentGrowthStage = plantData.growthStage;
+    const timeUntilNextGrowthStage = TimeUtility.ticksToSeconds(plantData.ticksUntilNextStage);
 
+    const message =
+      plantData.growthStage >= maxGrowthStage
+        ? "Growth stage: Ripe for harvest!"
+        : `Growth stage: ${currentGrowthStage} | Next stage in: ${timeUntilNextGrowthStage}`;
+
+    player.onScreenDisplay.setActionBar(message);
+  }
+
+  /**Returns true unless fully grown plant*/
+  private tryBoostPlantGrowth(
+    player: Player,
+    plantData: IPlantData,
+    maxGrowthStage: number,
+    boostAmount: number
+  ): boolean {
+    if (plantData.growthStage >= maxGrowthStage) {
+      player.onScreenDisplay.setActionBar("There is nothing to boost, this one is ripe!");
+
+      return false;
+    }
+
+    const newTicksLeft = plantData.ticksUntilNextStage - TimeUtility.secondsToTicks(boostAmount);
+
+    plantData.ticksUntilNextStage = Math.max(0, newTicksLeft);
+
+    if (newTicksLeft > 0) {
+      this.showPlantGrowthInfo(player, plantData, maxGrowthStage);
+    } else {
+      player.onScreenDisplay.setActionBar("Boosted growth to next stage!");
+    }
+
+    return true;
+  }
+
+  private getPlantData(playerPlants: IPlantData[], block: Block): IPlantData | null {
     for (const plant of playerPlants) {
       if (MathUtility.areVectorsEqual(plant.blockLocation, block.location)) {
         return plant;

@@ -1,7 +1,7 @@
 import { Player } from "@minecraft/server";
 
 export class PlayerInventoryUtility {
-  static isPlayerHoldingItem(player: Player, itemId: string): boolean {
+  public static isPlayerHoldingItem(player: Player, itemId: string): boolean {
     const playerInventory = player.getComponent("inventory");
 
     if (!playerInventory) {
