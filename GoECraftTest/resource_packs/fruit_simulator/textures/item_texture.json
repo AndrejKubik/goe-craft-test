@@ -8,11 +8,19 @@
     "cucumber_seed": {
       "textures": "textures/items/cucumber_seed"
     },
+
     "tomato": {
       "textures": "textures/items/tomato"
     },
     "cucumber": {
       "textures": "textures/items/cucumber"
+    },
+
+    "fertilizer": {
+      "textures": "textures/items/fertilizer"
+    },
+    "uber_fertilizer": {
+      "textures": "textures/items/uber_fertilizer"
     }
   }
 }
