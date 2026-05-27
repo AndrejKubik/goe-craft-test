@@ -1,6 +1,9 @@
 import { world } from "@minecraft/server";
 import { PlantDefinitions } from "../data/blockCustomComponents/PlantDefinitions";
 import { TimeUtility } from "../utilities/TimeUtility";
+import { BlockUtility } from "../utilities/BlockUtility";
+import { EntityIdUtility } from "../utilities/EntityIdUtility";
+import { BlockPermutationStateKeys } from "../data/blockCustomComponents/BlockPermutationStateKeys";
 export class PlantGrowthManager {
     constructor(playerManager) {
         this.playerManager = playerManager;
@@ -27,10 +30,9 @@ export class PlantGrowthManager {
         plant.growthStage++;
         plant.ticksUntilNextStage = TimeUtility.getTicks(plantDefinition.growthStageDuration);
         const block = player.dimension.getBlock(plant.blockLocation);
-        if (!block) {
-            return;
+        if (block) {
+            BlockUtility.setPermutationByIndex(block, EntityIdUtility.getFullId(BlockPermutationStateKeys.plantGrowth), plant.growthStage);
         }
-        block.setPermutation(block.permutation.withState("fruit_simulator:plant_growth", plant.growthStage));
     }
 }
 //# sourceMappingURL=PlantGrowthManager.js.map

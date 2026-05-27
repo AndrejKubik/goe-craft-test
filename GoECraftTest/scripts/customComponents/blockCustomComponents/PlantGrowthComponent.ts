@@ -1,3 +1,4 @@
+import { Block } from "@minecraft/server";
 import { EntityIdUtility } from "../../utilities/EntityIdUtility";
 import { BlockCustomComponent } from "../baseClasses/BlockCustomComponent";
 

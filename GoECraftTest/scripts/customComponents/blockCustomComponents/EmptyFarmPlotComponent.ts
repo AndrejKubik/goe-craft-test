@@ -9,6 +9,8 @@ import { PlantDefinitions } from "../../data/blockCustomComponents/PlantDefiniti
 import { PlantDefinitionKeys } from "../../data/blockCustomComponents/PlantDefinitionKeys";
 import { IPlantData } from "../../data/blockCustomComponents/IPlantData";
 import { TimeUtility } from "../../utilities/TimeUtility";
+import { BlockUtility } from "../../utilities/BlockUtility";
+import { BlockPermutationStateKeys } from "../../data/blockCustomComponents/BlockPermutationStateKeys";
 
 const tomatoSeedId = EntityIdUtility.getFullId(CustomItemIds.tomatoSeed);
 const cucumberSeedId = EntityIdUtility.getFullId(CustomItemIds.cucumberSeed);
@@ -50,8 +52,7 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     farmPlotBlock.setType(EntityIdUtility.getFullId(CustomBlockIds.usedFarmPlot));
     plantBlock.setType(EntityIdUtility.getFullId(plantBlockRawId));
 
-    const plantGrowthState = "fruit_simulator:plant_growth" as any;
-    plantBlock.setPermutation(plantBlock.permutation.withState(plantGrowthState, 0));
+    BlockUtility.setPermutationByIndex(plantBlock, EntityIdUtility.getFullId(BlockPermutationStateKeys.plantGrowth), 0);
 
     const plantDefinition = PlantDefinitions[plantDefinitionKey];
 

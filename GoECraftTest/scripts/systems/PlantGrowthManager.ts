@@ -4,6 +4,9 @@ import { PlantDefinitions } from "../data/blockCustomComponents/PlantDefinitions
 import { TimeUtility } from "../utilities/TimeUtility";
 import { IPlantData } from "../data/blockCustomComponents/IPlantData";
 import { IPlantDefinition } from "../data/blockCustomComponents/IPlantDefinition";
+import { BlockUtility } from "../utilities/BlockUtility";
+import { EntityIdUtility } from "../utilities/EntityIdUtility";
+import { BlockPermutationStateKeys } from "../data/blockCustomComponents/BlockPermutationStateKeys";
 
 export class PlantGrowthManager {
   constructor(private readonly playerManager: PlayerManager) {}
@@ -38,10 +41,12 @@ export class PlantGrowthManager {
 
     const block = player.dimension.getBlock(plant.blockLocation);
 
-    if (!block) {
-      return;
+    if (block) {
+      BlockUtility.setPermutationByIndex(
+        block,
+        EntityIdUtility.getFullId(BlockPermutationStateKeys.plantGrowth),
+        plant.growthStage
+      );
     }
-
-    block.setPermutation((block.permutation as any).withState("fruit_simulator:plant_growth", plant.growthStage));
   }
 }
