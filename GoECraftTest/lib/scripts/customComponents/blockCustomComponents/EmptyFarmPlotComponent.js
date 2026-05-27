@@ -8,6 +8,7 @@ import { PlantDefinitionKeys } from "../../data/blockCustomComponents/PlantDefin
 import { TimeUtility } from "../../utilities/TimeUtility";
 import { BlockUtility } from "../../utilities/BlockUtility";
 import { BlockPermutationStateKeys } from "../../data/blockCustomComponents/BlockPermutationStateKeys";
+import { PlayerDataPersistenceManager } from "../../systems/PlayerDataPersistenceManager";
 const tomatoSeedId = EntityIdUtility.getFullId(CustomItemIds.tomatoSeed);
 const cucumberSeedId = EntityIdUtility.getFullId(CustomItemIds.cucumberSeed);
 export class EmptyFarmPlotComponent extends BlockCustomComponent {
@@ -42,14 +43,20 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
         plantBlock.setType(EntityIdUtility.getFullId(plantBlockRawId));
         BlockUtility.setPermutationByIndex(plantBlock, EntityIdUtility.getFullId(BlockPermutationStateKeys.plantGrowth), 0);
         const plantDefinition = PlantDefinitions[plantDefinitionKey];
-        const plantData = {
+        if (!plantDefinition) {
+            console.error(`Cannot plant seed, requested invalid plant definition: ${plantDefinitionKey}`);
+            return;
+        }
+        const newPlantData = {
             plantDefinitionKey: plantDefinitionKey,
             blockLocation: plantBlock.location,
             growthStage: 0,
             ticksUntilNextStage: TimeUtility.getTicks(plantDefinition.growthStageDuration),
         };
         const playerData = this.playerManager.getPlayerData(player.id);
-        playerData.plants.push(plantData);
+        const playerPlants = playerData.plants;
+        playerPlants.push(newPlantData);
+        PlayerDataPersistenceManager.setPlants(player, playerPlants);
         console.warn(`Planted seed: ${plantBlockRawId}`);
     }
 }

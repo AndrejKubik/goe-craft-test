@@ -4,6 +4,7 @@ import { TimeUtility } from "../utilities/TimeUtility";
 import { BlockUtility } from "../utilities/BlockUtility";
 import { EntityIdUtility } from "../utilities/EntityIdUtility";
 import { BlockPermutationStateKeys } from "../data/blockCustomComponents/BlockPermutationStateKeys";
+import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
 export class PlantGrowthManager {
     constructor(playerManager) {
         this.playerManager = playerManager;
@@ -23,6 +24,7 @@ export class PlantGrowthManager {
             plant.ticksUntilNextStage--;
             if (plant.ticksUntilNextStage <= 0) {
                 this.advancePlantStage(player, plant, plantDefinition);
+                PlayerDataPersistenceManager.setPlants(player, playerData.plants);
             }
         }
     }
