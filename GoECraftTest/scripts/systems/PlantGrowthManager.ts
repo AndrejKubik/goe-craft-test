@@ -1,9 +1,8 @@
-import { Player, world } from "@minecraft/server";
+import { Dimension, Player, world } from "@minecraft/server";
 import { PlayerManager } from "./PlayerManager";
 import { PlantDefinitions } from "../data/blockCustomComponents/PlantDefinitions";
 import { TimeUtility } from "../utilities/TimeUtility";
 import { IPlantData } from "../data/blockCustomComponents/IPlantData";
-import { IPlantDefinition } from "../data/blockCustomComponents/IPlantDefinition";
 import { BlockUtility } from "../utilities/BlockUtility";
 import { EntityIdUtility } from "../utilities/EntityIdUtility";
 import { BlockPermutationStateKeys } from "../data/blockCustomComponents/BlockPermutationStateKeys";
@@ -22,34 +21,57 @@ export class PlantGrowthManager {
     const playerData = this.playerManager.getPlayerData(player.id);
 
     for (const plant of playerData.plants) {
-      const plantDefinition = PlantDefinitions[plant.plantDefinitionKey];
+      const isGrowthStageChanged = this.growPlant(plant);
+      const isPlantVisualsUpdated = this.syncPlantVisuals(player.dimension, plant);
 
-      if (plant.growthStage >= plantDefinition.maxGrowthStage) {
-        continue;
-      }
-
-      plant.ticksUntilNextStage--;
-
-      if (plant.ticksUntilNextStage <= 0) {
-        this.advancePlantStage(player, plant, plantDefinition);
-
+      if (isGrowthStageChanged || isPlantVisualsUpdated) {
         PlayerDataPersistenceManager.setPlants(player, playerData.plants);
       }
     }
   }
 
-  private advancePlantStage(player: Player, plant: IPlantData, plantDefinition: IPlantDefinition) {
-    plant.growthStage++;
-    plant.ticksUntilNextStage = TimeUtility.getTicks(plantDefinition.growthStageDuration);
+  /**Returns true when the plant advances to the next growth stage*/
+  private growPlant(plant: IPlantData): boolean {
+    const plantDefinition = PlantDefinitions[plant.plantDefinitionKey];
 
-    const block = player.dimension.getBlock(plant.blockLocation);
-
-    if (block) {
-      BlockUtility.setPermutationByIndex(
-        block,
-        EntityIdUtility.getFullId(BlockPermutationStateKeys.plantGrowth),
-        plant.growthStage
-      );
+    if (plant.growthStage >= plantDefinition.maxGrowthStage) {
+      return false;
     }
+
+    plant.ticksUntilNextStage--;
+
+    if (plant.ticksUntilNextStage <= 0) {
+      plant.growthStage++;
+      plant.ticksUntilNextStage = TimeUtility.getTicks(plantDefinition.growthStageDuration);
+
+      console.warn("Plant advanced growth state.");
+      return true;
+    }
+
+    return false;
+  }
+
+  /**Returns true when visuals get updated. */
+  private syncPlantVisuals(dimension: Dimension, plant: IPlantData): boolean {
+    if (plant.growthStage === plant.growthStageVisual) {
+      return false;
+    }
+
+    const block = dimension.getBlock(plant.blockLocation);
+
+    if (!block) {
+      return false;
+    }
+
+    BlockUtility.setPermutationByIndex(
+      block,
+      EntityIdUtility.getFullId(BlockPermutationStateKeys.plantGrowth),
+      plant.growthStage
+    );
+
+    plant.growthStageVisual = plant.growthStage;
+
+    console.warn("Plant visuals updated.");
+    return true;
   }
 }

@@ -17,24 +17,41 @@ export class PlantGrowthManager {
     growPlayerPlants(player) {
         const playerData = this.playerManager.getPlayerData(player.id);
         for (const plant of playerData.plants) {
-            const plantDefinition = PlantDefinitions[plant.plantDefinitionKey];
-            if (plant.growthStage >= plantDefinition.maxGrowthStage) {
-                continue;
-            }
-            plant.ticksUntilNextStage--;
-            if (plant.ticksUntilNextStage <= 0) {
-                this.advancePlantStage(player, plant, plantDefinition);
+            const isGrowthStageChanged = this.growPlant(plant);
+            const isPlantVisualsUpdated = this.syncPlantVisuals(player.dimension, plant);
+            if (isGrowthStageChanged || isPlantVisualsUpdated) {
                 PlayerDataPersistenceManager.setPlants(player, playerData.plants);
             }
         }
     }
-    advancePlantStage(player, plant, plantDefinition) {
-        plant.growthStage++;
-        plant.ticksUntilNextStage = TimeUtility.getTicks(plantDefinition.growthStageDuration);
-        const block = player.dimension.getBlock(plant.blockLocation);
-        if (block) {
-            BlockUtility.setPermutationByIndex(block, EntityIdUtility.getFullId(BlockPermutationStateKeys.plantGrowth), plant.growthStage);
+    /**Returns true when the plant advances to the next growth stage*/
+    growPlant(plant) {
+        const plantDefinition = PlantDefinitions[plant.plantDefinitionKey];
+        if (plant.growthStage >= plantDefinition.maxGrowthStage) {
+            return false;
         }
+        plant.ticksUntilNextStage--;
+        if (plant.ticksUntilNextStage <= 0) {
+            plant.growthStage++;
+            plant.ticksUntilNextStage = TimeUtility.getTicks(plantDefinition.growthStageDuration);
+            console.warn("Plant advanced growth state.");
+            return true;
+        }
+        return false;
+    }
+    /**Returns true when visuals get updated. */
+    syncPlantVisuals(dimension, plant) {
+        if (plant.growthStage === plant.growthStageVisual) {
+            return false;
+        }
+        const block = dimension.getBlock(plant.blockLocation);
+        if (!block) {
+            return false;
+        }
+        BlockUtility.setPermutationByIndex(block, EntityIdUtility.getFullId(BlockPermutationStateKeys.plantGrowth), plant.growthStage);
+        plant.growthStageVisual = plant.growthStage;
+        console.warn("Plant visuals updated.");
+        return true;
     }
 }
 //# sourceMappingURL=PlantGrowthManager.js.map

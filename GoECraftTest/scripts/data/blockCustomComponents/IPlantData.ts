@@ -4,5 +4,6 @@ export interface IPlantData {
   plantDefinitionKey: string;
   blockLocation: Vector3;
   growthStage: number;
+  growthStageVisual: number;
   ticksUntilNextStage: number;
 }

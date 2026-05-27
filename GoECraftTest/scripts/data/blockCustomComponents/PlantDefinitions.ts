@@ -4,7 +4,7 @@ import { IPlantDefinition } from "./IPlantDefinition";
 export const PlantDefinitions: Record<string, IPlantDefinition> = {
   tomato_plant: {
     maxGrowthStage: 2,
-    growthStageDuration: 2, //set to 60
+    growthStageDuration: 30, //set to 60
   },
   cucumber_plant: {
     maxGrowthStage: 4,

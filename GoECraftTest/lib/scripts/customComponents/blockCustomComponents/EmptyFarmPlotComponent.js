@@ -51,6 +51,7 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
             plantDefinitionKey: plantDefinitionKey,
             blockLocation: plantBlock.location,
             growthStage: 0,
+            growthStageVisual: 0,
             ticksUntilNextStage: TimeUtility.getTicks(plantDefinition.growthStageDuration),
         };
         const playerData = this.playerManager.getPlayerData(player.id);
