@@ -11,6 +11,14 @@ const fertilizerItemId = EntityIdUtility.getFullId(CustomItemIds.fertilizer);
 const uberFertilizerItemId = EntityIdUtility.getFullId(CustomItemIds.uberFertilizer);
 const fertilizerBoostAmount = 30;
 const uberFertilizerBoostAmount = 60;
+const hoeIds = [
+    "minecraft:wooden_hoe",
+    "minecraft:stone_hoe",
+    "minecraft:iron_hoe",
+    "minecraft:golden_hoe",
+    "minecraft:diamond_hoe",
+    "minecraft:netherite_hoe",
+];
 export class PlayerGrownPlantComponent extends BlockCustomComponent {
     constructor(playerManager) {
         super();
@@ -27,39 +35,42 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
             return; //this means player does not own the block
         }
         const plantDefinition = PlantDefinitions[plantData.plantDefinitionKey];
-        const maxGrowthStage = plantDefinition.maxGrowthStage;
+        const isFullyGrown = plantData.growthStage >= plantDefinition.maxGrowthStage;
         let isPlayerDataChanged = false;
         if (PlayerInventoryUtility.isPlayerHoldingItem(player, bookItemId)) {
-            this.showPlantGrowthInfo(player, plantData, maxGrowthStage);
+            this.showPlantGrowthInfo(player, plantData, isFullyGrown);
         }
         else if (PlayerInventoryUtility.isPlayerHoldingItem(player, fertilizerItemId)) {
-            isPlayerDataChanged = this.tryBoostPlantGrowth(player, plantData, maxGrowthStage, fertilizerBoostAmount);
+            isPlayerDataChanged = this.tryBoostPlantGrowth(player, plantData, isFullyGrown, fertilizerBoostAmount);
         }
         else if (PlayerInventoryUtility.isPlayerHoldingItem(player, uberFertilizerItemId)) {
-            isPlayerDataChanged = this.tryBoostPlantGrowth(player, plantData, maxGrowthStage, uberFertilizerBoostAmount);
+            isPlayerDataChanged = this.tryBoostPlantGrowth(player, plantData, isFullyGrown, uberFertilizerBoostAmount);
+        }
+        else if (this.isPlayerHoldingHoeItem(player) && isFullyGrown) {
+            console.warn("test");
         }
         if (isPlayerDataChanged) {
             PlayerDataPersistenceManager.setPlants(player, playerPlants);
         }
     }
-    showPlantGrowthInfo(player, plantData, maxGrowthStage) {
+    showPlantGrowthInfo(player, plantData, isFullyGrown) {
         const currentGrowthStage = plantData.growthStage;
         const timeUntilNextGrowthStage = TimeUtility.ticksToSeconds(plantData.ticksUntilNextStage);
-        const message = plantData.growthStage >= maxGrowthStage
+        const message = isFullyGrown
             ? "Growth stage: Ripe for harvest!"
             : `Growth stage: ${currentGrowthStage} | Next stage in: ${timeUntilNextGrowthStage}`;
         player.onScreenDisplay.setActionBar(message);
     }
     /**Returns true unless fully grown plant*/
-    tryBoostPlantGrowth(player, plantData, maxGrowthStage, boostAmount) {
-        if (plantData.growthStage >= maxGrowthStage) {
+    tryBoostPlantGrowth(player, plantData, isFullyGrown, boostAmount) {
+        if (isFullyGrown) {
             player.onScreenDisplay.setActionBar("There is nothing to boost, this one is ripe!");
             return false;
         }
         const newTicksLeft = plantData.ticksUntilNextStage - TimeUtility.secondsToTicks(boostAmount);
         plantData.ticksUntilNextStage = Math.max(0, newTicksLeft);
         if (newTicksLeft > 0) {
-            this.showPlantGrowthInfo(player, plantData, maxGrowthStage);
+            this.showPlantGrowthInfo(player, plantData, isFullyGrown);
         }
         else {
             player.onScreenDisplay.setActionBar("Boosted growth to next stage!");
@@ -73,6 +84,9 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
             }
         }
         return null;
+    }
+    isPlayerHoldingHoeItem(player) {
+        return PlayerInventoryUtility.isPlayerHoldingItemAny(player, hoeIds);
     }
 }
 //# sourceMappingURL=PlayerGrownPlantComponent.js.map
