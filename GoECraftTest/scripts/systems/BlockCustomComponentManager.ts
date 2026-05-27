@@ -6,6 +6,7 @@ import {
 } from "@minecraft/server";
 import { EmptyFarmPlotComponent } from "../customComponents/blockCustomComponents/EmptyFarmPlotComponent";
 import { PlayerManager } from "./PlayerManager";
+import { PlantGrowthComponent } from "../customComponents/blockCustomComponents/PlantGrowthComponent";
 
 export class BlockCustomComponentManager {
   constructor(private readonly playerManager: PlayerManager) {}
@@ -29,5 +30,7 @@ export class BlockCustomComponentManager {
       EmptyFarmPlotComponent.getId(),
       new EmptyFarmPlotComponent(this.playerManager)
     );
+
+    blockComponentRegistry.registerCustomComponent(PlantGrowthComponent.getId(), new PlantGrowthComponent());
   }
 }

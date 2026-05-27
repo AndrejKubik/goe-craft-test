@@ -38,5 +38,20 @@ export class PlayerDataPersistenceManager {
             return [];
         }
     }
+    static setPlants(player, plants) {
+        player.setDynamicProperty(PlayerSaveKeys.plants, JSON.stringify(plants));
+    }
+    static getPlants(player) {
+        const property = player.getDynamicProperty(PlayerSaveKeys.plants);
+        if (property === undefined || typeof property !== "string") {
+            return [];
+        }
+        try {
+            return JSON.parse(property);
+        }
+        catch {
+            return [];
+        }
+    }
 }
 //# sourceMappingURL=PlayerDataPersistenceManager.js.map

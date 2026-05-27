@@ -1,16 +1,17 @@
 import { Player, Vector3 } from "@minecraft/server";
 import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
+import { IPlantData } from "../data/blockCustomComponents/IPlantData";
 
 export class PlayerDataPersistenceManager {
-  static clearProperty(player: Player, saveKey: string): void {
+  public static clearProperty(player: Player, saveKey: string): void {
     player.setDynamicProperty(saveKey, undefined);
   }
 
-  static setVisitCount(player: Player, value: number): void {
+  public static setVisitCount(player: Player, value: number): void {
     player.setDynamicProperty(PlayerSaveKeys.totalVisits, value);
   }
 
-  static getVisitCount(player: Player): number {
+  public static getVisitCount(player: Player): number {
     const property = player.getDynamicProperty(PlayerSaveKeys.totalVisits);
 
     if (property === undefined || typeof property !== "number") {
@@ -20,11 +21,11 @@ export class PlayerDataPersistenceManager {
     return property as number;
   }
 
-  static setPlayTime(player: Player, value: number): void {
+  public static setPlayTime(player: Player, value: number): void {
     player.setDynamicProperty(PlayerSaveKeys.playTime, value);
   }
 
-  static getPlayerPlayTime(player: Player): number {
+  public static getPlayerPlayTime(player: Player): number {
     const property = player.getDynamicProperty(PlayerSaveKeys.playTime);
 
     if (property === undefined || typeof property !== "number") {
@@ -34,11 +35,11 @@ export class PlayerDataPersistenceManager {
     return property as number;
   }
 
-  static setFarmPlotLocations(player: Player, locations: Vector3[]): void {
+  public static setFarmPlotLocations(player: Player, locations: Vector3[]): void {
     player.setDynamicProperty(PlayerSaveKeys.farmPlotLocations, JSON.stringify(locations));
   }
 
-  static getFarmPlotLocations(player: Player): Vector3[] {
+  public static getFarmPlotLocations(player: Player): Vector3[] {
     const property = player.getDynamicProperty(PlayerSaveKeys.farmPlotLocations);
 
     if (property === undefined || typeof property !== "string") {
@@ -47,6 +48,24 @@ export class PlayerDataPersistenceManager {
 
     try {
       return JSON.parse(property) as Vector3[];
+    } catch {
+      return [];
+    }
+  }
+
+  public static setPlants(player: Player, plants: IPlantData[]) {
+    player.setDynamicProperty(PlayerSaveKeys.plants, JSON.stringify(plants));
+  }
+
+  public static getPlants(player: Player): IPlantData[] {
+    const property = player.getDynamicProperty(PlayerSaveKeys.plants);
+
+    if (property === undefined || typeof property !== "string") {
+      return [];
+    }
+
+    try {
+      return JSON.parse(property) as IPlantData[];
     } catch {
       return [];
     }

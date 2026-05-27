@@ -1,1 +1,1 @@
-{"version":3,"file":"PlayerData.js","sourceRoot":"","sources":["../../../../scripts/data/dataPersistence/PlayerData.ts"],"names":[],"mappings":"AAEA,MAAM,OAAO,UAAU;IAAvB;QACS,wBAAmB,GAAW,CAAC,CAAC;QAChC,sBAAiB,GAAc,EAAE,CAAC;IAC3C,CAAC;CAAA"}
+{"version":3,"file":"PlayerData.js","sourceRoot":"","sources":["../../../../scripts/data/dataPersistence/PlayerData.ts"],"names":[],"mappings":"AAGA,MAAM,OAAO,UAAU;IAAvB;QACS,wBAAmB,GAAW,CAAC,CAAC;QAChC,sBAAiB,GAAc,EAAE,CAAC;QAClC,WAAM,GAAiB,EAAE,CAAC;IACnC,CAAC;CAAA"}

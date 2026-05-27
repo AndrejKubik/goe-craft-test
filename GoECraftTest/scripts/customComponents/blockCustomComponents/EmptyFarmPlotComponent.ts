@@ -1,10 +1,15 @@
-import { BlockComponentPlayerInteractEvent } from "@minecraft/server";
+import { Block, BlockComponentPlayerInteractEvent, Player } from "@minecraft/server";
 import { BlockCustomComponent } from "../baseClasses/BlockCustomComponent";
 import { PlayerManager } from "../../systems/PlayerManager";
 import { PlayerInventoryUtility } from "../../utilities/PlayerInventoryUtility";
 import { CustomItemIds } from "../../data/idContainers/CustomItemIds";
 import { EntityIdUtility } from "../../utilities/EntityIdUtility";
 import { CustomBlockIds } from "../../data/idContainers/CustomBlockIds";
+import { PlantDefinitions } from "../../data/blockCustomComponents/PlantDefinitions";
+import { PlantDefinitionKeys } from "../../data/blockCustomComponents/PlantDefinitionKeys";
+import { IPlantData } from "../../data/blockCustomComponents/IPlantData";
+import { TimeUtility } from "../../utilities/TimeUtility";
+import { BlockStateSuperset } from "@minecraft/vanilla-data";
 
 const tomatoSeedId = EntityIdUtility.getFullId(CustomItemIds.tomatoSeed);
 const cucumberSeedId = EntityIdUtility.getFullId(CustomItemIds.cucumberSeed);
@@ -27,11 +32,40 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     }
 
     if (PlayerInventoryUtility.isPlayerHoldingItem(player, tomatoSeedId)) {
-      console.warn("Planted tomato seed");
-      block.setType(EntityIdUtility.getFullId(CustomBlockIds.usedFarmPlot));
+      this.plantSeed(player, block, PlantDefinitionKeys.tomato, CustomBlockIds.tomatoPlant);
     } else if (PlayerInventoryUtility.isPlayerHoldingItem(player, cucumberSeedId)) {
-      console.warn("Planted cucumber seed");
-      block.setType(EntityIdUtility.getFullId(CustomBlockIds.usedFarmPlot));
+      this.plantSeed(player, block, PlantDefinitionKeys.cucumber, CustomBlockIds.cucumberPlant);
     }
+  }
+
+  /**plantBlockRawId - identifier without the "namespace_name:" part. */
+  private plantSeed(player: Player, farmPlotBlock: Block, plantDefinitionKey: string, plantBlockRawId: string) {
+    const plantBlock = farmPlotBlock.above();
+
+    if (!plantBlock) {
+      console.error("Cannot find the block data for block above the farm plot. Cannot plant seeds");
+
+      return;
+    }
+
+    farmPlotBlock.setType(EntityIdUtility.getFullId(CustomBlockIds.usedFarmPlot));
+    plantBlock.setType(EntityIdUtility.getFullId(plantBlockRawId));
+
+    const plantGrowthState = "fruit_simulator:plant_growth" as any;
+    plantBlock.setPermutation(plantBlock.permutation.withState(plantGrowthState, 0));
+
+    const plantDefinition = PlantDefinitions[plantDefinitionKey];
+
+    const plantData: IPlantData = {
+      plantId: plantDefinitionKey,
+      blockLocation: plantBlock.location,
+      growthStage: 0,
+      stageGrowTime: Date.now() + TimeUtility.getMiliseconds(plantDefinition.growthStageDuration),
+    };
+
+    const playerData = this.playerManager.getPlayerData(player.id);
+
+    playerData.plants.push(plantData);
+    console.warn(`Planted seed: ${plantBlockRawId}`);
   }
 }

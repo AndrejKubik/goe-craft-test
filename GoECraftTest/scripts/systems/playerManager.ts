@@ -21,8 +21,8 @@ export class PlayerManager {
 
   public onPlayerSpawn(player: Player): void {
     this.increasePlayerVisits(player);
+    PlayerDataPersistenceManager.clearProperty(player, PlayerSaveKeys.farmPlotLocations);
     this.loadPlayerFarmPlotBlocks(player);
-    // PlayerDataPersistenceManager.clearProperty(player, PlayerSaveKeys.farmPlotLocations);
 
     system.runTimeout(
       player.sendMessage.bind(player, this.getPlayerWelcomeMessage(player)),
@@ -76,7 +76,7 @@ export class PlayerManager {
     return `Welcome back ${playerNameText}!\n` + `Play time: ${playTimeText}\n` + `Current visit: ${currentVisit}`;
   }
 
-  private getPlayerData(playerId: string): PlayerData {
+  public getPlayerData(playerId: string): PlayerData {
     let playerData = this.playerMap.get(playerId);
 
     if (playerData === undefined) {

@@ -5,6 +5,7 @@ import { PlayerData } from "../data/dataPersistence/PlayerData";
 import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
 import { BlockUtility } from "../utilities/BlockUtility";
 import { MathUtility } from "../utilities/MathUtility";
+import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 const fullSecondTicks = 20;
 const playerWelcomeMessageDelayTicks = 40;
 export class PlayerManager {
@@ -18,8 +19,8 @@ export class PlayerManager {
     }
     onPlayerSpawn(player) {
         this.increasePlayerVisits(player);
+        PlayerDataPersistenceManager.clearProperty(player, PlayerSaveKeys.farmPlotLocations);
         this.loadPlayerFarmPlotBlocks(player);
-        // PlayerDataPersistenceManager.clearProperty(player, PlayerSaveKeys.farmPlotLocations);
         system.runTimeout(player.sendMessage.bind(player, this.getPlayerWelcomeMessage(player)), playerWelcomeMessageDelayTicks //small delay to avoid duplicate welcome message, due to UI reload at startup
         );
     }
