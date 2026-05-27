@@ -6,7 +6,7 @@ import {
 } from "@minecraft/server";
 import { EmptyFarmPlotComponent } from "../customComponents/blockCustomComponents/EmptyFarmPlotComponent";
 import { PlayerManager } from "./PlayerManager";
-import { PlantGrowthComponent } from "../customComponents/blockCustomComponents/PlantGrowthComponent";
+import { PlayerGrownPlantComponent } from "../customComponents/blockCustomComponents/PlayerGrownPlantComponent";
 
 export class BlockCustomComponentManager {
   constructor(private readonly playerManager: PlayerManager) {}
@@ -23,14 +23,12 @@ export class BlockCustomComponentManager {
     }
   }
 
-  // public onInteractWithBlockGlobal(event: PlayerInteractWithBlockBeforeEvent) {}
-
   private registerCustomComponents(blockComponentRegistry: BlockComponentRegistry) {
     blockComponentRegistry.registerCustomComponent(
       EmptyFarmPlotComponent.getId(),
       new EmptyFarmPlotComponent(this.playerManager)
     );
 
-    blockComponentRegistry.registerCustomComponent(PlantGrowthComponent.getId(), new PlantGrowthComponent());
+    blockComponentRegistry.registerCustomComponent(PlayerGrownPlantComponent.getId(), new PlayerGrownPlantComponent());
   }
 }
