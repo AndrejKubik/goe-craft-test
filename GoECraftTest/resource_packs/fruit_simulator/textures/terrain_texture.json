@@ -7,6 +7,15 @@
     },
     "used_farm_plot": {
       "textures": "textures/blocks/used_farm_plot"
+    },
+    "tomato_plant_0": {
+      "textures": "textures/blocks/tomato_plant/tomato_plant_0"
+    },
+    "tomato_plant_1": {
+      "textures": "textures/blocks/tomato_plant/tomato_plant_1"
+    },
+    "tomato_plant_2": {
+      "textures": "textures/blocks/tomato_plant/tomato_plant_2"
     }
   }
 }

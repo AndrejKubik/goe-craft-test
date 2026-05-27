@@ -1,0 +1,52 @@
+{
+  "format_version": "1.21.0",
+  "minecraft:block": {
+    "description": {
+      "identifier": "fruit_simulator:tomato_plant",
+      "states": {
+        "fruit_simulator:plant_growth": [0, 1, 2]
+      }
+    },
+
+    "components": {
+      "minecraft:destructible_by_mining": true,
+      "minecraft:collision_box": false,
+      "minecraft:selection_box": true,
+
+      "minecraft:geometry": "geometry.tomato_plant_0",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "tomato_plant_0",
+          "render_method": "alpha_test"
+        }
+      }
+    },
+
+    "permutations": [
+      {
+        "condition": "q.block_state('fruit_simulator:plant_growth') == 1",
+        "components": {
+          "minecraft:geometry": "geometry.tomato_plant_1",
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "tomato_plant_1",
+              "render_method": "alpha_test"
+            }
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('fruit_simulator:plant_growth') == 2",
+        "components": {
+          "minecraft:geometry": "geometry.tomato_plant_2",
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "tomato_plant_2",
+              "render_method": "alpha_test"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
