@@ -4,11 +4,13 @@ import { ItemCustomComponentManager } from "./systems/ItemCustomComponentManager
 import { WorldSettingsManager } from "./systems/WorldSettingsManager";
 import { GameModeManager } from "./systems/GameModeManager";
 import { BlockCustomComponentManager } from "./systems/BlockCustomComponentManager";
+import { PlantGrowthManager } from "./systems/PlantGrowthManager";
 const gameModeManager = new GameModeManager();
 const playerManager = new PlayerManager();
 const worldSettingsManager = new WorldSettingsManager();
 const itemCustomComponentManager = new ItemCustomComponentManager(worldSettingsManager, gameModeManager);
 const blockCustomComponentManager = new BlockCustomComponentManager(playerManager);
+const plantGrowthManager = new PlantGrowthManager(playerManager);
 function mainTick() {
     try {
         onTick();
@@ -27,6 +29,7 @@ function onStartup(event) {
 function onTick() {
     playerManager.onTick();
     gameModeManager.onTick();
+    plantGrowthManager.onTick();
 }
 function onPlayerSpawn(event) {
     if (event.initialSpawn) {

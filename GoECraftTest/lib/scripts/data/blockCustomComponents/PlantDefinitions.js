@@ -1,7 +1,8 @@
+/**growthStageDuration - in seconds */
 export const PlantDefinitions = {
     tomato_plant: {
         maxGrowthStage: 2,
-        growthStageDuration: 60,
+        growthStageDuration: 2, //set to 60
     },
     cucumber_plant: {
         maxGrowthStage: 4,

@@ -42,10 +42,10 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
         plantBlock.setPermutation(plantBlock.permutation.withState(plantGrowthState, 0));
         const plantDefinition = PlantDefinitions[plantDefinitionKey];
         const plantData = {
-            plantId: plantDefinitionKey,
+            plantDefinitionKey: plantDefinitionKey,
             blockLocation: plantBlock.location,
             growthStage: 0,
-            stageGrowTime: Date.now() + TimeUtility.getMiliseconds(plantDefinition.growthStageDuration),
+            ticksUntilNextStage: TimeUtility.getTicks(plantDefinition.growthStageDuration),
         };
         const playerData = this.playerManager.getPlayerData(player.id);
         playerData.plants.push(plantData);

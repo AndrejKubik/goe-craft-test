@@ -1,5 +1,5 @@
 export class TimeUtility {
-  public static getMiliseconds(seconds: number): number {
-    return seconds * 1000;
+  public static getTicks(seconds: number): number {
+    return seconds * 20;
   }
 }

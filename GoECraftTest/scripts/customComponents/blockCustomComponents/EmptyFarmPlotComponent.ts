@@ -9,7 +9,6 @@ import { PlantDefinitions } from "../../data/blockCustomComponents/PlantDefiniti
 import { PlantDefinitionKeys } from "../../data/blockCustomComponents/PlantDefinitionKeys";
 import { IPlantData } from "../../data/blockCustomComponents/IPlantData";
 import { TimeUtility } from "../../utilities/TimeUtility";
-import { BlockStateSuperset } from "@minecraft/vanilla-data";
 
 const tomatoSeedId = EntityIdUtility.getFullId(CustomItemIds.tomatoSeed);
 const cucumberSeedId = EntityIdUtility.getFullId(CustomItemIds.cucumberSeed);
@@ -57,10 +56,10 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     const plantDefinition = PlantDefinitions[plantDefinitionKey];
 
     const plantData: IPlantData = {
-      plantId: plantDefinitionKey,
+      plantDefinitionKey: plantDefinitionKey,
       blockLocation: plantBlock.location,
       growthStage: 0,
-      stageGrowTime: Date.now() + TimeUtility.getMiliseconds(plantDefinition.growthStageDuration),
+      ticksUntilNextStage: TimeUtility.getTicks(plantDefinition.growthStageDuration),
     };
 
     const playerData = this.playerManager.getPlayerData(player.id);
