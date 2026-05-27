@@ -6,7 +6,7 @@ export const PlantDefinitions = {
     },
     cucumber_plant: {
         maxGrowthStage: 4,
-        growthStageDuration: 120,
+        growthStageDuration: 2, //set to 120
     },
 };
 //# sourceMappingURL=PlantDefinitions.js.map
