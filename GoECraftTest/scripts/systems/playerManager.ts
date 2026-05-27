@@ -1,10 +1,9 @@
-import { Block, Player, system, Vector3, world } from "@minecraft/server";
+import { Block, Player, system, world } from "@minecraft/server";
 import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { PlayerData } from "../data/dataPersistence/PlayerData";
 import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
 import { BlockUtility } from "../utilities/BlockUtility";
-import { MathUtility } from "../utilities/MathUtility";
 import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 
 const fullSecondTicks = 20;
@@ -21,7 +20,7 @@ export class PlayerManager {
 
   public onPlayerSpawn(player: Player): void {
     this.increasePlayerVisits(player);
-    PlayerDataPersistenceManager.clearProperty(player, PlayerSaveKeys.farmPlotLocations);
+    PlayerDataPersistenceManager.clearProperty(player, PlayerSaveKeys.farmPlotLocations); //remove this!
     this.loadPlayerFarmPlotBlocks(player);
 
     system.runTimeout(
@@ -105,19 +104,5 @@ export class PlayerManager {
   private loadPlayerFarmPlotBlocks(player: Player): void {
     const playerData = this.getPlayerData(player.id);
     playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
-  }
-
-  public isFarmPlotOwnedByPlayer(block: Block, player: Player): boolean {
-    const playerData = this.getPlayerData(player.id);
-    const playerFarmPlotLocations = playerData.farmPlotLocations;
-    const blockLocation = block.location;
-
-    for (const farmPlotLocation of playerFarmPlotLocations) {
-      if (MathUtility.areVectorsEqual(farmPlotLocation, blockLocation)) {
-        return true;
-      }
-    }
-
-    return false;
   }
 }

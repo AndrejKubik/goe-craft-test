@@ -19,7 +19,9 @@
           "texture": "cucumber_plant_0",
           "render_method": "alpha_test"
         }
-      }
+      },
+
+      "minecraft:custom_components": ["fruit_simulator:player_grown_plant"]
     },
 
     "permutations": [

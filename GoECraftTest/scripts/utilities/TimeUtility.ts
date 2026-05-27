@@ -1,5 +1,9 @@
 export class TimeUtility {
-  public static getTicks(seconds: number): number {
+  public static secondsToTicks(seconds: number): number {
     return seconds * 20;
+  }
+
+  public static ticksToSeconds(ticks: number): number {
+    return Math.floor(ticks / 20);
   }
 }

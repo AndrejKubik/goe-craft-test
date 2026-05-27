@@ -33,7 +33,7 @@ export class PlantGrowthManager {
         plant.ticksUntilNextStage--;
         if (plant.ticksUntilNextStage <= 0) {
             plant.growthStage++;
-            plant.ticksUntilNextStage = TimeUtility.getTicks(plantDefinition.growthStageDuration);
+            plant.ticksUntilNextStage = TimeUtility.secondsToTicks(plantDefinition.growthStageDuration);
             console.warn("Plant advanced growth state.");
             return true;
         }

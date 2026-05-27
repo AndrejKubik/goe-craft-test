@@ -1,4 +1,4 @@
-import { BlockComponentOnPlaceEvent, BlockComponentPlayerInteractEvent } from "@minecraft/server";
+import { BlockComponentOnPlaceEvent, BlockComponentPlayerInteractEvent, Player } from "@minecraft/server";
 import { CustomComponent } from "./CustomComponent";
 
 export abstract class BlockCustomComponent extends CustomComponent {
@@ -10,5 +10,15 @@ export abstract class BlockCustomComponent extends CustomComponent {
   }
 
   public onPlace(event: BlockComponentOnPlaceEvent): void {}
-  public onPlayerInteract(event: BlockComponentPlayerInteractEvent): void {}
+
+  /**Do not override this on child classes, override onInteract() instead */
+  public onPlayerInteract(event: BlockComponentPlayerInteractEvent): void {
+    const player = event.player;
+
+    if (player) {
+      this.onInteract(player, event);
+    }
+  }
+
+  protected onInteract(player: Player, event: BlockComponentPlayerInteractEvent): void {}
 }

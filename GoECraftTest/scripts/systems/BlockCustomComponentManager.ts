@@ -1,9 +1,4 @@
-import {
-  BlockComponentRegistry,
-  PlayerInteractWithBlockBeforeEvent,
-  PlayerPlaceBlockAfterEvent,
-  StartupEvent,
-} from "@minecraft/server";
+import { BlockComponentRegistry, PlayerPlaceBlockAfterEvent, StartupEvent } from "@minecraft/server";
 import { EmptyFarmPlotComponent } from "../customComponents/blockCustomComponents/EmptyFarmPlotComponent";
 import { PlayerManager } from "./PlayerManager";
 import { PlayerGrownPlantComponent } from "../customComponents/blockCustomComponents/PlayerGrownPlantComponent";
@@ -29,6 +24,9 @@ export class BlockCustomComponentManager {
       new EmptyFarmPlotComponent(this.playerManager)
     );
 
-    blockComponentRegistry.registerCustomComponent(PlayerGrownPlantComponent.getId(), new PlayerGrownPlantComponent());
+    blockComponentRegistry.registerCustomComponent(
+      PlayerGrownPlantComponent.getId(),
+      new PlayerGrownPlantComponent(this.playerManager)
+    );
   }
 }

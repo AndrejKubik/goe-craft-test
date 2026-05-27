@@ -15,7 +15,7 @@ export class BlockCustomComponentManager {
     }
     registerCustomComponents(blockComponentRegistry) {
         blockComponentRegistry.registerCustomComponent(EmptyFarmPlotComponent.getId(), new EmptyFarmPlotComponent(this.playerManager));
-        blockComponentRegistry.registerCustomComponent(PlayerGrownPlantComponent.getId(), new PlayerGrownPlantComponent());
+        blockComponentRegistry.registerCustomComponent(PlayerGrownPlantComponent.getId(), new PlayerGrownPlantComponent(this.playerManager));
     }
 }
 //# sourceMappingURL=BlockCustomComponentManager.js.map

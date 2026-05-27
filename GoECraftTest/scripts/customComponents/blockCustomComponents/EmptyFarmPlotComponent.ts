@@ -12,9 +12,15 @@ import { TimeUtility } from "../../utilities/TimeUtility";
 import { BlockUtility } from "../../utilities/BlockUtility";
 import { BlockPermutationStateKeys } from "../../data/blockCustomComponents/BlockPermutationStateKeys";
 import { PlayerDataPersistenceManager } from "../../systems/PlayerDataPersistenceManager";
+import { MathUtility } from "../../utilities/MathUtility";
+
+const usedFarmPlotId = EntityIdUtility.getFullId(CustomBlockIds.usedFarmPlot);
 
 const tomatoSeedId = EntityIdUtility.getFullId(CustomItemIds.tomatoSeed);
 const cucumberSeedId = EntityIdUtility.getFullId(CustomItemIds.cucumberSeed);
+
+const tomatoPlantId = EntityIdUtility.getFullId(CustomBlockIds.tomatoPlant);
+const cucumberPlantId = EntityIdUtility.getFullId(CustomBlockIds.cucumberPlant);
 
 export class EmptyFarmPlotComponent extends BlockCustomComponent {
   constructor(private readonly playerManager: PlayerManager) {
@@ -25,23 +31,33 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     return EntityIdUtility.getFullId("empty_farm_plot");
   }
 
-  public onPlayerInteract(event: BlockComponentPlayerInteractEvent): void {
+  public onInteract(player: Player, event: BlockComponentPlayerInteractEvent): void {
     const block = event.block;
-    const player = event.player;
 
-    if (!player || !this.playerManager.isFarmPlotOwnedByPlayer(block, player)) {
+    if (!this.isBlockOwnedByPlayer(event.block, player)) {
       return;
     }
 
     if (PlayerInventoryUtility.isPlayerHoldingItem(player, tomatoSeedId)) {
-      this.plantSeed(player, block, PlantDefinitionKeys.tomato, CustomBlockIds.tomatoPlant);
+      this.plantSeed(player, block, PlantDefinitionKeys.tomato, tomatoPlantId);
     } else if (PlayerInventoryUtility.isPlayerHoldingItem(player, cucumberSeedId)) {
-      this.plantSeed(player, block, PlantDefinitionKeys.cucumber, CustomBlockIds.cucumberPlant);
+      this.plantSeed(player, block, PlantDefinitionKeys.cucumber, cucumberPlantId);
     }
   }
 
-  /**plantBlockRawId - identifier without the "namespace_name:" part. */
-  private plantSeed(player: Player, farmPlotBlock: Block, plantDefinitionKey: string, plantBlockRawId: string) {
+  private isBlockOwnedByPlayer(block: Block, player: Player): boolean {
+    const playerData = this.playerManager.getPlayerData(player.id);
+
+    for (const farmPlotLocation of playerData.farmPlotLocations) {
+      if (MathUtility.areVectorsEqual(farmPlotLocation, block.location)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private plantSeed(player: Player, farmPlotBlock: Block, plantDefinitionKey: string, plantBlockId: string) {
     const plantBlock = farmPlotBlock.above();
 
     if (!plantBlock) {
@@ -50,8 +66,8 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
       return;
     }
 
-    farmPlotBlock.setType(EntityIdUtility.getFullId(CustomBlockIds.usedFarmPlot));
-    plantBlock.setType(EntityIdUtility.getFullId(plantBlockRawId));
+    farmPlotBlock.setType(usedFarmPlotId);
+    plantBlock.setType(plantBlockId);
 
     BlockUtility.setPermutationByIndex(plantBlock, EntityIdUtility.getFullId(BlockPermutationStateKeys.plantGrowth), 0);
 
@@ -68,7 +84,7 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
       blockLocation: plantBlock.location,
       growthStage: 0,
       growthStageVisual: 0,
-      ticksUntilNextStage: TimeUtility.getTicks(plantDefinition.growthStageDuration),
+      ticksUntilNextStage: TimeUtility.secondsToTicks(plantDefinition.growthStageDuration),
     };
 
     const playerData = this.playerManager.getPlayerData(player.id);
@@ -77,6 +93,6 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     playerPlants.push(newPlantData);
     PlayerDataPersistenceManager.setPlants(player, playerPlants);
 
-    console.warn(`Planted seed: ${plantBlockRawId}`);
+    console.warn(`Planted seed: ${plantBlockId}`);
   }
 }
