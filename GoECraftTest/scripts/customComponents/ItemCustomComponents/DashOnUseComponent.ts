@@ -1,19 +1,19 @@
 import { ItemComponentUseEvent, ItemUseAfterEvent, Player } from "@minecraft/server";
 import { ItemCustomComponent } from "../baseClasses/ItemCustomComponent";
-import { DashOnUseComponentConfig } from "../../data/itemCustomComponents/DashOnUseComponentConfig";
+import { IDashOnUseComponentConfig } from "../../data/itemCustomComponents/IDashOnUseComponentConfig";
 import { WorldSettingsManager } from "../../systems/WorldSettingsManager";
 import { EntityIdUtility } from "../../utilities/EntityIdUtility";
+
+const config: IDashOnUseComponentConfig = {
+  horizontalStrength: 1.25,
+  verticalStrength: 0.5,
+  isGroundDashAllowed: false,
+};
 
 export class DashOnUseComponent extends ItemCustomComponent {
   constructor(private readonly worldSettingsManager: WorldSettingsManager) {
     super();
   }
-
-  private config: DashOnUseComponentConfig = {
-    horizontalStrength: 2.2,
-    verticalStrength: 0.5,
-    isGroundDashAllowed: false,
-  };
 
   public static getId(): string {
     return EntityIdUtility.getFullId("dash_on_use");
@@ -21,32 +21,28 @@ export class DashOnUseComponent extends ItemCustomComponent {
 
   public onUse(event: ItemComponentUseEvent): void {
     if (this.worldSettingsManager.isSpeedCheatEnabled()) {
-      tryPlayerDash(event.source, this.config);
-    } else {
-      console.warn("speed cheat disabled.");
+      this.tryPlayerDash(event.source, config);
     }
   }
 
   public onUseVanilla(event: ItemUseAfterEvent): void {
     if (this.worldSettingsManager.isSpeedCheatEnabled()) {
-      tryPlayerDash(event.source, this.config);
-    } else {
-      console.warn("speed cheat disabled.");
+      this.tryPlayerDash(event.source, config);
     }
   }
-}
 
-function tryPlayerDash(player: Player, config: DashOnUseComponentConfig): void {
-  if (player.isOnGround && !config.isGroundDashAllowed) {
-    return;
+  private tryPlayerDash(player: Player, config: IDashOnUseComponentConfig): void {
+    if (player.isOnGround && !config.isGroundDashAllowed) {
+      return;
+    }
+
+    const lookDirection = player.getViewDirection();
+
+    const dashDirection = {
+      x: lookDirection.x * config.horizontalStrength,
+      z: lookDirection.z * config.horizontalStrength,
+    };
+
+    player.applyKnockback(dashDirection, config.verticalStrength);
   }
-
-  const lookDirection = player.getViewDirection();
-
-  const dashDirection = {
-    x: lookDirection.x * config.horizontalStrength,
-    z: lookDirection.z * config.horizontalStrength,
-  };
-
-  player.applyKnockback(dashDirection, config.verticalStrength);
 }

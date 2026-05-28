@@ -19,6 +19,26 @@ export class GameModeManager {
     onTick() {
         this.enforceGameMode(this.currentEnforcedMode);
     }
+    enforceGameMode(mode) {
+        if (mode === EnforcedGameMode.None) {
+            return;
+        }
+        if (mode === EnforcedGameMode.Survival) {
+            this.setModeForAllPlayers(GameMode.Survival);
+        }
+        else if (mode === EnforcedGameMode.Adventure) {
+            this.setModeForAllPlayers(GameMode.Adventure);
+        }
+    }
+    setModeForAllPlayers(gameMode) {
+        for (const player of world.getPlayers()) {
+            const playerGameMode = player.getGameMode();
+            if (playerGameMode !== gameMode) {
+                player.sendMessage(`Your current game mode is ${playerGameMode},\nChanging to enforced game mode : ${gameMode}`);
+            }
+            player.setGameMode(gameMode);
+        }
+    }
     setEnforcedGameMode(gameMode) {
         if (gameMode === this.currentEnforcedMode) {
             return;
@@ -40,26 +60,6 @@ export class GameModeManager {
     }
     getCurrentEnforcedMode() {
         return this.currentEnforcedMode;
-    }
-    enforceGameMode(mode) {
-        if (mode === EnforcedGameMode.None) {
-            return;
-        }
-        if (mode === EnforcedGameMode.Survival) {
-            this.setModeForAllPlayers(GameMode.Survival);
-        }
-        else if (mode === EnforcedGameMode.Adventure) {
-            this.setModeForAllPlayers(GameMode.Adventure);
-        }
-    }
-    setModeForAllPlayers(gameMode) {
-        for (const player of world.getPlayers()) {
-            const playerGameMode = player.getGameMode();
-            if (playerGameMode !== gameMode) {
-                player.sendMessage(`Your current game mode is ${playerGameMode},\nChanging to enforced game mode : ${gameMode}`);
-            }
-            player.setGameMode(gameMode);
-        }
     }
 }
 //# sourceMappingURL=GameModeManager.js.map

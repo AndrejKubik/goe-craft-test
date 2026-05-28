@@ -21,6 +21,32 @@ export class GameModeManager {
     this.enforceGameMode(this.currentEnforcedMode);
   }
 
+  public enforceGameMode(mode: EnforcedGameMode): void {
+    if (mode === EnforcedGameMode.None) {
+      return;
+    }
+
+    if (mode === EnforcedGameMode.Survival) {
+      this.setModeForAllPlayers(GameMode.Survival);
+    } else if (mode === EnforcedGameMode.Adventure) {
+      this.setModeForAllPlayers(GameMode.Adventure);
+    }
+  }
+
+  private setModeForAllPlayers(gameMode: GameMode): void {
+    for (const player of world.getPlayers()) {
+      const playerGameMode = player.getGameMode();
+
+      if (playerGameMode !== gameMode) {
+        player.sendMessage(
+          `Your current game mode is ${playerGameMode},\nChanging to enforced game mode : ${gameMode}`
+        );
+      }
+
+      player.setGameMode(gameMode);
+    }
+  }
+
   public setEnforcedGameMode(gameMode: EnforcedGameMode): void {
     if (gameMode === this.currentEnforcedMode) {
       return;
@@ -47,31 +73,5 @@ export class GameModeManager {
 
   public getCurrentEnforcedMode(): EnforcedGameMode {
     return this.currentEnforcedMode;
-  }
-
-  public enforceGameMode(mode: EnforcedGameMode): void {
-    if (mode === EnforcedGameMode.None) {
-      return;
-    }
-
-    if (mode === EnforcedGameMode.Survival) {
-      this.setModeForAllPlayers(GameMode.Survival);
-    } else if (mode === EnforcedGameMode.Adventure) {
-      this.setModeForAllPlayers(GameMode.Adventure);
-    }
-  }
-
-  private setModeForAllPlayers(gameMode: GameMode): void {
-    for (const player of world.getPlayers()) {
-      const playerGameMode = player.getGameMode();
-
-      if (playerGameMode !== gameMode) {
-        player.sendMessage(
-          `Your current game mode is ${playerGameMode},\nChanging to enforced game mode : ${gameMode}`
-        );
-      }
-
-      player.setGameMode(gameMode);
-    }
   }
 }
