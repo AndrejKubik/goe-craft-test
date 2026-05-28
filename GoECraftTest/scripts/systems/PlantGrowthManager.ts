@@ -11,6 +11,12 @@ import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
 export class PlantGrowthManager {
   constructor(private readonly playerManager: PlayerManager) {}
 
+  public onPlayerLeave(player: Player): void {
+    const playerPlants = this.getPlayerPlants(player);
+
+    PlayerDataPersistenceManager.setPlants(player, playerPlants);
+  }
+
   public onTick() {
     for (const player of world.getPlayers()) {
       this.growPlayerPlants(player);
@@ -18,16 +24,22 @@ export class PlantGrowthManager {
   }
 
   private growPlayerPlants(player: Player) {
-    const playerData = this.playerManager.getPlayerData(player.id);
+    const playerPlants = this.getPlayerPlants(player);
 
-    for (const plant of playerData.plants) {
+    for (const plant of playerPlants) {
       const isGrowthStageChanged = this.growPlant(plant);
       const isPlantVisualsUpdated = this.syncPlantVisuals(player.dimension, plant);
 
       if (isGrowthStageChanged || isPlantVisualsUpdated) {
-        PlayerDataPersistenceManager.setPlants(player, playerData.plants);
+        PlayerDataPersistenceManager.setPlants(player, playerPlants);
       }
     }
+  }
+
+  private getPlayerPlants(player: Player) {
+    const playerData = this.playerManager.getPlayerData(player.id);
+
+    return playerData.plants;
   }
 
   /**Returns true when the plant advances to the next growth stage*/

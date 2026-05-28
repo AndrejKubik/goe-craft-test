@@ -1,4 +1,11 @@
-import { system, StartupEvent, world, PlayerSpawnAfterEvent, ItemUseAfterEvent } from "@minecraft/server";
+import {
+  system,
+  StartupEvent,
+  world,
+  PlayerSpawnAfterEvent,
+  ItemUseAfterEvent,
+  PlayerLeaveBeforeEvent,
+} from "@minecraft/server";
 import { PlayerManager } from "./systems/PlayerManager";
 import { ItemCustomComponentManager } from "./systems/ItemCustomComponentManager";
 import { WorldSettingsManager } from "./systems/WorldSettingsManager";
@@ -42,6 +49,10 @@ function onPlayerSpawn(event: PlayerSpawnAfterEvent): void {
   }
 }
 
+function onPlayerLeave(event: PlayerLeaveBeforeEvent): void {
+  plantGrowthManager.onPlayerLeave(event.player);
+}
+
 function onUseItem(event: ItemUseAfterEvent): void {
   itemCustomComponentManager.onUseItem(event);
 }
@@ -49,5 +60,6 @@ function onUseItem(event: ItemUseAfterEvent): void {
 system.beforeEvents.startup.subscribe(onStartup);
 world.afterEvents.playerSpawn.subscribe(onPlayerSpawn);
 world.afterEvents.itemUse.subscribe(onUseItem);
+world.beforeEvents.playerLeave.subscribe(onPlayerLeave);
 
 system.run(mainTick);

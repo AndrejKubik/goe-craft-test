@@ -1,4 +1,4 @@
-import { system, world } from "@minecraft/server";
+import { system, world, } from "@minecraft/server";
 import { PlayerManager } from "./systems/PlayerManager";
 import { ItemCustomComponentManager } from "./systems/ItemCustomComponentManager";
 import { WorldSettingsManager } from "./systems/WorldSettingsManager";
@@ -36,11 +36,15 @@ function onPlayerSpawn(event) {
         playerManager.onPlayerJoin(event.player);
     }
 }
+function onPlayerLeave(event) {
+    plantGrowthManager.onPlayerLeave(event.player);
+}
 function onUseItem(event) {
     itemCustomComponentManager.onUseItem(event);
 }
 system.beforeEvents.startup.subscribe(onStartup);
 world.afterEvents.playerSpawn.subscribe(onPlayerSpawn);
 world.afterEvents.itemUse.subscribe(onUseItem);
+world.beforeEvents.playerLeave.subscribe(onPlayerLeave);
 system.run(mainTick);
 //# sourceMappingURL=main.js.map

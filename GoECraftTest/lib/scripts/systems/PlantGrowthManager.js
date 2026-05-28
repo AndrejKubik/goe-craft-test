@@ -9,20 +9,28 @@ export class PlantGrowthManager {
     constructor(playerManager) {
         this.playerManager = playerManager;
     }
+    onPlayerLeave(player) {
+        const playerPlants = this.getPlayerPlants(player);
+        PlayerDataPersistenceManager.setPlants(player, playerPlants);
+    }
     onTick() {
         for (const player of world.getPlayers()) {
             this.growPlayerPlants(player);
         }
     }
     growPlayerPlants(player) {
-        const playerData = this.playerManager.getPlayerData(player.id);
-        for (const plant of playerData.plants) {
+        const playerPlants = this.getPlayerPlants(player);
+        for (const plant of playerPlants) {
             const isGrowthStageChanged = this.growPlant(plant);
             const isPlantVisualsUpdated = this.syncPlantVisuals(player.dimension, plant);
             if (isGrowthStageChanged || isPlantVisualsUpdated) {
-                PlayerDataPersistenceManager.setPlants(player, playerData.plants);
+                PlayerDataPersistenceManager.setPlants(player, playerPlants);
             }
         }
+    }
+    getPlayerPlants(player) {
+        const playerData = this.playerManager.getPlayerData(player.id);
+        return playerData.plants;
     }
     /**Returns true when the plant advances to the next growth stage*/
     growPlant(plant) {
