@@ -2,6 +2,7 @@ import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 export class PlayerDataPersistenceManager {
     static clearAllProperties(player) {
         player.clearDynamicProperties();
+        console.warn(`Cleared all dynamic properties for player: ${player.name}`);
     }
     static clearProperty(player, saveKey) {
         player.setDynamicProperty(saveKey, undefined);

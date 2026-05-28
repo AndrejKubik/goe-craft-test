@@ -5,6 +5,8 @@ import { IPlantData } from "../data/blockCustomComponents/IPlantData";
 export class PlayerDataPersistenceManager {
   public static clearAllProperties(player: Player): void {
     player.clearDynamicProperties();
+
+    console.warn(`Cleared all dynamic properties for player: ${player.name}`);
   }
 
   public static clearProperty(player: Player, saveKey: string): void {
