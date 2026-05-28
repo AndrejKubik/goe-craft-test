@@ -34,7 +34,6 @@ export class PlantGrowthManager {
         if (plant.ticksUntilNextStage <= 0) {
             plant.growthStage++;
             plant.ticksUntilNextStage = TimeUtility.secondsToTicks(plantDefinition.growthStageDuration);
-            console.warn("Plant advanced growth state.");
             return true;
         }
         return false;
@@ -50,7 +49,6 @@ export class PlantGrowthManager {
         }
         BlockUtility.setPermutationByIndex(block, EntityIdUtility.getFullId(BlockPermutationStateKeys.plantGrowth), plant.growthStage);
         plant.growthStageVisual = plant.growthStage;
-        console.warn("Plant visuals updated.");
         return true;
     }
 }

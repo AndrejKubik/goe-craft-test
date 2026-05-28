@@ -1,4 +1,5 @@
 export const CustomItemIds = {
+  debugTablet: "debug_tablet",
   tomatoSeed: "tomato_seed",
   cucumberSeed: "cucumber_seed",
   tomato: "tomato",

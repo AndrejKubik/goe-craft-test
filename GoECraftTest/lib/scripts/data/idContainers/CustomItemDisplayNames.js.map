@@ -1,0 +1,1 @@
+{"version":3,"file":"CustomItemDisplayNames.js","sourceRoot":"","sources":["../../../../scripts/data/idContainers/CustomItemDisplayNames.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,MAAM,sBAAsB,GAAG;IACpC,WAAW,EAAE,cAAc;IAC3B,UAAU,EAAE,aAAa;IACzB,MAAM,EAAE,QAAQ;IAChB,YAAY,EAAE,eAAe;IAC7B,QAAQ,EAAE,UAAU;IACpB,UAAU,EAAE,YAAY;IACxB,cAAc,EAAE,iBAAiB;CACzB,CAAC"}

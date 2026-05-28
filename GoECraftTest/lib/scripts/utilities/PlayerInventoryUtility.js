@@ -1,3 +1,4 @@
+import { ItemStack } from "@minecraft/server";
 export class PlayerInventoryUtility {
     static isPlayerHoldingItem(player, itemId) {
         const heldItemStack = this.getPlayerHeldItemStack(player);
@@ -14,18 +15,30 @@ export class PlayerInventoryUtility {
         }
         return itemIds.includes(heldItemStack.typeId);
     }
-    static getPlayerHeldItemStack(player) {
-        const playerInventory = player.getComponent("inventory");
-        if (!playerInventory) {
-            console.error("Failed to find player inventory.");
-            return undefined;
+    static addItemToPlayer(player, itemId, amount) {
+        const inventoryContainer = this.getPlayerInventoryContainer(player);
+        if (!inventoryContainer) {
+            console.error("Failed to access player inventory.");
+            return false;
         }
-        const container = playerInventory.container;
+        const itemStack = new ItemStack(itemId, amount);
+        return inventoryContainer.addItem(itemStack) === undefined;
+    }
+    static getPlayerHeldItemStack(player) {
+        const container = this.getPlayerInventoryContainer(player);
         if (!container) {
             console.error("Failed to find player inventory container.");
             return undefined;
         }
         return container.getItem(player.selectedSlotIndex);
+    }
+    static getPlayerInventoryContainer(player) {
+        const playerInventory = player.getComponent("inventory");
+        if (!playerInventory) {
+            console.error("Failed to find player inventory.");
+            return undefined;
+        }
+        return playerInventory.container;
     }
 }
 //# sourceMappingURL=PlayerInventoryUtility.js.map

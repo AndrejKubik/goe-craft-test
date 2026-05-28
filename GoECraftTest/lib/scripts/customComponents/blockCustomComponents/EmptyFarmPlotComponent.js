@@ -69,7 +69,6 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
         const playerPlants = playerData.plants;
         playerPlants.push(newPlantData);
         PlayerDataPersistenceManager.setPlants(player, playerPlants);
-        console.warn(`Planted seed: ${plantBlockId}`);
     }
 }
 //# sourceMappingURL=EmptyFarmPlotComponent.js.map

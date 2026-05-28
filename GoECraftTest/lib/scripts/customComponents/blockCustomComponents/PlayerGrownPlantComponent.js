@@ -6,6 +6,8 @@ import { TimeUtility } from "../../utilities/TimeUtility";
 import { CustomItemIds } from "../../data/idContainers/CustomItemIds";
 import { PlantDefinitions } from "../../data/blockCustomComponents/PlantDefinitions";
 import { PlayerDataPersistenceManager } from "../../systems/PlayerDataPersistenceManager";
+import { BlockUtility } from "../../utilities/BlockUtility";
+import { CustomBlockIds } from "../../data/idContainers/CustomBlockIds";
 const bookItemId = "minecraft:book";
 const fertilizerItemId = EntityIdUtility.getFullId(CustomItemIds.fertilizer);
 const uberFertilizerItemId = EntityIdUtility.getFullId(CustomItemIds.uberFertilizer);
@@ -30,7 +32,8 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
     onInteract(player, event) {
         const playerData = this.playerManager.getPlayerData(player.id);
         const playerPlants = playerData.plants;
-        const plantData = this.getPlantData(playerData.plants, event.block);
+        const plantBlock = event.block;
+        const plantData = this.getPlantData(playerPlants, plantBlock);
         if (!plantData) {
             return; //this means player does not own the block
         }
@@ -47,7 +50,8 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
             isPlayerDataChanged = this.tryBoostPlantGrowth(player, plantData, isFullyGrown, uberFertilizerBoostAmount);
         }
         else if (this.isPlayerHoldingHoeItem(player) && isFullyGrown) {
-            console.warn("test");
+            this.harvestPlant(player, plantBlock, plantDefinition);
+            isPlayerDataChanged = this.tryRemovePlantBlockDataFromPlayer(playerPlants, plantBlock);
         }
         if (isPlayerDataChanged) {
             PlayerDataPersistenceManager.setPlants(player, playerPlants);
@@ -87,6 +91,33 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
     }
     isPlayerHoldingHoeItem(player) {
         return PlayerInventoryUtility.isPlayerHoldingItemAny(player, hoeIds);
+    }
+    harvestPlant(player, plantBlock, plantDefinition) {
+        const fruitItemId = EntityIdUtility.getFullId(plantDefinition.fruitItemId);
+        const dropAmount = plantDefinition.fruitDropAmount;
+        const fruitDisplayName = plantDefinition.fruitDisplayName;
+        PlayerInventoryUtility.addItemToPlayer(player, fruitItemId, dropAmount);
+        player.onScreenDisplay.setActionBar(`Harvested ${dropAmount}x ${fruitDisplayName}`);
+        BlockUtility.removeBlock(plantBlock);
+        this.resetFarmPlotBlock(plantBlock);
+    }
+    resetFarmPlotBlock(plantBlock) {
+        const farmPlotBlock = plantBlock.below();
+        if (!farmPlotBlock) {
+            console.warn("Failed to find farm plot block.");
+            return;
+        }
+        farmPlotBlock.setType(CustomBlockIds.emptyFarmPlot);
+    }
+    /**Returns true if a plant was removed from the data */
+    tryRemovePlantBlockDataFromPlayer(playerPlants, plantBlock) {
+        const targetIndex = playerPlants.findIndex((plant) => MathUtility.areVectorsEqual(plant.blockLocation, plantBlock.location));
+        if (targetIndex >= 0) {
+            playerPlants.splice(targetIndex, 1);
+            return true;
+        }
+        console.warn("Trying to remove a non-existent player plant from player data, nothing to remove.");
+        return false; //no matching value found
     }
 }
 //# sourceMappingURL=PlayerGrownPlantComponent.js.map

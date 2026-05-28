@@ -44,7 +44,6 @@ export class PlantGrowthManager {
       plant.growthStage++;
       plant.ticksUntilNextStage = TimeUtility.secondsToTicks(plantDefinition.growthStageDuration);
 
-      console.warn("Plant advanced growth state.");
       return true;
     }
 
@@ -71,7 +70,6 @@ export class PlantGrowthManager {
 
     plant.growthStageVisual = plant.growthStage;
 
-    console.warn("Plant visuals updated.");
     return true;
   }
 }
