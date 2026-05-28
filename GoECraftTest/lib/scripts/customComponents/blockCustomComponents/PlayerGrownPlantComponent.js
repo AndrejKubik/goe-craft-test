@@ -22,6 +22,8 @@ const hoeIds = [
     "minecraft:netherite_hoe",
 ];
 const harvestSoundId = "random.pop";
+const fertilizerSoundId = "random.fizz";
+const bookSoundId = "random.toast";
 export class PlayerGrownPlantComponent extends BlockCustomComponent {
     constructor(playerManager) {
         super();
@@ -42,6 +44,7 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
         let isPlayerDataChanged = false;
         if (PlayerInventoryUtility.isPlayerHoldingItem(player, bookItemId)) {
             this.showPlantGrowthInfo(player, plantData, isFullyGrown);
+            player.dimension.playSound(bookSoundId, plantBlock.location);
         }
         else if (PlayerInventoryUtility.isPlayerHoldingItem(player, fertilizerItemId)) {
             isPlayerDataChanged = this.tryBoostPlantGrowth(player, plantData, isFullyGrown, fertilizerBoostAmount);
@@ -103,6 +106,7 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
         else {
             player.onScreenDisplay.setActionBar("Boosted growth to next stage!");
         }
+        player.dimension.playSound(fertilizerSoundId, plantData.blockLocation);
         return true;
     }
     getPlantData(playerPlants, block) {

@@ -30,6 +30,8 @@ const hoeIds = [
 ];
 
 const harvestSoundId = "random.pop";
+const fertilizerSoundId = "random.fizz";
+const bookSoundId = "random.toast";
 
 export class PlayerGrownPlantComponent extends BlockCustomComponent {
   constructor(private readonly playerManager: PlayerManager) {
@@ -56,6 +58,7 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
 
     if (PlayerInventoryUtility.isPlayerHoldingItem(player, bookItemId)) {
       this.showPlantGrowthInfo(player, plantData, isFullyGrown);
+      player.dimension.playSound(bookSoundId, plantBlock.location);
     } else if (PlayerInventoryUtility.isPlayerHoldingItem(player, fertilizerItemId)) {
       isPlayerDataChanged = this.tryBoostPlantGrowth(player, plantData, isFullyGrown, fertilizerBoostAmount);
     } else if (PlayerInventoryUtility.isPlayerHoldingItem(player, uberFertilizerItemId)) {
@@ -138,6 +141,7 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
       player.onScreenDisplay.setActionBar("Boosted growth to next stage!");
     }
 
+    player.dimension.playSound(fertilizerSoundId, plantData.blockLocation);
     return true;
   }
 

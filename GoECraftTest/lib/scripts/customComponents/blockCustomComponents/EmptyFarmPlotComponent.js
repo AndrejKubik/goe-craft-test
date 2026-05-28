@@ -16,6 +16,7 @@ const cucumberSeedId = EntityIdUtility.getFullId(CustomItemIds.cucumberSeed);
 const tomatoPlantId = EntityIdUtility.getFullId(CustomBlockIds.tomatoPlant);
 const cucumberPlantId = EntityIdUtility.getFullId(CustomBlockIds.cucumberPlant);
 const invalidIndex = -1;
+const plantSeedSoundId = "random.pop";
 export class EmptyFarmPlotComponent extends BlockCustomComponent {
     constructor(playerManager) {
         super();
@@ -96,6 +97,7 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
         const playerPlants = playerData.plants;
         playerPlants.push(newPlantData);
         PlayerDataPersistenceManager.setPlants(player, playerPlants);
+        farmPlotBlock.dimension.playSound(plantSeedSoundId, farmPlotBlock.location);
     }
 }
 //# sourceMappingURL=EmptyFarmPlotComponent.js.map

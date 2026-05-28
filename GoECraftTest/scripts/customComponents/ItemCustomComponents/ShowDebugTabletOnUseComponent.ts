@@ -5,6 +5,8 @@ import { DebugTablet } from "../../ui/DebugTablet";
 import { GameModeManager } from "../../systems/GameModeManager";
 import { EntityIdUtility } from "../../utilities/EntityIdUtility";
 
+const showDebugTabletSoundId = "random.click";
+
 export class ShowDebugTabletOnUseComponent extends ItemCustomComponent {
   constructor(
     private readonly worldSettingsManager: WorldSettingsManager,
@@ -22,5 +24,6 @@ export class ShowDebugTabletOnUseComponent extends ItemCustomComponent {
     const debugTablet = new DebugTablet(player, this.worldSettingsManager, this.gameModeManager);
 
     debugTablet.show();
+    player.dimension.playSound(showDebugTabletSoundId, player.location);
   }
 }

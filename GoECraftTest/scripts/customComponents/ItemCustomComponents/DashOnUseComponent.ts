@@ -10,6 +10,8 @@ const config: IDashOnUseComponentConfig = {
   isGroundDashAllowed: false,
 };
 
+const dashSoundId = "item.trident.riptide_1";
+
 export class DashOnUseComponent extends ItemCustomComponent {
   constructor(private readonly worldSettingsManager: WorldSettingsManager) {
     super();
@@ -44,5 +46,6 @@ export class DashOnUseComponent extends ItemCustomComponent {
     };
 
     player.applyKnockback(dashDirection, config.verticalStrength);
+    player.dimension.playSound(dashSoundId, player.location);
   }
 }

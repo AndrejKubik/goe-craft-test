@@ -32,6 +32,8 @@ const cucumberPlantId = EntityIdUtility.getFullId(CustomBlockIds.cucumberPlant);
 
 const invalidIndex = -1;
 
+const plantSeedSoundId = "random.pop";
+
 export class EmptyFarmPlotComponent extends BlockCustomComponent {
   constructor(private readonly playerManager: PlayerManager) {
     super();
@@ -142,5 +144,7 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
 
     playerPlants.push(newPlantData);
     PlayerDataPersistenceManager.setPlants(player, playerPlants);
+
+    farmPlotBlock.dimension.playSound(plantSeedSoundId, farmPlotBlock.location);
   }
 }
