@@ -2,6 +2,10 @@ import { world } from "@minecraft/server";
 import { WorldSaveKeys } from "../data/dataPersistence/WorldSaveKeys";
 import { EnforcedGameMode } from "../data/dataPersistence/EnforcedGameMode";
 export class WorldDataPersistenceManager {
+    static clearAllProperties() {
+        world.clearDynamicProperties();
+        console.warn("Cleared all world dynamic properties.");
+    }
     static clearProperty(saveKey) {
         world.setDynamicProperty(saveKey, undefined);
     }

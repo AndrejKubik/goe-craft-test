@@ -16,7 +16,6 @@ export class PlayerManager {
         }
     }
     onPlayerJoin(player) {
-        // PlayerDataPersistenceManager.clearAllProperties(player); //remove this!
         this.teleportPlayerToLobby(player);
         this.increasePlayerVisits(player);
         this.loadPlayerData(player);

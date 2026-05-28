@@ -3,15 +3,21 @@ import { WorldSaveKeys } from "../data/dataPersistence/WorldSaveKeys";
 import { EnforcedGameMode } from "../data/dataPersistence/EnforcedGameMode";
 
 export class WorldDataPersistenceManager {
-  static clearProperty(saveKey: string): void {
+  public static clearAllProperties(): void {
+    world.clearDynamicProperties();
+
+    console.warn("Cleared all world dynamic properties.");
+  }
+
+  public static clearProperty(saveKey: string): void {
     world.setDynamicProperty(saveKey, undefined);
   }
 
-  static setSpeedCheatEnabled(newState: boolean): void {
+  public static setSpeedCheatEnabled(newState: boolean): void {
     world.setDynamicProperty(WorldSaveKeys.speedCheatEnabled, newState);
   }
 
-  static getSpeedCheatEnabled(): boolean {
+  public static getSpeedCheatEnabled(): boolean {
     const property = world.getDynamicProperty(WorldSaveKeys.speedCheatEnabled);
 
     if (property === undefined || typeof property !== "boolean") {
@@ -21,11 +27,11 @@ export class WorldDataPersistenceManager {
     return property as boolean;
   }
 
-  static setEnforcedGameMode(gameMode: EnforcedGameMode) {
+  public static setEnforcedGameMode(gameMode: EnforcedGameMode) {
     world.setDynamicProperty(WorldSaveKeys.enforcedGameMode, gameMode);
   }
 
-  static getEnforcedGameMode(): EnforcedGameMode {
+  public static getEnforcedGameMode(): EnforcedGameMode {
     const property = world.getDynamicProperty(WorldSaveKeys.enforcedGameMode);
 
     if (property === undefined || typeof property !== "number") {
