@@ -1,4 +1,4 @@
-import { BlockComponentRegistry, PlayerPlaceBlockAfterEvent, StartupEvent } from "@minecraft/server";
+import { BlockComponentRegistry, StartupEvent } from "@minecraft/server";
 import { EmptyFarmPlotComponent } from "../customComponents/blockCustomComponents/EmptyFarmPlotComponent";
 import { PlayerManager } from "./PlayerManager";
 import { PlayerGrownPlantComponent } from "../customComponents/blockCustomComponents/PlayerGrownPlantComponent";

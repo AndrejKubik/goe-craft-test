@@ -30,9 +30,8 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
         return EntityIdUtility.getFullId("player_grown_plant");
     }
     onInteract(player, event) {
-        const playerData = this.playerManager.getPlayerData(player.id);
-        const playerPlants = playerData.plants;
         const plantBlock = event.block;
+        const playerPlants = this.getPlayerPlants(player);
         const plantData = this.getPlantData(playerPlants, plantBlock);
         if (!plantData) {
             return; //this means player does not own the block
@@ -52,10 +51,31 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
         else if (this.isPlayerHoldingHoeItem(player) && isFullyGrown) {
             this.harvestPlant(player, plantBlock, plantDefinition);
             isPlayerDataChanged = this.tryRemovePlantBlockDataFromPlayer(playerPlants, plantBlock);
+            BlockUtility.removeBlock(plantBlock);
+            this.resetFarmPlotBlock(plantBlock);
         }
         if (isPlayerDataChanged) {
             PlayerDataPersistenceManager.setPlants(player, playerPlants);
         }
+    }
+    onBreak(player, event) {
+        const plantBlock = event.block;
+        const playerPlants = this.getPlayerPlants(player);
+        const plantData = this.getPlantData(playerPlants, plantBlock);
+        if (!plantData) {
+            return; //this means player does not own the block
+        }
+        const plantDefinition = PlantDefinitions[plantData.plantDefinitionKey];
+        const isFullyGrown = plantData.growthStage >= plantDefinition.maxGrowthStage;
+        if (isFullyGrown) {
+            this.harvestPlant(player, plantBlock, plantDefinition);
+        }
+        this.tryRemovePlantBlockDataFromPlayer(playerPlants, plantBlock);
+        this.resetFarmPlotBlock(plantBlock);
+    }
+    getPlayerPlants(player) {
+        const playerData = this.playerManager.getPlayerData(player.id);
+        return playerData.plants;
     }
     showPlantGrowthInfo(player, plantData, isFullyGrown) {
         const currentGrowthStage = plantData.growthStage;
@@ -98,8 +118,6 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
         const fruitDisplayName = plantDefinition.fruitDisplayName;
         PlayerInventoryUtility.addItemToPlayer(player, fruitItemId, dropAmount);
         player.onScreenDisplay.setActionBar(`Harvested ${dropAmount}x ${fruitDisplayName}`);
-        BlockUtility.removeBlock(plantBlock);
-        this.resetFarmPlotBlock(plantBlock);
     }
     resetFarmPlotBlock(plantBlock) {
         const farmPlotBlock = plantBlock.below();
