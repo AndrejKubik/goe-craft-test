@@ -21,6 +21,7 @@ const hoeIds = [
     "minecraft:diamond_hoe",
     "minecraft:netherite_hoe",
 ];
+const harvestSoundId = "random.pop";
 export class PlayerGrownPlantComponent extends BlockCustomComponent {
     constructor(playerManager) {
         super();
@@ -50,9 +51,9 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
         }
         else if (this.isPlayerHoldingHoeItem(player) && isFullyGrown) {
             this.harvestPlant(player, plantBlock, plantDefinition);
+            this.resetFarmPlotBlock(plantBlock);
             isPlayerDataChanged = this.tryRemovePlantBlockDataFromPlayer(playerPlants, plantBlock);
             BlockUtility.removeBlock(plantBlock);
-            this.resetFarmPlotBlock(plantBlock);
         }
         if (isPlayerDataChanged) {
             PlayerDataPersistenceManager.setPlants(player, playerPlants);
@@ -67,11 +68,14 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
         }
         const plantDefinition = PlantDefinitions[plantData.plantDefinitionKey];
         const isFullyGrown = plantData.growthStage >= plantDefinition.maxGrowthStage;
-        if (isFullyGrown) {
+        if (this.isPlayerHoldingHoeItem(player) && isFullyGrown) {
             this.harvestPlant(player, plantBlock, plantDefinition);
         }
-        this.tryRemovePlantBlockDataFromPlayer(playerPlants, plantBlock);
         this.resetFarmPlotBlock(plantBlock);
+        const isPlayerDataChanged = this.tryRemovePlantBlockDataFromPlayer(playerPlants, plantBlock);
+        if (isPlayerDataChanged) {
+            PlayerDataPersistenceManager.setPlants(player, playerPlants);
+        }
     }
     getPlayerPlants(player) {
         const playerData = this.playerManager.getPlayerData(player.id);
@@ -118,6 +122,7 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
         const fruitDisplayName = plantDefinition.fruitDisplayName;
         PlayerInventoryUtility.addItemToPlayer(player, fruitItemId, dropAmount);
         player.onScreenDisplay.setActionBar(`Harvested ${dropAmount}x ${fruitDisplayName}`);
+        plantBlock.dimension.playSound(harvestSoundId, plantBlock.location);
     }
     resetFarmPlotBlock(plantBlock) {
         const farmPlotBlock = plantBlock.below();

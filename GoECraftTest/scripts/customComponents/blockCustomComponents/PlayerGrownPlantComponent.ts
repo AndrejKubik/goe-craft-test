@@ -29,6 +29,8 @@ const hoeIds = [
   "minecraft:netherite_hoe",
 ];
 
+const harvestSoundId = "random.pop";
+
 export class PlayerGrownPlantComponent extends BlockCustomComponent {
   constructor(private readonly playerManager: PlayerManager) {
     super();
@@ -60,11 +62,10 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
       isPlayerDataChanged = this.tryBoostPlantGrowth(player, plantData, isFullyGrown, uberFertilizerBoostAmount);
     } else if (this.isPlayerHoldingHoeItem(player) && isFullyGrown) {
       this.harvestPlant(player, plantBlock, plantDefinition);
+      this.resetFarmPlotBlock(plantBlock);
 
       isPlayerDataChanged = this.tryRemovePlantBlockDataFromPlayer(playerPlants, plantBlock);
-
       BlockUtility.removeBlock(plantBlock);
-      this.resetFarmPlotBlock(plantBlock);
     }
 
     if (isPlayerDataChanged) {
@@ -84,12 +85,17 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
     const plantDefinition = PlantDefinitions[plantData.plantDefinitionKey];
     const isFullyGrown = plantData.growthStage >= plantDefinition.maxGrowthStage;
 
-    if (isFullyGrown) {
+    if (this.isPlayerHoldingHoeItem(player) && isFullyGrown) {
       this.harvestPlant(player, plantBlock, plantDefinition);
     }
 
-    this.tryRemovePlantBlockDataFromPlayer(playerPlants, plantBlock);
     this.resetFarmPlotBlock(plantBlock);
+
+    const isPlayerDataChanged = this.tryRemovePlantBlockDataFromPlayer(playerPlants, plantBlock);
+
+    if (isPlayerDataChanged) {
+      PlayerDataPersistenceManager.setPlants(player, playerPlants);
+    }
   }
 
   private getPlayerPlants(player: Player): IPlantData[] {
@@ -156,6 +162,7 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
 
     PlayerInventoryUtility.addItemToPlayer(player, fruitItemId, dropAmount);
     player.onScreenDisplay.setActionBar(`Harvested ${dropAmount}x ${fruitDisplayName}`);
+    plantBlock.dimension.playSound(harvestSoundId, plantBlock.location);
   }
 
   private resetFarmPlotBlock(plantBlock: Block) {
