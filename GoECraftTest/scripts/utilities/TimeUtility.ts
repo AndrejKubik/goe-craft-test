@@ -1,3 +1,4 @@
+/**Helper for time conversions*/
 export class TimeUtility {
   public static secondsToTicks(seconds: number): number {
     return seconds * 20;

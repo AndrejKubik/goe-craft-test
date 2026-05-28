@@ -3,6 +3,7 @@ import { EmptyFarmPlotComponent } from "../customComponents/blockCustomComponent
 import { PlayerManager } from "./PlayerManager";
 import { PlayerGrownPlantComponent } from "../customComponents/blockCustomComponents/PlayerGrownPlantComponent";
 
+/**Handles registration of custom block components */
 export class BlockCustomComponentManager {
   constructor(private readonly playerManager: PlayerManager) {}
 

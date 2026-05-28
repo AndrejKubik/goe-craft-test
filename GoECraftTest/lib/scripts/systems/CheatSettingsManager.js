@@ -1,11 +1,12 @@
 import { world } from "@minecraft/server";
-import { WorldDataPersistenceManager } from "./WorldDataPersistenceManager";
-export class WorldSettingsManager {
+import { WorldDataPersistenceUtility } from "./WorldDataPersistenceUtility";
+/**Handles cheat settings */
+export class CheatSettingsManager {
     constructor() {
         this.speedCheatEnabled = false;
     }
     onStartup() {
-        this.speedCheatEnabled = WorldDataPersistenceManager.getSpeedCheatEnabled();
+        this.speedCheatEnabled = WorldDataPersistenceUtility.getSpeedCheatEnabled();
     }
     isSpeedCheatEnabled() {
         return this.speedCheatEnabled;
@@ -15,9 +16,9 @@ export class WorldSettingsManager {
             return;
         }
         this.speedCheatEnabled = newState;
-        WorldDataPersistenceManager.setSpeedCheatEnabled(newState);
+        WorldDataPersistenceUtility.setSpeedCheatEnabled(newState);
         const stateText = newState == true ? "enabled" : "disabled";
         world.sendMessage(`Speed cheat is now: ${stateText}.`);
     }
 }
-//# sourceMappingURL=WorldSettingsManager.js.map
+//# sourceMappingURL=CheatSettingsManager.js.map

@@ -1,5 +1,6 @@
 import { Container, ItemStack, Player } from "@minecraft/server";
 
+/**Helper for player inventory operations*/
 export class PlayerInventoryUtility {
   public static isPlayerHoldingItem(player: Player, itemId: string): boolean {
     const heldItemStack = this.getPlayerHeldItemStack(player);

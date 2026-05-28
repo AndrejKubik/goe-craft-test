@@ -1,5 +1,6 @@
 import { DashOnUseComponent } from "../customComponents/ItemCustomComponents/DashOnUseComponent";
 import { ShowDebugTabletOnUseComponent } from "../customComponents/ItemCustomComponents/ShowDebugTabletOnUseComponent";
+/**Handles registration of custom item components and adding their effects to vanilla items as well */
 export class ItemCustomComponentManager {
     constructor(worldSettingsManager, gameModeManager) {
         this.worldSettingsManager = worldSettingsManager;

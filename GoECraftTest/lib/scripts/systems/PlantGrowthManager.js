@@ -4,14 +4,15 @@ import { TimeUtility } from "../utilities/TimeUtility";
 import { BlockUtility } from "../utilities/BlockUtility";
 import { EntityIdUtility } from "../utilities/EntityIdUtility";
 import { BlockPermutationStateKeys } from "../data/blockCustomComponents/BlockPermutationStateKeys";
-import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
+import { PlayerDataPersistenceUtility } from "./PlayerDataPersistenceUtility";
+/**Takes care of plant growth and plant visuals sync for all active players, centralized logic here for easier control*/
 export class PlantGrowthManager {
     constructor(playerManager) {
         this.playerManager = playerManager;
     }
     onPlayerLeave(player) {
         const playerPlants = this.getPlayerPlants(player);
-        PlayerDataPersistenceManager.setPlants(player, playerPlants);
+        PlayerDataPersistenceUtility.setPlants(player, playerPlants);
     }
     onTick() {
         for (const player of world.getPlayers()) {
@@ -24,7 +25,7 @@ export class PlantGrowthManager {
             const isGrowthStageChanged = this.growPlant(plant);
             const isPlantVisualsUpdated = this.syncPlantVisuals(player.dimension, plant);
             if (isGrowthStageChanged || isPlantVisualsUpdated) {
-                PlayerDataPersistenceManager.setPlants(player, playerPlants);
+                PlayerDataPersistenceUtility.setPlants(player, playerPlants);
             }
         }
     }

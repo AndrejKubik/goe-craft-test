@@ -2,6 +2,7 @@ import { ItemCustomComponent } from "../baseClasses/ItemCustomComponent";
 import { DebugTablet } from "../../ui/DebugTablet";
 import { EntityIdUtility } from "../../utilities/EntityIdUtility";
 const showDebugTabletSoundId = "random.click";
+/**Reusable component for showing the debug tablet*/
 export class ShowDebugTabletOnUseComponent extends ItemCustomComponent {
     constructor(worldSettingsManager, gameModeManager) {
         super();

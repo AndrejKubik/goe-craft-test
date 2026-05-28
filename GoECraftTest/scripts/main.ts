@@ -8,15 +8,15 @@ import {
 } from "@minecraft/server";
 import { PlayerManager } from "./systems/PlayerManager";
 import { ItemCustomComponentManager } from "./systems/ItemCustomComponentManager";
-import { WorldSettingsManager } from "./systems/WorldSettingsManager";
+import { CheatSettingsManager } from "./systems/CheatSettingsManager";
 import { GameModeManager } from "./systems/GameModeManager";
 import { BlockCustomComponentManager } from "./systems/BlockCustomComponentManager";
 import { PlantGrowthManager } from "./systems/PlantGrowthManager";
 
 const gameModeManager = new GameModeManager();
 const playerManager = new PlayerManager();
-const worldSettingsManager = new WorldSettingsManager();
-const itemCustomComponentManager = new ItemCustomComponentManager(worldSettingsManager, gameModeManager);
+const cheatSettingsManager = new CheatSettingsManager();
+const itemCustomComponentManager = new ItemCustomComponentManager(cheatSettingsManager, gameModeManager);
 const blockCustomComponentManager = new BlockCustomComponentManager(playerManager);
 const plantGrowthManager = new PlantGrowthManager(playerManager);
 
@@ -31,10 +31,15 @@ function mainTick(): void {
 }
 
 function onStartup(event: StartupEvent): void {
-  system.run(gameModeManager.onStartup.bind(gameModeManager));
-  system.run(worldSettingsManager.onStartup.bind(worldSettingsManager));
   itemCustomComponentManager.onStartup(event);
   blockCustomComponentManager.onStartup(event);
+
+  system.run(onAfterStartup); //we run these in the next frame because of non-early execution methods
+}
+
+function onAfterStartup(): void {
+  gameModeManager.onStartup();
+  cheatSettingsManager.onStartup();
 }
 
 function onTick(): void {

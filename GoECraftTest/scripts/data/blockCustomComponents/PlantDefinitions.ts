@@ -2,7 +2,7 @@ import { CustomItemDisplayNames } from "../idContainers/CustomItemDisplayNames";
 import { CustomItemIds } from "../idContainers/CustomItemIds";
 import { IPlantDefinition } from "./IPlantDefinition";
 
-/**growthStageDuration - in seconds */
+/**Info about player-grown plants, note: growthStageDuration - in seconds */
 export const PlantDefinitions: Record<string, IPlantDefinition> = {
   tomato_plant: {
     maxGrowthStage: 2,

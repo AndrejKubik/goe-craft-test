@@ -2,12 +2,13 @@ import { ItemComponentRegistry, ItemUseAfterEvent, StartupEvent } from "@minecra
 import { ItemCustomComponent } from "../customComponents/baseClasses/ItemCustomComponent";
 import { DashOnUseComponent } from "../customComponents/ItemCustomComponents/DashOnUseComponent";
 import { ShowDebugTabletOnUseComponent } from "../customComponents/ItemCustomComponents/ShowDebugTabletOnUseComponent";
-import { WorldSettingsManager } from "./WorldSettingsManager";
+import { CheatSettingsManager } from "./CheatSettingsManager";
 import { GameModeManager } from "./GameModeManager";
 
+/**Handles registration of custom item components and adding their effects to vanilla items as well */
 export class ItemCustomComponentManager {
   constructor(
-    private readonly worldSettingsManager: WorldSettingsManager,
+    private readonly worldSettingsManager: CheatSettingsManager,
     private readonly gameModeManager: GameModeManager
   ) {}
 

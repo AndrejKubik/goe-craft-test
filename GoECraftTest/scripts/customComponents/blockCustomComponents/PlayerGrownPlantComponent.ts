@@ -8,7 +8,7 @@ import { MathUtility } from "../../utilities/MathUtility";
 import { TimeUtility } from "../../utilities/TimeUtility";
 import { CustomItemIds } from "../../data/idContainers/CustomItemIds";
 import { PlantDefinitions } from "../../data/blockCustomComponents/PlantDefinitions";
-import { PlayerDataPersistenceManager } from "../../systems/PlayerDataPersistenceManager";
+import { PlayerDataPersistenceUtility } from "../../systems/PlayerDataPersistenceUtility";
 import { IPlantDefinition } from "../../data/blockCustomComponents/IPlantDefinition";
 import { BlockUtility } from "../../utilities/BlockUtility";
 import { CustomBlockIds } from "../../data/idContainers/CustomBlockIds";
@@ -72,7 +72,7 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
     }
 
     if (isPlayerDataChanged) {
-      PlayerDataPersistenceManager.setPlants(player, playerPlants);
+      PlayerDataPersistenceUtility.setPlants(player, playerPlants);
     }
   }
 
@@ -97,7 +97,7 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
     const isPlayerDataChanged = this.tryRemovePlantBlockDataFromPlayer(playerPlants, plantBlock);
 
     if (isPlayerDataChanged) {
-      PlayerDataPersistenceManager.setPlants(player, playerPlants);
+      PlayerDataPersistenceUtility.setPlants(player, playerPlants);
     }
   }
 

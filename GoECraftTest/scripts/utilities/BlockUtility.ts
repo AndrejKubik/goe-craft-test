@@ -1,5 +1,6 @@
 import { Block } from "@minecraft/server";
 
+/**Helper for block operations*/
 export class BlockUtility {
   public static removeBlock(block: Block) {
     block.setType("minecraft:air");

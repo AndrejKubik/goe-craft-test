@@ -1,3 +1,4 @@
+/**Helper for block operations*/
 export class BlockUtility {
     static removeBlock(block) {
         block.setType("minecraft:air");

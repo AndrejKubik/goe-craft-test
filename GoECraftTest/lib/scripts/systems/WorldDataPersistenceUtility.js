@@ -1,7 +1,8 @@
 import { world } from "@minecraft/server";
 import { WorldSaveKeys } from "../data/dataPersistence/WorldSaveKeys";
 import { EnforcedGameMode } from "../data/dataPersistence/EnforcedGameMode";
-export class WorldDataPersistenceManager {
+/**Helper for world dynamic properties */
+export class WorldDataPersistenceUtility {
     static clearAllProperties() {
         world.clearDynamicProperties();
         console.warn("Cleared all world dynamic properties.");
@@ -30,4 +31,4 @@ export class WorldDataPersistenceManager {
         return property;
     }
 }
-//# sourceMappingURL=WorldDataPersistenceManager.js.map
+//# sourceMappingURL=WorldDataPersistenceUtility.js.map

@@ -5,7 +5,7 @@ import { MathUtility } from "../../utilities/MathUtility";
 import { TimeUtility } from "../../utilities/TimeUtility";
 import { CustomItemIds } from "../../data/idContainers/CustomItemIds";
 import { PlantDefinitions } from "../../data/blockCustomComponents/PlantDefinitions";
-import { PlayerDataPersistenceManager } from "../../systems/PlayerDataPersistenceManager";
+import { PlayerDataPersistenceUtility } from "../../systems/PlayerDataPersistenceUtility";
 import { BlockUtility } from "../../utilities/BlockUtility";
 import { CustomBlockIds } from "../../data/idContainers/CustomBlockIds";
 const bookItemId = "minecraft:book";
@@ -59,7 +59,7 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
             BlockUtility.removeBlock(plantBlock);
         }
         if (isPlayerDataChanged) {
-            PlayerDataPersistenceManager.setPlants(player, playerPlants);
+            PlayerDataPersistenceUtility.setPlants(player, playerPlants);
         }
     }
     onBreak(player, event) {
@@ -77,7 +77,7 @@ export class PlayerGrownPlantComponent extends BlockCustomComponent {
         this.resetFarmPlotBlock(plantBlock);
         const isPlayerDataChanged = this.tryRemovePlantBlockDataFromPlayer(playerPlants, plantBlock);
         if (isPlayerDataChanged) {
-            PlayerDataPersistenceManager.setPlants(player, playerPlants);
+            PlayerDataPersistenceUtility.setPlants(player, playerPlants);
         }
     }
     getPlayerPlants(player) {

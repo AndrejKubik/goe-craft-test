@@ -1,6 +1,7 @@
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { MessageTextFormat } from "../data/messageUtility/MessageTextFormat";
 
+/**Helper for string operations*/
 export class MessageUtility {
   static formatString(
     text: string,

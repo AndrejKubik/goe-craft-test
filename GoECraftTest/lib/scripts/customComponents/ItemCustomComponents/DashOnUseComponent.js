@@ -6,6 +6,7 @@ const config = {
     isGroundDashAllowed: false,
 };
 const dashSoundId = "item.trident.riptide_1";
+/**Reusable component for speed cheat effect on use */
 export class DashOnUseComponent extends ItemCustomComponent {
     constructor(worldSettingsManager) {
         super();

@@ -1,11 +1,12 @@
 import { world } from "@minecraft/server";
-import { WorldDataPersistenceManager } from "./WorldDataPersistenceManager";
+import { WorldDataPersistenceUtility } from "./WorldDataPersistenceUtility";
 
-export class WorldSettingsManager {
+/**Handles cheat settings */
+export class CheatSettingsManager {
   private speedCheatEnabled = false;
 
   public onStartup() {
-    this.speedCheatEnabled = WorldDataPersistenceManager.getSpeedCheatEnabled();
+    this.speedCheatEnabled = WorldDataPersistenceUtility.getSpeedCheatEnabled();
   }
 
   public isSpeedCheatEnabled(): boolean {
@@ -19,7 +20,7 @@ export class WorldSettingsManager {
 
     this.speedCheatEnabled = newState;
 
-    WorldDataPersistenceManager.setSpeedCheatEnabled(newState);
+    WorldDataPersistenceUtility.setSpeedCheatEnabled(newState);
 
     const stateText = newState == true ? "enabled" : "disabled";
 

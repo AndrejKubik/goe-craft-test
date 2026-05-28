@@ -2,12 +2,13 @@ import { Player, system, Vector3, world } from "@minecraft/server";
 import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { PlayerData } from "../data/dataPersistence/PlayerData";
-import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
+import { PlayerDataPersistenceUtility } from "./PlayerDataPersistenceUtility";
 
 const fullSecondTicks = 20;
 const playerWelcomeMessageDelayTicks = 40;
 const lobbyLocation: Vector3 = { x: 0, y: -60, z: 0 };
 
+/**Handles player data and player join logic */
 export class PlayerManager {
   private playerMap = new Map<string, PlayerData>();
 
@@ -43,20 +44,20 @@ export class PlayerManager {
   }
 
   private increasePlayerPlayTimeSeconds(player: Player) {
-    const currentTotalSeconds = PlayerDataPersistenceManager.getPlayerPlayTime(player);
+    const currentTotalSeconds = PlayerDataPersistenceUtility.getPlayerPlayTime(player);
 
-    PlayerDataPersistenceManager.setPlayTime(player, currentTotalSeconds + 1);
+    PlayerDataPersistenceUtility.setPlayTime(player, currentTotalSeconds + 1);
   }
 
   private increasePlayerVisits(player: Player) {
-    const currentVisits = PlayerDataPersistenceManager.getVisitCount(player);
+    const currentVisits = PlayerDataPersistenceUtility.getVisitCount(player);
 
-    PlayerDataPersistenceManager.setVisitCount(player, currentVisits + 1);
+    PlayerDataPersistenceUtility.setVisitCount(player, currentVisits + 1);
   }
 
   private getPlayerWelcomeMessage(player: Player): string {
-    const totalSeconds = PlayerDataPersistenceManager.getPlayerPlayTime(player);
-    const totalVisits = PlayerDataPersistenceManager.getVisitCount(player);
+    const totalSeconds = PlayerDataPersistenceUtility.getPlayerPlayTime(player);
+    const totalVisits = PlayerDataPersistenceUtility.getVisitCount(player);
     const playerNameText = MessageUtility.formatString(`${player.nameTag}`, MessageTextColor.Gold);
 
     if (totalVisits <= 1) {
@@ -77,8 +78,8 @@ export class PlayerManager {
   private loadPlayerData(player: Player): void {
     const playerData = this.getPlayerData(player.id);
 
-    playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
-    playerData.plants = PlayerDataPersistenceManager.getPlants(player);
+    playerData.farmPlotLocations = PlayerDataPersistenceUtility.getFarmPlotLocations(player);
+    playerData.plants = PlayerDataPersistenceUtility.getPlants(player);
   }
 
   public getPlayerData(playerId: string): PlayerData {

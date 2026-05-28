@@ -1,5 +1,6 @@
 import { EmptyFarmPlotComponent } from "../customComponents/blockCustomComponents/EmptyFarmPlotComponent";
 import { PlayerGrownPlantComponent } from "../customComponents/blockCustomComponents/PlayerGrownPlantComponent";
+/**Handles registration of custom block components */
 export class BlockCustomComponentManager {
     constructor(playerManager) {
         this.playerManager = playerManager;

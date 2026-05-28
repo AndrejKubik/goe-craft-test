@@ -1,6 +1,7 @@
 import { GameMode, world } from "@minecraft/server";
 import { EnforcedGameMode } from "../data/dataPersistence/EnforcedGameMode";
-import { WorldDataPersistenceManager } from "./WorldDataPersistenceManager";
+import { WorldDataPersistenceUtility } from "./WorldDataPersistenceUtility";
+/**Handles global game mode enforcement rules */
 export class GameModeManager {
     constructor() {
         this.currentEnforcedMode = EnforcedGameMode.None;
@@ -14,7 +15,7 @@ export class GameModeManager {
         }
     }
     onStartup() {
-        this.currentEnforcedMode = WorldDataPersistenceManager.getEnforcedGameMode();
+        this.currentEnforcedMode = WorldDataPersistenceUtility.getEnforcedGameMode();
     }
     onTick() {
         this.enforceGameMode(this.currentEnforcedMode);
@@ -45,7 +46,7 @@ export class GameModeManager {
         }
         this.currentEnforcedMode = gameMode;
         world.sendMessage(this.getGameModeChangeMessage());
-        WorldDataPersistenceManager.setEnforcedGameMode(this.currentEnforcedMode);
+        WorldDataPersistenceUtility.setEnforcedGameMode(this.currentEnforcedMode);
     }
     getGameModeChangeMessage() {
         const messageBase = "New game mode has been enforced:";

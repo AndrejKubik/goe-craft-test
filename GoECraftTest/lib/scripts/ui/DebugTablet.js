@@ -1,12 +1,13 @@
 import { ModalFormData } from "@minecraft/server-ui";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { MessageUtility } from "../utilities/MessageUtility";
-import { PlayerDataPersistenceManager } from "../systems/PlayerDataPersistenceManager";
-import { WorldDataPersistenceManager } from "../systems/WorldDataPersistenceManager";
+import { PlayerDataPersistenceUtility } from "../systems/PlayerDataPersistenceUtility";
+import { WorldDataPersistenceUtility } from "../systems/WorldDataPersistenceUtility";
+/**Debug tablet drawing and callbacks*/
 export class DebugTablet {
-    constructor(player, worldSettingsManager, gameModeManager) {
+    constructor(player, cheatSettingsManager, gameModeManager) {
         this.player = player;
-        this.worldSettingsManager = worldSettingsManager;
+        this.cheatSettingsManager = cheatSettingsManager;
         this.gameModeManager = gameModeManager;
     }
     async show() {
@@ -27,20 +28,20 @@ export class DebugTablet {
             console.error("Invalid modal form data provided for debug tablet.");
             return;
         }
-        this.worldSettingsManager.enableSpeedCheat(modalFormValues[0]);
+        this.cheatSettingsManager.enableSpeedCheat(modalFormValues[0]);
         this.gameModeManager.setEnforcedGameMode(modalFormValues[1]);
         if (modalFormValues[4] === true) {
-            PlayerDataPersistenceManager.clearAllProperties(this.player);
+            PlayerDataPersistenceUtility.clearAllProperties(this.player);
         }
         if (modalFormValues[5] === true) {
-            WorldDataPersistenceManager.clearAllProperties();
+            WorldDataPersistenceUtility.clearAllProperties();
         }
     }
     async showModalForm() {
         const form = new ModalFormData()
             .title("Debug Tablet")
             .toggle(this.getSpeedCheatToggleLabel(), {
-            defaultValue: this.worldSettingsManager.isSpeedCheatEnabled(),
+            defaultValue: this.cheatSettingsManager.isSpeedCheatEnabled(),
         })
             .dropdown("Game Mode", ["Enforced Survival", "Enforced Adventure", "Free"], {
             defaultValueIndex: this.gameModeManager.getCurrentEnforcedMode(),
@@ -53,7 +54,7 @@ export class DebugTablet {
     }
     getSpeedCheatToggleLabel() {
         const stateText = "Speed cheat enabled";
-        return this.worldSettingsManager.isSpeedCheatEnabled()
+        return this.cheatSettingsManager.isSpeedCheatEnabled()
             ? MessageUtility.formatString(stateText, MessageTextColor.DarkGreen)
             : MessageUtility.formatString(stateText, MessageTextColor.Red);
     }

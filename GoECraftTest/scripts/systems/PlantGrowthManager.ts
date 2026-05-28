@@ -6,15 +6,16 @@ import { IPlantData } from "../data/blockCustomComponents/IPlantData";
 import { BlockUtility } from "../utilities/BlockUtility";
 import { EntityIdUtility } from "../utilities/EntityIdUtility";
 import { BlockPermutationStateKeys } from "../data/blockCustomComponents/BlockPermutationStateKeys";
-import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
+import { PlayerDataPersistenceUtility } from "./PlayerDataPersistenceUtility";
 
+/**Takes care of plant growth and plant visuals sync for all active players, centralized logic here for easier control*/
 export class PlantGrowthManager {
   constructor(private readonly playerManager: PlayerManager) {}
 
   public onPlayerLeave(player: Player): void {
     const playerPlants = this.getPlayerPlants(player);
 
-    PlayerDataPersistenceManager.setPlants(player, playerPlants);
+    PlayerDataPersistenceUtility.setPlants(player, playerPlants);
   }
 
   public onTick() {
@@ -31,7 +32,7 @@ export class PlantGrowthManager {
       const isPlantVisualsUpdated = this.syncPlantVisuals(player.dimension, plant);
 
       if (isGrowthStageChanged || isPlantVisualsUpdated) {
-        PlayerDataPersistenceManager.setPlants(player, playerPlants);
+        PlayerDataPersistenceUtility.setPlants(player, playerPlants);
       }
     }
   }

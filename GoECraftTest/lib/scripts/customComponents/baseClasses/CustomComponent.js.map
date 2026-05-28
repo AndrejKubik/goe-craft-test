@@ -1,1 +1,1 @@
-{"version":3,"file":"CustomComponent.js","sourceRoot":"","sources":["../../../../scripts/customComponents/baseClasses/CustomComponent.ts"],"names":[],"mappings":"AAAA,MAAM,OAAgB,eAAe;IAC5B,MAAM,CAAC,KAAK;QACjB,OAAO,YAAY,CAAC;IACtB,CAAC;CACF"}
+{"version":3,"file":"CustomComponent.js","sourceRoot":"","sources":["../../../../scripts/customComponents/baseClasses/CustomComponent.ts"],"names":[],"mappings":"AAAA,MAAM,OAAgB,eAAe;IACnC,oFAAoF;IAC7E,MAAM,CAAC,KAAK;QACjB,OAAO,YAAY,CAAC;IACtB,CAAC;CACF"}

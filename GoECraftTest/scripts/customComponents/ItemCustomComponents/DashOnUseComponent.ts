@@ -1,7 +1,7 @@
 import { ItemComponentUseEvent, ItemUseAfterEvent, Player } from "@minecraft/server";
 import { ItemCustomComponent } from "../baseClasses/ItemCustomComponent";
 import { IDashOnUseComponentConfig } from "../../data/itemCustomComponents/IDashOnUseComponentConfig";
-import { WorldSettingsManager } from "../../systems/WorldSettingsManager";
+import { CheatSettingsManager } from "../../systems/CheatSettingsManager";
 import { EntityIdUtility } from "../../utilities/EntityIdUtility";
 
 const config: IDashOnUseComponentConfig = {
@@ -12,8 +12,9 @@ const config: IDashOnUseComponentConfig = {
 
 const dashSoundId = "item.trident.riptide_1";
 
+/**Reusable component for speed cheat effect on use */
 export class DashOnUseComponent extends ItemCustomComponent {
-  constructor(private readonly worldSettingsManager: WorldSettingsManager) {
+  constructor(private readonly worldSettingsManager: CheatSettingsManager) {
     super();
   }
 

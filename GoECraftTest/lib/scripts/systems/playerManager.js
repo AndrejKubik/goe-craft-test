@@ -2,10 +2,11 @@ import { system, world } from "@minecraft/server";
 import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { PlayerData } from "../data/dataPersistence/PlayerData";
-import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
+import { PlayerDataPersistenceUtility } from "./PlayerDataPersistenceUtility";
 const fullSecondTicks = 20;
 const playerWelcomeMessageDelayTicks = 40;
 const lobbyLocation = { x: 0, y: -60, z: 0 };
+/**Handles player data and player join logic */
 export class PlayerManager {
     constructor() {
         this.playerMap = new Map();
@@ -32,16 +33,16 @@ export class PlayerManager {
         playerData.playTimeSecondTicks = 0;
     }
     increasePlayerPlayTimeSeconds(player) {
-        const currentTotalSeconds = PlayerDataPersistenceManager.getPlayerPlayTime(player);
-        PlayerDataPersistenceManager.setPlayTime(player, currentTotalSeconds + 1);
+        const currentTotalSeconds = PlayerDataPersistenceUtility.getPlayerPlayTime(player);
+        PlayerDataPersistenceUtility.setPlayTime(player, currentTotalSeconds + 1);
     }
     increasePlayerVisits(player) {
-        const currentVisits = PlayerDataPersistenceManager.getVisitCount(player);
-        PlayerDataPersistenceManager.setVisitCount(player, currentVisits + 1);
+        const currentVisits = PlayerDataPersistenceUtility.getVisitCount(player);
+        PlayerDataPersistenceUtility.setVisitCount(player, currentVisits + 1);
     }
     getPlayerWelcomeMessage(player) {
-        const totalSeconds = PlayerDataPersistenceManager.getPlayerPlayTime(player);
-        const totalVisits = PlayerDataPersistenceManager.getVisitCount(player);
+        const totalSeconds = PlayerDataPersistenceUtility.getPlayerPlayTime(player);
+        const totalVisits = PlayerDataPersistenceUtility.getVisitCount(player);
         const playerNameText = MessageUtility.formatString(`${player.nameTag}`, MessageTextColor.Gold);
         if (totalVisits <= 1) {
             const addonTitleText = MessageUtility.formatString("Fruit Harvest Simulator", MessageTextColor.Gold);
@@ -55,8 +56,8 @@ export class PlayerManager {
     }
     loadPlayerData(player) {
         const playerData = this.getPlayerData(player.id);
-        playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
-        playerData.plants = PlayerDataPersistenceManager.getPlants(player);
+        playerData.farmPlotLocations = PlayerDataPersistenceUtility.getFarmPlotLocations(player);
+        playerData.plants = PlayerDataPersistenceUtility.getPlants(player);
     }
     getPlayerData(playerId) {
         let playerData = this.playerMap.get(playerId);

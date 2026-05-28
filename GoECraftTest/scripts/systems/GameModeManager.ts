@@ -1,7 +1,8 @@
 import { GameMode, Player, world } from "@minecraft/server";
 import { EnforcedGameMode } from "../data/dataPersistence/EnforcedGameMode";
-import { WorldDataPersistenceManager } from "./WorldDataPersistenceManager";
+import { WorldDataPersistenceUtility } from "./WorldDataPersistenceUtility";
 
+/**Handles global game mode enforcement rules */
 export class GameModeManager {
   private currentEnforcedMode = EnforcedGameMode.None;
 
@@ -14,7 +15,7 @@ export class GameModeManager {
   }
 
   public onStartup() {
-    this.currentEnforcedMode = WorldDataPersistenceManager.getEnforcedGameMode();
+    this.currentEnforcedMode = WorldDataPersistenceUtility.getEnforcedGameMode();
   }
 
   public onTick(): void {
@@ -55,7 +56,7 @@ export class GameModeManager {
     this.currentEnforcedMode = gameMode;
 
     world.sendMessage(this.getGameModeChangeMessage());
-    WorldDataPersistenceManager.setEnforcedGameMode(this.currentEnforcedMode);
+    WorldDataPersistenceUtility.setEnforcedGameMode(this.currentEnforcedMode);
   }
 
   private getGameModeChangeMessage(): string {

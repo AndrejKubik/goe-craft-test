@@ -1,6 +1,6 @@
 import { CustomItemDisplayNames } from "../idContainers/CustomItemDisplayNames";
 import { CustomItemIds } from "../idContainers/CustomItemIds";
-/**growthStageDuration - in seconds */
+/**Info about player-grown plants, note: growthStageDuration - in seconds */
 export const PlantDefinitions = {
     tomato_plant: {
         maxGrowthStage: 2,

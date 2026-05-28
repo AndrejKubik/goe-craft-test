@@ -19,7 +19,7 @@ import { IPlantData } from "../../data/blockCustomComponents/IPlantData";
 import { TimeUtility } from "../../utilities/TimeUtility";
 import { BlockUtility } from "../../utilities/BlockUtility";
 import { BlockPermutationStateKeys } from "../../data/blockCustomComponents/BlockPermutationStateKeys";
-import { PlayerDataPersistenceManager } from "../../systems/PlayerDataPersistenceManager";
+import { PlayerDataPersistenceUtility } from "../../systems/PlayerDataPersistenceUtility";
 import { MathUtility } from "../../utilities/MathUtility";
 
 const usedFarmPlotId = EntityIdUtility.getFullId(CustomBlockIds.usedFarmPlot);
@@ -72,7 +72,7 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
 
     playerFarmPlots.splice(playerOwnedBlockIndex, 1);
 
-    PlayerDataPersistenceManager.setFarmPlotLocations(player, playerFarmPlots);
+    PlayerDataPersistenceUtility.setFarmPlotLocations(player, playerFarmPlots);
   }
 
   /**Returns true if the operation fails */
@@ -86,7 +86,7 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     }
 
     playerFarmPlots.push(block.location);
-    PlayerDataPersistenceManager.setFarmPlotLocations(player, playerFarmPlots);
+    PlayerDataPersistenceUtility.setFarmPlotLocations(player, playerFarmPlots);
 
     return true;
   }
@@ -143,7 +143,7 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     const playerPlants = playerData.plants;
 
     playerPlants.push(newPlantData);
-    PlayerDataPersistenceManager.setPlants(player, playerPlants);
+    PlayerDataPersistenceUtility.setPlants(player, playerPlants);
 
     farmPlotBlock.dimension.playSound(plantSeedSoundId, farmPlotBlock.location);
   }

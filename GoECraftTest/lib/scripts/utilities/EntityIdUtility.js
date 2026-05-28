@@ -1,3 +1,4 @@
+/**Helper for identifier operations*/
 export class EntityIdUtility {
     /**Returns the identifier with the addon namespace included.*/
     static getFullId(entityId) {

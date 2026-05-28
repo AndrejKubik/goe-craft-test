@@ -1,5 +1,6 @@
 import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
-export class PlayerDataPersistenceManager {
+/**Helper for player dynamic properties */
+export class PlayerDataPersistenceUtility {
     static clearAllProperties(player) {
         player.clearDynamicProperties();
         console.warn(`Cleared all dynamic properties for player: ${player.name}`);
@@ -58,4 +59,4 @@ export class PlayerDataPersistenceManager {
         }
     }
 }
-//# sourceMappingURL=PlayerDataPersistenceManager.js.map
+//# sourceMappingURL=PlayerDataPersistenceUtility.js.map

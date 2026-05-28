@@ -2,7 +2,8 @@ import { Player, Vector3 } from "@minecraft/server";
 import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 import { IPlantData } from "../data/blockCustomComponents/IPlantData";
 
-export class PlayerDataPersistenceManager {
+/**Helper for player dynamic properties */
+export class PlayerDataPersistenceUtility {
   public static clearAllProperties(player: Player): void {
     player.clearDynamicProperties();
 

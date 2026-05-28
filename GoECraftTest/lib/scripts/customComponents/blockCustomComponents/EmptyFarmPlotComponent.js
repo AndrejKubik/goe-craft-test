@@ -8,7 +8,7 @@ import { PlantDefinitionKeys } from "../../data/blockCustomComponents/PlantDefin
 import { TimeUtility } from "../../utilities/TimeUtility";
 import { BlockUtility } from "../../utilities/BlockUtility";
 import { BlockPermutationStateKeys } from "../../data/blockCustomComponents/BlockPermutationStateKeys";
-import { PlayerDataPersistenceManager } from "../../systems/PlayerDataPersistenceManager";
+import { PlayerDataPersistenceUtility } from "../../systems/PlayerDataPersistenceUtility";
 import { MathUtility } from "../../utilities/MathUtility";
 const usedFarmPlotId = EntityIdUtility.getFullId(CustomBlockIds.usedFarmPlot);
 const tomatoSeedId = EntityIdUtility.getFullId(CustomItemIds.tomatoSeed);
@@ -48,7 +48,7 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
             return;
         }
         playerFarmPlots.splice(playerOwnedBlockIndex, 1);
-        PlayerDataPersistenceManager.setFarmPlotLocations(player, playerFarmPlots);
+        PlayerDataPersistenceUtility.setFarmPlotLocations(player, playerFarmPlots);
     }
     /**Returns true if the operation fails */
     tryAddBlockToPlayerFarmPlots(player, block) {
@@ -58,7 +58,7 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
             return false;
         }
         playerFarmPlots.push(block.location);
-        PlayerDataPersistenceManager.setFarmPlotLocations(player, playerFarmPlots);
+        PlayerDataPersistenceUtility.setFarmPlotLocations(player, playerFarmPlots);
         return true;
     }
     isBlockOwnedByPlayer(block, player) {
@@ -96,7 +96,7 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
         const playerData = this.playerManager.getPlayerData(player.id);
         const playerPlants = playerData.plants;
         playerPlants.push(newPlantData);
-        PlayerDataPersistenceManager.setPlants(player, playerPlants);
+        PlayerDataPersistenceUtility.setPlants(player, playerPlants);
         farmPlotBlock.dimension.playSound(plantSeedSoundId, farmPlotBlock.location);
     }
 }
