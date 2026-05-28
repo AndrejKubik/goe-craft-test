@@ -15,6 +15,7 @@ const tomatoSeedId = EntityIdUtility.getFullId(CustomItemIds.tomatoSeed);
 const cucumberSeedId = EntityIdUtility.getFullId(CustomItemIds.cucumberSeed);
 const tomatoPlantId = EntityIdUtility.getFullId(CustomBlockIds.tomatoPlant);
 const cucumberPlantId = EntityIdUtility.getFullId(CustomBlockIds.cucumberPlant);
+const invalidIndex = -1;
 export class EmptyFarmPlotComponent extends BlockCustomComponent {
     constructor(playerManager) {
         super();
@@ -35,14 +36,26 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
             this.plantSeed(player, block, PlantDefinitionKeys.cucumber, cucumberPlantId);
         }
     }
-    isBlockOwnedByPlayer(block, player) {
-        const playerData = this.playerManager.getPlayerData(player.id);
-        for (const farmPlotLocation of playerData.farmPlotLocations) {
-            if (MathUtility.areVectorsEqual(farmPlotLocation, block.location)) {
-                return true;
-            }
+    onBreak(player, event) {
+        const block = event.block;
+        const playerFarmPlots = this.getPlayerFarmPlots(player);
+        const playerOwnedBlockIndex = this.getPlayerOwnedBlockIndex(block, playerFarmPlots);
+        if (playerOwnedBlockIndex == invalidIndex) {
+            return;
         }
-        return false;
+        playerFarmPlots.splice(playerOwnedBlockIndex, 1);
+        PlayerDataPersistenceManager.setFarmPlotLocations(player, playerFarmPlots);
+    }
+    isBlockOwnedByPlayer(block, player) {
+        const playerFarmPlots = this.getPlayerFarmPlots(player);
+        return this.getPlayerOwnedBlockIndex(block, playerFarmPlots) != invalidIndex;
+    }
+    getPlayerFarmPlots(player) {
+        const playerData = this.playerManager.getPlayerData(player.id);
+        return playerData.farmPlotLocations;
+    }
+    getPlayerOwnedBlockIndex(block, playerFarmPlots) {
+        return playerFarmPlots.findIndex((playerOwnedBlock) => MathUtility.areVectorsEqual(block.location, playerOwnedBlock)); // returns -1 if it finds no matches
     }
     plantSeed(player, farmPlotBlock, plantDefinitionKey, plantBlockId) {
         const plantBlock = farmPlotBlock.above();

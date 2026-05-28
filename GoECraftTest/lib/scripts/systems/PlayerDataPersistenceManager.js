@@ -1,5 +1,8 @@
 import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 export class PlayerDataPersistenceManager {
+    static clearAllProperties(player) {
+        player.clearDynamicProperties();
+    }
     static clearProperty(player, saveKey) {
         player.setDynamicProperty(saveKey, undefined);
     }

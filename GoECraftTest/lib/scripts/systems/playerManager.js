@@ -4,9 +4,9 @@ import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { PlayerData } from "../data/dataPersistence/PlayerData";
 import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
 import { BlockUtility } from "../utilities/BlockUtility";
-import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 const fullSecondTicks = 20;
 const playerWelcomeMessageDelayTicks = 40;
+const lobbyLocation = { x: 0, y: -60, z: 0 };
 export class PlayerManager {
     constructor() {
         this.playerMap = new Map();
@@ -16,10 +16,11 @@ export class PlayerManager {
             this.updatePlayerPlayTime(player);
         }
     }
-    onPlayerSpawn(player) {
+    onPlayerJoin(player) {
+        // PlayerDataPersistenceManager.clearAllProperties(player); //remove this!
         this.increasePlayerVisits(player);
-        PlayerDataPersistenceManager.clearProperty(player, PlayerSaveKeys.farmPlotLocations); //remove this!
         this.loadPlayerFarmPlotBlocks(player);
+        this.teleportPlayerToLobby(player);
         system.runTimeout(player.sendMessage.bind(player, this.getPlayerWelcomeMessage(player)), playerWelcomeMessageDelayTicks //small delay to avoid duplicate welcome message, due to UI reload at startup
         );
     }
@@ -75,6 +76,9 @@ export class PlayerManager {
     loadPlayerFarmPlotBlocks(player) {
         const playerData = this.getPlayerData(player.id);
         playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
+    }
+    teleportPlayerToLobby(player) {
+        player.teleport(lobbyLocation);
     }
 }
 //# sourceMappingURL=PlayerManager.js.map

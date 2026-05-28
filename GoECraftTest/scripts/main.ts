@@ -45,7 +45,7 @@ function onTick(): void {
 
 function onPlayerSpawn(event: PlayerSpawnAfterEvent): void {
   if (event.initialSpawn) {
-    playerManager.onPlayerSpawn(event.player);
+    playerManager.onPlayerJoin(event.player);
   }
 }
 

@@ -33,7 +33,7 @@ function onTick() {
 }
 function onPlayerSpawn(event) {
     if (event.initialSpawn) {
-        playerManager.onPlayerSpawn(event.player);
+        playerManager.onPlayerJoin(event.player);
     }
 }
 function onUseItem(event) {

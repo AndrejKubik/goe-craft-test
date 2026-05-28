@@ -3,6 +3,10 @@ import { PlayerSaveKeys } from "../data/dataPersistence/PlayerSaveKeys";
 import { IPlantData } from "../data/blockCustomComponents/IPlantData";
 
 export class PlayerDataPersistenceManager {
+  public static clearAllProperties(player: Player): void {
+    player.clearDynamicProperties();
+  }
+
   public static clearProperty(player: Player, saveKey: string): void {
     player.setDynamicProperty(saveKey, undefined);
   }

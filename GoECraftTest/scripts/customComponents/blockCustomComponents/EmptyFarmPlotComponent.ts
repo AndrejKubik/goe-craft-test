@@ -1,4 +1,10 @@
-import { Block, BlockComponentPlayerInteractEvent, Player } from "@minecraft/server";
+import {
+  Block,
+  BlockComponentPlayerBreakEvent,
+  BlockComponentPlayerInteractEvent,
+  Player,
+  Vector3,
+} from "@minecraft/server";
 import { BlockCustomComponent } from "../baseClasses/BlockCustomComponent";
 import { PlayerManager } from "../../systems/PlayerManager";
 import { PlayerInventoryUtility } from "../../utilities/PlayerInventoryUtility";
@@ -22,6 +28,8 @@ const cucumberSeedId = EntityIdUtility.getFullId(CustomItemIds.cucumberSeed);
 const tomatoPlantId = EntityIdUtility.getFullId(CustomBlockIds.tomatoPlant);
 const cucumberPlantId = EntityIdUtility.getFullId(CustomBlockIds.cucumberPlant);
 
+const invalidIndex = -1;
+
 export class EmptyFarmPlotComponent extends BlockCustomComponent {
   constructor(private readonly playerManager: PlayerManager) {
     super();
@@ -31,7 +39,7 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     return EntityIdUtility.getFullId("empty_farm_plot");
   }
 
-  public onInteract(player: Player, event: BlockComponentPlayerInteractEvent): void {
+  protected onInteract(player: Player, event: BlockComponentPlayerInteractEvent): void {
     const block = event.block;
 
     if (!this.isBlockOwnedByPlayer(event.block, player)) {
@@ -45,16 +53,36 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     }
   }
 
-  private isBlockOwnedByPlayer(block: Block, player: Player): boolean {
-    const playerData = this.playerManager.getPlayerData(player.id);
+  protected onBreak(player: Player, event: BlockComponentPlayerBreakEvent): void {
+    const block = event.block;
+    const playerFarmPlots = this.getPlayerFarmPlots(player);
+    const playerOwnedBlockIndex = this.getPlayerOwnedBlockIndex(block, playerFarmPlots);
 
-    for (const farmPlotLocation of playerData.farmPlotLocations) {
-      if (MathUtility.areVectorsEqual(farmPlotLocation, block.location)) {
-        return true;
-      }
+    if (playerOwnedBlockIndex == invalidIndex) {
+      return;
     }
 
-    return false;
+    playerFarmPlots.splice(playerOwnedBlockIndex, 1);
+
+    PlayerDataPersistenceManager.setFarmPlotLocations(player, playerFarmPlots);
+  }
+
+  private isBlockOwnedByPlayer(block: Block, player: Player): boolean {
+    const playerFarmPlots = this.getPlayerFarmPlots(player);
+
+    return this.getPlayerOwnedBlockIndex(block, playerFarmPlots) != invalidIndex;
+  }
+
+  private getPlayerFarmPlots(player: Player): Vector3[] {
+    const playerData = this.playerManager.getPlayerData(player.id);
+
+    return playerData.farmPlotLocations;
+  }
+
+  private getPlayerOwnedBlockIndex(block: Block, playerFarmPlots: Vector3[]): number {
+    return playerFarmPlots.findIndex((playerOwnedBlock) =>
+      MathUtility.areVectorsEqual(block.location, playerOwnedBlock)
+    ); // returns -1 if it finds no matches
   }
 
   private plantSeed(player: Player, farmPlotBlock: Block, plantDefinitionKey: string, plantBlockId: string) {
