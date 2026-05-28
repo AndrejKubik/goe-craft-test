@@ -17,9 +17,9 @@ export class PlayerManager {
     }
     onPlayerJoin(player) {
         // PlayerDataPersistenceManager.clearAllProperties(player); //remove this!
-        this.increasePlayerVisits(player);
-        this.loadPlayerFarmPlotBlocks(player);
         this.teleportPlayerToLobby(player);
+        this.increasePlayerVisits(player);
+        this.loadPlayerData(player);
         system.runTimeout(player.sendMessage.bind(player, this.getPlayerWelcomeMessage(player)), playerWelcomeMessageDelayTicks //small delay to avoid duplicate welcome message, due to UI reload at startup
         );
     }
@@ -54,6 +54,11 @@ export class PlayerManager {
         playTimeText = MessageUtility.formatString(playTimeText.toString(), MessageTextColor.Gold);
         return `Welcome back ${playerNameText}!\n` + `Play time: ${playTimeText}\n` + `Current visit: ${currentVisit}`;
     }
+    loadPlayerData(player) {
+        const playerData = this.getPlayerData(player.id);
+        playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
+        playerData.plants = PlayerDataPersistenceManager.getPlants(player);
+    }
     getPlayerData(playerId) {
         let playerData = this.playerMap.get(playerId);
         if (playerData === undefined) {
@@ -61,10 +66,6 @@ export class PlayerManager {
             this.playerMap.set(playerId, playerData);
         }
         return playerData;
-    }
-    loadPlayerFarmPlotBlocks(player) {
-        const playerData = this.getPlayerData(player.id);
-        playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
     }
     teleportPlayerToLobby(player) {
         player.teleport(lobbyLocation);

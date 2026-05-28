@@ -1,9 +1,8 @@
-import { Block, Player, system, Vector3, world } from "@minecraft/server";
+import { Player, system, Vector3, world } from "@minecraft/server";
 import { MessageUtility } from "../utilities/MessageUtility";
 import { MessageTextColor } from "../data/messageUtility/MessageTextColor";
 import { PlayerData } from "../data/dataPersistence/PlayerData";
 import { PlayerDataPersistenceManager } from "./PlayerDataPersistenceManager";
-import { BlockUtility } from "../utilities/BlockUtility";
 
 const fullSecondTicks = 20;
 const playerWelcomeMessageDelayTicks = 40;
@@ -20,9 +19,9 @@ export class PlayerManager {
 
   public onPlayerJoin(player: Player): void {
     // PlayerDataPersistenceManager.clearAllProperties(player); //remove this!
-    this.increasePlayerVisits(player);
-    this.loadPlayerFarmPlotBlocks(player);
     this.teleportPlayerToLobby(player);
+    this.increasePlayerVisits(player);
+    this.loadPlayerData(player);
 
     system.runTimeout(
       player.sendMessage.bind(player, this.getPlayerWelcomeMessage(player)),
@@ -76,6 +75,13 @@ export class PlayerManager {
     return `Welcome back ${playerNameText}!\n` + `Play time: ${playTimeText}\n` + `Current visit: ${currentVisit}`;
   }
 
+  private loadPlayerData(player: Player): void {
+    const playerData = this.getPlayerData(player.id);
+
+    playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
+    playerData.plants = PlayerDataPersistenceManager.getPlants(player);
+  }
+
   public getPlayerData(playerId: string): PlayerData {
     let playerData = this.playerMap.get(playerId);
 
@@ -86,11 +92,6 @@ export class PlayerManager {
     }
 
     return playerData;
-  }
-
-  private loadPlayerFarmPlotBlocks(player: Player): void {
-    const playerData = this.getPlayerData(player.id);
-    playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);
   }
 
   private teleportPlayerToLobby(player: Player): void {
