@@ -24,6 +24,9 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     static getId() {
         return EntityIdUtility.getFullId("empty_farm_plot");
     }
+    onPlayerPlace(player, event) {
+        event.cancel = !this.tryAddBlockToPlayerFarmPlots(player, event.block);
+    }
     onInteract(player, event) {
         const block = event.block;
         if (!this.isBlockOwnedByPlayer(event.block, player)) {
@@ -45,6 +48,17 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
         }
         playerFarmPlots.splice(playerOwnedBlockIndex, 1);
         PlayerDataPersistenceManager.setFarmPlotLocations(player, playerFarmPlots);
+    }
+    /**Returns true if the operation fails */
+    tryAddBlockToPlayerFarmPlots(player, block) {
+        const playerFarmPlots = this.getPlayerFarmPlots(player);
+        if (playerFarmPlots.length >= 3) {
+            player.sendMessage("Farm plot limit reached, cannot place block.");
+            return false;
+        }
+        playerFarmPlots.push(block.location);
+        PlayerDataPersistenceManager.setFarmPlotLocations(player, playerFarmPlots);
+        return true;
     }
     isBlockOwnedByPlayer(block, player) {
         const playerFarmPlots = this.getPlayerFarmPlots(player);

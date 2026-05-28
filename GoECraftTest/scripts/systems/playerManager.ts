@@ -88,20 +88,6 @@ export class PlayerManager {
     return playerData;
   }
 
-  public addFarmPlotBlockToPlayer(player: Player, block: Block): void {
-    const playerData = this.getPlayerData(player.id);
-
-    if (playerData.farmPlotLocations.length >= 3) {
-      player.sendMessage("Farm plot limit reached");
-
-      BlockUtility.removeBlock(block);
-      return;
-    }
-
-    playerData.farmPlotLocations.push(block.location);
-    PlayerDataPersistenceManager.setFarmPlotLocations(player, playerData.farmPlotLocations);
-  }
-
   private loadPlayerFarmPlotBlocks(player: Player): void {
     const playerData = this.getPlayerData(player.id);
     playerData.farmPlotLocations = PlayerDataPersistenceManager.getFarmPlotLocations(player);

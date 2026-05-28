@@ -1,7 +1,9 @@
 import {
   Block,
+  BlockComponentOnPlaceEvent,
   BlockComponentPlayerBreakEvent,
   BlockComponentPlayerInteractEvent,
+  BlockComponentPlayerPlaceBeforeEvent,
   Player,
   Vector3,
 } from "@minecraft/server";
@@ -39,6 +41,10 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     return EntityIdUtility.getFullId("empty_farm_plot");
   }
 
+  protected onPlayerPlace(player: Player, event: BlockComponentPlayerPlaceBeforeEvent): void {
+    event.cancel = !this.tryAddBlockToPlayerFarmPlots(player, event.block);
+  }
+
   protected onInteract(player: Player, event: BlockComponentPlayerInteractEvent): void {
     const block = event.block;
 
@@ -65,6 +71,22 @@ export class EmptyFarmPlotComponent extends BlockCustomComponent {
     playerFarmPlots.splice(playerOwnedBlockIndex, 1);
 
     PlayerDataPersistenceManager.setFarmPlotLocations(player, playerFarmPlots);
+  }
+
+  /**Returns true if the operation fails */
+  private tryAddBlockToPlayerFarmPlots(player: Player, block: Block): boolean {
+    const playerFarmPlots = this.getPlayerFarmPlots(player);
+
+    if (playerFarmPlots.length >= 3) {
+      player.sendMessage("Farm plot limit reached, cannot place block.");
+
+      return false;
+    }
+
+    playerFarmPlots.push(block.location);
+    PlayerDataPersistenceManager.setFarmPlotLocations(player, playerFarmPlots);
+
+    return true;
   }
 
   private isBlockOwnedByPlayer(block: Block, player: Player): boolean {

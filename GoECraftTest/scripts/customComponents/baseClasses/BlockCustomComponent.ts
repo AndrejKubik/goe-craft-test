@@ -2,6 +2,7 @@ import {
   BlockComponentOnPlaceEvent,
   BlockComponentPlayerBreakEvent,
   BlockComponentPlayerInteractEvent,
+  BlockComponentPlayerPlaceBeforeEvent,
   Player,
 } from "@minecraft/server";
 import { CustomComponent } from "./CustomComponent";
@@ -10,12 +11,23 @@ export abstract class BlockCustomComponent extends CustomComponent {
   constructor() {
     super();
 
-    this.onPlace = this.onPlace.bind(this);
+    this.beforeOnPlayerPlace = this.beforeOnPlayerPlace.bind(this);
     this.onPlayerInteract = this.onPlayerInteract.bind(this);
     this.onPlayerBreak = this.onPlayerBreak.bind(this);
   }
 
-  public onPlace(event: BlockComponentOnPlaceEvent): void {}
+  protected onPlayerPlace(player: Player, event: BlockComponentPlayerPlaceBeforeEvent): void {}
+  protected onInteract(player: Player, event: BlockComponentPlayerInteractEvent): void {}
+  protected onBreak(player: Player, event: BlockComponentPlayerBreakEvent): void {}
+
+  /**Do not override this on child classes, override onPlayerPlace() instead */
+  public beforeOnPlayerPlace(event: BlockComponentPlayerPlaceBeforeEvent): void {
+    const player = event.player;
+
+    if (player) {
+      this.onPlayerPlace(player, event);
+    }
+  }
 
   /**Do not override this on child classes, override onInteract() instead */
   public onPlayerInteract(event: BlockComponentPlayerInteractEvent): void {
@@ -26,8 +38,6 @@ export abstract class BlockCustomComponent extends CustomComponent {
     }
   }
 
-  protected onInteract(player: Player, event: BlockComponentPlayerInteractEvent): void {}
-
   /**Do not override this on child classes, override onBreak() instead */
   public onPlayerBreak(event: BlockComponentPlayerBreakEvent): void {
     const player = event.player;
@@ -36,6 +46,4 @@ export abstract class BlockCustomComponent extends CustomComponent {
       this.onBreak(player, event);
     }
   }
-
-  protected onBreak(player: Player, event: BlockComponentPlayerBreakEvent): void {}
 }

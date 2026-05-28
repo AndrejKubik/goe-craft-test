@@ -1,11 +1,4 @@
-import {
-  system,
-  StartupEvent,
-  world,
-  PlayerSpawnAfterEvent,
-  ItemUseAfterEvent,
-  PlayerPlaceBlockAfterEvent,
-} from "@minecraft/server";
+import { system, StartupEvent, world, PlayerSpawnAfterEvent, ItemUseAfterEvent } from "@minecraft/server";
 import { PlayerManager } from "./systems/PlayerManager";
 import { ItemCustomComponentManager } from "./systems/ItemCustomComponentManager";
 import { WorldSettingsManager } from "./systems/WorldSettingsManager";
@@ -53,13 +46,8 @@ function onUseItem(event: ItemUseAfterEvent): void {
   itemCustomComponentManager.onUseItem(event);
 }
 
-function onPlaceBlock(event: PlayerPlaceBlockAfterEvent): void {
-  blockCustomComponentManager.onPlaceBlockGlobal(event);
-}
-
 system.beforeEvents.startup.subscribe(onStartup);
 world.afterEvents.playerSpawn.subscribe(onPlayerSpawn);
-world.afterEvents.playerPlaceBlock.subscribe(onPlaceBlock);
 world.afterEvents.itemUse.subscribe(onUseItem);
 
 system.run(mainTick);

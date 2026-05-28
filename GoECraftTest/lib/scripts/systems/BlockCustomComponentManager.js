@@ -7,12 +7,6 @@ export class BlockCustomComponentManager {
     onStartup(event) {
         this.registerCustomComponents(event.blockComponentRegistry);
     }
-    onPlaceBlockGlobal(event) {
-        const block = event.block;
-        if (block.getComponent(EmptyFarmPlotComponent.getId())) {
-            this.playerManager.addFarmPlotBlockToPlayer(event.player, block);
-        }
-    }
     registerCustomComponents(blockComponentRegistry) {
         blockComponentRegistry.registerCustomComponent(EmptyFarmPlotComponent.getId(), new EmptyFarmPlotComponent(this.playerManager));
         blockComponentRegistry.registerCustomComponent(PlayerGrownPlantComponent.getId(), new PlayerGrownPlantComponent(this.playerManager));
